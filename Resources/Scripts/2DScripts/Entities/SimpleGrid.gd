@@ -27,10 +27,13 @@ onready var Obstacle = preload("res://Resources/Entities/2D/Obstacle.tscn")
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
+#	Заполнение массива точек передвижения
 	for x in range(grid_size.x):
 		grid.append([])
 		for y in grid_size.y:
 			grid[x].append(null)
+	
+#	Инициализация позиций для препятствий
 	var objPosition = []
 	for n in range(5):
 		rng.randomize()
@@ -38,10 +41,12 @@ func _ready():
 		if not grid_pos in objPosition:
 			objPosition.append(grid_pos)
 	
+#	Установка игрока в начальную позицию
 	var StartPos = updateChildPos(Player.position, Player.direction, Player.type)
 	Player.set_position(StartPos)
 	Player.gridPosition = world_to_map(Player.position)
 	
+#	Установка препятствий по позициям
 	for pos in objPosition:
 		var new_obstacle = Obstacle.instance()
 		new_obstacle.position = map_to_world(pos)+half_tile_size
@@ -117,6 +122,7 @@ func isCellCheck(pos, direction, gridArr):
 			var step = 0
 			if typeof(gridArr[pos.x][pos.y]) != TYPE_INT:
 				step = gridArr[pos.x][pos.y].step
+#				print("step - " + str(step))
 			gridArr[gridPos.x][gridPos.y] = {step = step + 1}
 			return true
 	return false

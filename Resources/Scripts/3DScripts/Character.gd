@@ -47,8 +47,8 @@ var ActivePointID = null
 func _ready():
 	add_to_group("Units")
 	movement = MaxMovement
-#	var V3Pos = Grid.world_to_map(transform.origin)
-#	ZonePosition = Vector2(V3Pos.x, V3Pos.z)
+	var V3Pos = Grid.world_to_map(transform.origin)
+	ZonePosition = Vector2(V3Pos.x, V3Pos.z)
 	ZoneId = Arena.GetActualZoneId(ZonePosition)
 	print("ZoneId - " + str(ZoneId))
 #	print(str((Grid.world_to_map(transform.origin))))

@@ -20,6 +20,16 @@ onready var Grids            = get_node(GridsPath)
 onready var CharactersNode   = get_node(CharactersNodePath)
 
 var Grid = []
+var GridSize
+const RoundDirections = [
+	Vector2( 1, 0),
+	Vector2( 0, 1),
+	Vector2(-1, 0),
+	Vector2( 0,-1),
+	Vector2( 1, 1),
+	Vector2(-1, 1),
+	Vector2( 1,-1),
+	Vector2(-1,-1),]
 
 func _ready():
 	SetVisualGrids()
@@ -65,6 +75,7 @@ func SetVisualGrids():
 	var count = 0
 #	var MinPos = Vector2(0,0)
 	var MaxPos = Vector2(0,0)
+#	print(str(Zones))
 	for zone in Zones:
 		if zone.interzone:
 			continue
@@ -82,7 +93,8 @@ func SetVisualGrids():
 		newMesh.size = Vector3(CellsNum.x * 10, 0.01, CellsNum.y * 10)
 		newGrid.mesh = newMesh
 		count += 1
-#	AutofilGridMap(MaxPos)
+	GridSize = MaxPos
+	AutofilGridMap(MaxPos)
 	pass
 
 #Устанавливает выбранной зоне цвет и модификатор альфа-канала
@@ -100,12 +112,100 @@ func AutofilGridMap(EndPosition):
 	for i in (EndPosition.x):
 		var line = []
 		for j in EndPosition.y:
-			var point = Vector2(i,j)
-			line.append(point)
+#			var point = Vector2(i,j)
+#			line.append(point)
+			line.append(GridPoint.new())
 		Grid.append(line)
 #			print(str(Vector2(i,j)))
 #			gridMap.set_cell_item(i, 0, j, 0)
 #			pass
 	pass
 
+
+#Волнами сканируем поле и ищем короткий путь
+func WaveFindPath(startPos, finPos):
+	var newGrid = Grid.duplicate(true)
+	var ScanningNodes = [startPos]
+	for node in ScanningNodes:
+		if node == finPos:
+			return SetTrace(finPos, newGrid)
+		else:
+			for dir in RoundDirections:
+				if isCellCheck(node, dir, newGrid):
+					ScanningNodes.append(node + dir)
+	var startString = "Startpos - %s, Endpos - %s"
+	var actualstring = startString % [str(startPos), str(finPos)]
+	print(actualstring)
+	print(str(Grid))
+	print("Путь не был найден")
+	return []
+	pass
+
+#Проверяем, доступна ли нам соседняя ячейка по направлению dir ячейка и если да, то увеличиваем её вес на 1
+func isCellCheck(pos, direction, gridArr):
+#	Проверка соседней клетки pos по направлению direction
+	var gridPos = (pos) + direction
+#	Проверка, находится ли точка в рамках сетки
+	if InGridCheck(pos, direction):
+#		Проверка, что точка свободна для передвижения
+		if  gridArr[gridPos.x][gridPos.y].content == GridPoint.EMPTY:
+#			print(str(gridArr[pos.x][pos.y]))
+			var step = 0
+#			Проверка, что предыдущая точка не занята игроком и определение её шага
+			if  gridArr[pos.x][pos.y].content != GridPoint.PLAYER:
+				step = gridArr[pos.x][pos.y].step
+#			Увеличение шага текущей точки на 1 по сравнению с прошлой
+			gridArr[gridPos.x][gridPos.y].inPath = true
+			gridArr[gridPos.x][gridPos.y].step = step + 1
+			return true
+	return false
+	pass
+
+#Строим путь обратно от финальной ячейки по полю
+func SetTrace(finPos, gridArr):
+	var newTrace = [finPos]
+	var stepNum = gridArr[finPos.x][finPos.y].step
+	while stepNum != 1:
+#		Перебираем окружающие ячейки
+		for dir in RoundDirections:
+#			Берём одну из ближайших ячеек, относительно нашей сдвинутой на dir
+			var NextPoint = NextStep(newTrace[-1], gridArr, dir)
+#			Проверяем, что её вес меньше веса текущей ячейки
+			if gridArr[NextPoint.x][NextPoint.y].step < stepNum:
+#				Если да, уменьшаем текущий вес ячейки, добавляем выбранную ячейку в массив пути и выходим из цикла перебора окружающих ячеек
+				stepNum = gridArr[NextPoint.x][NextPoint.y].step
+				newTrace.append(NextPoint)
+				break
+	print("Trace - " + str(newTrace))
+	return newTrace
+	pass
+
+#Проверяем, что следующая, по направлению dir, ячейка весит меньше текущей
+#Если да, возвращаем положение этой новой ячейки, иначе возвращаем старое значение
+func NextStep(pos, nGrid, dir):
+	if (InGridCheck(pos, dir) &&
+			nGrid[pos.x + dir.x][pos.y + dir.y].inPath &&
+			nGrid[pos.x + dir.x][pos.y + dir.y].step < nGrid[pos.x][pos.y].step):
+		return     Vector2(pos.x + dir.x, pos.y + dir.y)
+	else:
+		return     Vector2(pos.x, pos.y)
+	pass
+
+#Проверяем, что ячейка находится внутри сетки
+func InGridCheck(pos, direction):
+	var gridPos = (pos) + direction
+	if gridPos.x < GridSize.x && gridPos.x >= 0:
+		if gridPos.y < GridSize.y && gridPos.y >= 0:
+			return true
+	return false
+	pass
+
+#Переворачиваем массив и заполняем его мировыми координатами
+#func SetPath(trace):
+#	trace.invert()
+#	var finalPath = []
+#	for point in trace:
+#		finalPath.append(map_to_world(point) + half_tile_size)
+#	return finalPath
+#	pass
 

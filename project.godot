@@ -13,9 +13,15 @@ _global_script_classes=[ {
 "class": "Character",
 "language": "GDScript",
 "path": "res://Resources/Scripts/3DScripts/Character.gd"
+}, {
+"base": "Node",
+"class": "GridPoint",
+"language": "GDScript",
+"path": "res://Resources/Entities/NodeObjects/GridPoint.gd"
 } ]
 _global_script_class_icons={
-"Character": ""
+"Character": "",
+"GridPoint": "res://Resources/Images/GUI/SimpleIcons/White/1x/target.png"
 }
 
 [application]

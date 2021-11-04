@@ -74,22 +74,6 @@ albedo_color = Color( 0.286275, 0.392157, 0.286275, 1 )
 [node name="Arena" type="Spatial"]
 script = ExtResource( 7 )
 GridYValue = 0.5
-Zones = [ {
-"EndPos": Vector2( 10, 3 ),
-"StartPos": Vector2( 0, 0 ),
-"ZoneId": 0,
-"ZoneName": "Zone1"
-}, {
-"EndPos": Vector2( 10, 7 ),
-"StartPos": Vector2( 0, 4 ),
-"ZoneId": 1,
-"ZoneName": "Zone2"
-}, {
-"EndPos": Vector2( 10, 11 ),
-"StartPos": Vector2( 0, 8 ),
-"ZoneId": 2,
-"ZoneName": "Zone3"
-} ]
 GridsPath = NodePath("Environment/GridVisualizers")
 GridMapPath = NodePath("Environment/GridMap")
 CharactersNodePath = NodePath("CharactersNode")
