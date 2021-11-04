@@ -1,0 +1,32 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://Resources/Entities/2D/2DPlayer.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Resources/Scripts/2DScripts/Entities/SimpleGrid.gd" type="Script" id=2]
+[ext_resource path="res://Resources/Scripts/2DScripts/Entities/GridVisualizer.gd" type="Script" id=3]
+[ext_resource path="res://Resources/Scripts/2DScripts/Entities/Visualizer.gd" type="Script" id=4]
+[ext_resource path="res://Resources/Images/Objects/Hex/Terrain/Dirt/dirt_01.png" type="Texture" id=5]
+
+[node name="GridScene" type="Node2D"]
+
+[node name="Grid" type="TileMap" parent="."]
+cell_size = Vector2( 64, 54 )
+cell_half_offset = 0
+format = 1
+script = ExtResource( 2 )
+_player = NodePath("2DPlayer")
+
+[node name="GridVisualizer" type="Node2D" parent="Grid"]
+pause_mode = 1
+visible = false
+script = ExtResource( 3 )
+LINE_COLOR = Color( 0.372549, 0.501961, 0.72549, 0.756863 )
+LINE_WIDTH = 2
+
+[node name="Visualizer" type="Node2D" parent="Grid"]
+script = ExtResource( 4 )
+CellScale = 0.5
+CellImage = ExtResource( 5 )
+GridPath = NodePath("..")
+
+[node name="2DPlayer" parent="Grid" instance=ExtResource( 1 )]
+position = Vector2( 313.923, 219.409 )

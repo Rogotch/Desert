@@ -1,0 +1,26 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://Resources/Shaders/3D/GridVisualizer.gdshader" type="Shader" id=1]
+[ext_resource path="res://Resources/Images/Shaders/noise_combined.png" type="Texture" id=2]
+
+[sub_resource type="CubeMesh" id=1]
+size = Vector3( 30, 0.01, 30 )
+
+[sub_resource type="ShaderMaterial" id=2]
+resource_local_to_scene = true
+shader = ExtResource( 1 )
+shader_param/AlfaMult = 1.0
+shader_param/XYMult = Vector2( 1, 1 )
+shader_param/RGBModifier = Vector3( 1, 1, 1 )
+shader_param/speed = 0.181
+shader_param/Offset = Vector2( 5, 5 )
+shader_param/CellSize = 10.0
+shader_param/LineWidth = 0.59
+shader_param/color1 = Color( 1, 1, 1, 0 )
+shader_param/color2 = Color( 0, 1, 0.937255, 0.635294 )
+shader_param/noize_img = ExtResource( 2 )
+
+[node name="Line" type="MeshInstance"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 115, 1, 15 )
+mesh = SubResource( 1 )
+material/0 = SubResource( 2 )

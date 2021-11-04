@@ -1,0 +1,53 @@
+[gd_scene load_steps=7 format=2]
+
+[ext_resource path="res://Resources/Scripts/3DScripts/Character.gd" type="Script" id=1]
+
+[sub_resource type="CapsuleShape" id=1]
+height = 1.04
+
+[sub_resource type="SpatialMaterial" id=2]
+albedo_color = Color( 1, 0.678431, 0, 1 )
+
+[sub_resource type="SpatialMaterial" id=3]
+albedo_color = Color( 0, 0, 0, 1 )
+
+[sub_resource type="SpatialMaterial" id=4]
+flags_transparent = true
+albedo_color = Color( 0.00784314, 1, 0, 0.345098 )
+
+[sub_resource type="CylinderMesh" id=5]
+material = SubResource( 4 )
+top_radius = 0.839
+bottom_radius = 0.001
+height = 1.549
+
+[node name="Character" type="KinematicBody"]
+script = ExtResource( 1 )
+SelecterPath = NodePath("Selecter")
+
+[node name="CollisionShape" type="CollisionShape" parent="."]
+transform = Transform( 1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 2, 0 )
+shape = SubResource( 1 )
+
+[node name="Rig" type="Spatial" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0 )
+
+[node name="CSGSphere" type="CSGSphere" parent="Rig"]
+material = SubResource( 2 )
+
+[node name="CSGBox" type="CSGBox" parent="Rig/CSGSphere"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.193721, -0.622877 )
+width = 1.46217
+height = 0.539817
+depth = 0.82082
+material = SubResource( 3 )
+
+[node name="Camera" type="Camera" parent="."]
+transform = Transform( 1, 0, 0, 0, 0.803473, 0.595342, 0, -0.595342, 0.803473, 0, 8.35235, 9.13502 )
+fov = 47.9936
+
+[node name="Selecter" type="MeshInstance" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.522, 0 )
+visible = false
+mesh = SubResource( 5 )
+material/0 = null
