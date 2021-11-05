@@ -47,8 +47,10 @@ var ActivePointID = null
 func _ready():
 	add_to_group("Units")
 	movement = MaxMovement
+	yield(get_tree(), "idle_frame")
 	var V3Pos = Grid.world_to_map(transform.origin)
 	ZonePosition = Vector2(V3Pos.x, V3Pos.z)
+#	Arena.Grid[ZonePosition.x][ZonePosition.y].content = GridPoint.PLAYER
 	ZoneId = Arena.GetActualZoneId(ZonePosition)
 	print("ZoneId - " + str(ZoneId))
 #	print(str((Grid.world_to_map(transform.origin))))
@@ -84,8 +86,8 @@ func _physics_process(delta):
 			if path_ind == path.size():
 				print("EndPath!")
 				Marker.visible = false
-		else:
-			move_and_slide(move_vec.normalized() * speed, Vector3.UP)
+#		else:
+#			move_and_slide(move_vec.normalized() * speed, Vector3.UP)
 	pass
 
 func move_to(target_pos):

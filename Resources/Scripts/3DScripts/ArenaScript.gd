@@ -70,6 +70,17 @@ func GetZoneByID(id):
 			return zone
 	pass
 
+#Даёт зону по позиции объекта в ней
+func GetZoneByPosition(objPos):
+	for zone in Zones:
+		if (zone.StartPos.x <= objPos.x &&
+			zone.StartPos.y <= objPos.y &&
+			zone.EndPos.x > objPos.x &&
+			zone.EndPos.y > objPos.y):
+				return zone
+	return null
+	pass
+
 #Устанавливает визуальное отображение сетки
 func SetVisualGrids():
 	var count = 0
@@ -93,6 +104,7 @@ func SetVisualGrids():
 		newMesh.size = Vector3(CellsNum.x * 10, 0.01, CellsNum.y * 10)
 		newGrid.mesh = newMesh
 		count += 1
+	print("MaxPos - " + str(MaxPos))
 	GridSize = MaxPos
 	AutofilGridMap(MaxPos)
 	pass
@@ -112,22 +124,23 @@ func AutofilGridMap(EndPosition):
 	for i in (EndPosition.x):
 		var line = []
 		for j in EndPosition.y:
-#			var point = Vector2(i,j)
-#			line.append(point)
-			line.append(GridPoint.new())
+			var NewPoint = GridPoint.new()
+			var pointZone = GetZoneByPosition(Vector2(i,j))
+			NewPoint.zoneID = pointZone.ZoneId
+			NewPoint.interZonePoint = pointZone.interzone
+			line.append(NewPoint)
 		Grid.append(line)
-#			print(str(Vector2(i,j)))
-#			gridMap.set_cell_item(i, 0, j, 0)
-#			pass
 	pass
-
 
 #Волнами сканируем поле и ищем короткий путь
 func WaveFindPath(startPos, finPos):
+	Grid[startPos.x][startPos.y].step = 0
 	var newGrid = Grid.duplicate(true)
 	var ScanningNodes = [startPos]
 	for node in ScanningNodes:
 		if node == finPos:
+			print("Дошли до обратной постройки пути!")
+#			break
 			return SetTrace(finPos, newGrid)
 		else:
 			for dir in RoundDirections:
@@ -136,9 +149,24 @@ func WaveFindPath(startPos, finPos):
 	var startString = "Startpos - %s, Endpos - %s"
 	var actualstring = startString % [str(startPos), str(finPos)]
 	print(actualstring)
-	print(str(Grid))
+#	print(str(Grid))
+	PrintGrid(finPos)
 	print("Путь не был найден")
 	return []
+	pass
+
+func PrintGrid(finPos):
+	for i in Grid.size():
+		var Line = ""
+		for j in Grid[0].size():
+#			print()
+			if Vector2(i,j) == finPos:
+				Line += ("  <!>")
+			elif Grid[i][j].step == null:
+				Line += "     "
+			else:
+				Line += ("%5d" % Grid[i][j].step)
+		print(str(Line))
 	pass
 
 #Проверяем, доступна ли нам соседняя ячейка по направлению dir ячейка и если да, то увеличиваем её вес на 1
@@ -148,14 +176,13 @@ func isCellCheck(pos, direction, gridArr):
 #	Проверка, находится ли точка в рамках сетки
 	if InGridCheck(pos, direction):
 #		Проверка, что точка свободна для передвижения
-		if  gridArr[gridPos.x][gridPos.y].content == GridPoint.EMPTY:
+		if  gridArr[gridPos.x][gridPos.y].content == GridPoint.EMPTY && gridArr[gridPos.x][gridPos.y].step == null:
 #			print(str(gridArr[pos.x][pos.y]))
 			var step = 0
 #			Проверка, что предыдущая точка не занята игроком и определение её шага
-			if  gridArr[pos.x][pos.y].content != GridPoint.PLAYER:
+			if  gridArr[pos.x][pos.y].step != null:
 				step = gridArr[pos.x][pos.y].step
 #			Увеличение шага текущей точки на 1 по сравнению с прошлой
-			gridArr[gridPos.x][gridPos.y].inPath = true
 			gridArr[gridPos.x][gridPos.y].step = step + 1
 			return true
 	return false
@@ -177,14 +204,22 @@ func SetTrace(finPos, gridArr):
 				newTrace.append(NextPoint)
 				break
 	print("Trace - " + str(newTrace))
+	ClearPoints()
+#	get_tree().call_group("GridPoints", "ClearPoint")
 	return newTrace
+	pass
+
+func ClearPoints():
+	for i in Grid.size():
+		for j in Grid[0].size():
+			Grid[i][j].ClearPoint()
 	pass
 
 #Проверяем, что следующая, по направлению dir, ячейка весит меньше текущей
 #Если да, возвращаем положение этой новой ячейки, иначе возвращаем старое значение
 func NextStep(pos, nGrid, dir):
 	if (InGridCheck(pos, dir) &&
-			nGrid[pos.x + dir.x][pos.y + dir.y].inPath &&
+			nGrid[pos.x + dir.x][pos.y + dir.y].step != null &&
 			nGrid[pos.x + dir.x][pos.y + dir.y].step < nGrid[pos.x][pos.y].step):
 		return     Vector2(pos.x + dir.x, pos.y + dir.y)
 	else:
@@ -194,10 +229,34 @@ func NextStep(pos, nGrid, dir):
 #Проверяем, что ячейка находится внутри сетки
 func InGridCheck(pos, direction):
 	var gridPos = (pos) + direction
+#	print("GridSize - "+ str(GridSize))
 	if gridPos.x < GridSize.x && gridPos.x >= 0:
 		if gridPos.y < GridSize.y && gridPos.y >= 0:
 			return true
 	return false
+	pass
+
+func CheckTrace(_Character, endPos):
+	var trace = WaveFindPath(_Character.ZonePosition, endPos)
+	trace.invert()
+	var newTrace = []
+	var Cost = {movement = 0, zonePoints = 0}
+	for tracePosition in trace:
+		if Grid[tracePosition.x][tracePosition.y].CheckMovement(_Character, Cost):
+			print("Один есть!")
+			newTrace.append(tracePosition)
+		else:
+			break
+	print("StartTrace - " + str(trace))
+	print("FinalTrace - " + str(newTrace))
+	print("Cost - " + str(Cost))
+	
+	return Cost
+#	_Character.ZoneId
+#	_Character.movement
+#	_Character.zonePoints
+	
+#	var cost = {movement = 0, zonePoints = 0}
 	pass
 
 #Переворачиваем массив и заполняем его мировыми координатами
@@ -208,4 +267,3 @@ func InGridCheck(pos, direction):
 #		finalPath.append(map_to_world(point) + half_tile_size)
 #	return finalPath
 #	pass
-
