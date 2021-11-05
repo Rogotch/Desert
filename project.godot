@@ -17,7 +17,7 @@ _global_script_classes=[ {
 "base": "Node",
 "class": "GridPoint",
 "language": "GDScript",
-"path": "res://Resources/Entities/NodeObjects/GridPoint.gd"
+"path": "res://Resources/Scripts/NodeScripts/GridPoint.gd"
 } ]
 _global_script_class_icons={
 "Character": "",

@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=2]
 
-[ext_resource path="res://Resources/Entities/NodeObjects/GridPoint.gd" type="Script" id=1]
+[ext_resource path="res://Resources/Scripts/NodeScripts/GridPoint.gd" type="Script" id=1]
 
 [node name="GridPoint" type="Node"]
 script = ExtResource( 1 )
