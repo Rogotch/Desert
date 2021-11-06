@@ -2,7 +2,7 @@ extends Node
 
 class_name GridPoint, "res://Resources/Images/GUI/SimpleIcons/White/1x/target.png"
 
-enum {EMPTY = 0, PLAYER = 1, OBSTACLE = 2}
+enum {EMPTY = 0, CHARACTER = 1, OBSTACLE = 2}
 
 var step = null
 var content = EMPTY
@@ -37,5 +37,19 @@ func CheckMovement(_character, lastPointsCost):
 			else:
 #				Иначе верни результат в зависимости от того, достаточно ли у игрока очков передвижения и увеличь стоимость передвижения на 1
 				lastPointsCost.movement += 1
-				return (_character.movement > lastPointsCost.movement)
+				return (_character.movement >= lastPointsCost.movement)
+	pass
+
+func OnCellStart():
+	pass
+
+func OnCellEnd():
+	pass
+
+func OnCellMove(_Character):
+	if interZonePoint:
+		_Character.zonePoints -= 1
+	else:
+		if !_Character.freeMovement:
+			_Character.movement -= 1
 	pass

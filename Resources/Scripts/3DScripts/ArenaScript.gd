@@ -250,14 +250,23 @@ func CheckTrace(_Character, endPos):
 	print("StartTrace - " + str(trace))
 	print("FinalTrace - " + str(newTrace))
 	print("Cost - " + str(Cost))
-	
-	return Cost
+	print("GlobalPath - " + str(SetGlobalPath(newTrace)))
+	return {path = newTrace, cost = Cost}
 #	_Character.ZoneId
 #	_Character.movement
 #	_Character.zonePoints
 	
 #	var cost = {movement = 0, zonePoints = 0}
 	pass
+
+func SetGlobalPath(mapPath):
+	var finalPath = []
+	for point in mapPath:
+		var pathPoint = gridMap.map_to_world(point.x, 0, point.y)
+		finalPath.append(pathPoint)
+	return finalPath
+	pass
+
 
 #Переворачиваем массив и заполняем его мировыми координатами
 #func SetPath(trace):

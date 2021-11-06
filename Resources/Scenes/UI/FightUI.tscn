@@ -10,6 +10,8 @@ script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
+_UnitUI = NodePath("UnitInformation")
+UnitUIOffset = Vector2( -10, -10 )
 
 [node name="EndTurnButton" type="Button" parent="."]
 anchor_left = 1.0
@@ -22,5 +24,37 @@ text = "EndTurn"
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="UnitInformation" type="Control" parent="."]
+mouse_filter = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Strings" type="VBoxContainer" parent="UnitInformation"]
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -40.0
+margin_top = -50.0
+mouse_filter = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ZonePoints" type="Label" parent="UnitInformation/Strings"]
+margin_right = 40.0
+margin_bottom = 14.0
+
+[node name="Movement" type="Label" parent="UnitInformation/Strings"]
+margin_top = 18.0
+margin_right = 40.0
+margin_bottom = 32.0
+
+[node name="ActionPoints" type="Label" parent="UnitInformation/Strings"]
+margin_top = 36.0
+margin_right = 40.0
+margin_bottom = 50.0
 
 [connection signal="pressed" from="EndTurnButton" to="." method="NextTurn"]
