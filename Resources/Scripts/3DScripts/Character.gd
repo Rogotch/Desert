@@ -64,7 +64,7 @@ func _ready():
 #	transform.origin = newPosition
 	pass # Replace with function body.
 
-func _physics_process(delta):
+func _physics_process(_delta):
 	if path.size() > 0 && (movement > 0 || freeMovement):
 		velocity = transform.origin.direction_to(path[0]) * speed
 		if transform.origin.distance_to(path[0]) > 1:

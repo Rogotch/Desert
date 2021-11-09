@@ -14,7 +14,7 @@ onready var Arena  = get_node(ArenaPath)
 func _ready():
 	pass # Replace with function body.
 
-func _input_event(camera, event, click_position, click_normal, shape_idx):
+func _input_event(_camera, event, click_position, _click_normal, _shape_idx):
 #	if event is InputEventMouseMotion:
 #		print("Motion!" )
 #		var mapPoint = Grid.world_to_map(click_position)

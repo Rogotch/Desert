@@ -29,7 +29,13 @@ const RoundDirections = [
 	Vector2( 1, 1),
 	Vector2(-1, 1),
 	Vector2( 1,-1),
-	Vector2(-1,-1),]
+	Vector2(-1,-1)]
+
+const RectDirections = [
+	Vector2( 1, 0),
+	Vector2( 0, 1),
+	Vector2(-1, 0),
+	Vector2( 0,-1)]
 
 func _ready():
 	SetVisualGrids()
@@ -134,24 +140,31 @@ func AutofilGridMap(EndPosition):
 
 #Волнами сканируем поле и ищем короткий путь
 func WaveFindPath(startPos, finPos):
-	Grid[startPos.x][startPos.y].step = 0
-	var newGrid = Grid.duplicate(true)
-	var ScanningNodes = [startPos]
-	for node in ScanningNodes:
-		if node == finPos:
-			print("Дошли до обратной постройки пути!")
-#			break
-			return SetTrace(finPos, newGrid)
-		else:
-			for dir in RoundDirections:
-				if isCellCheck(node, dir, newGrid):
-					ScanningNodes.append(node + dir)
-	var startString = "Startpos - %s, Endpos - %s"
-	var actualstring = startString % [str(startPos), str(finPos)]
-	print(actualstring)
-#	print(str(Grid))
-	PrintGrid(finPos)
-	print("Путь не был найден")
+	var BigTrace = []
+	var actualZone = GetZoneByPosition(startPos)
+	var ZonePoints = [{start = actualZone.StartPos, end = actualZone.EndPos}, {start = Vector2.ZERO, end = GridSize}]
+	for zPoint in ZonePoints:
+		Grid[startPos.x][startPos.y].step = 0
+		var newGrid = Grid.duplicate(true)
+		var ScanningNodes = [startPos]
+		for node in ScanningNodes:
+			if node == finPos:
+				print("Дошли до обратной постройки пути!")
+	#			break
+				PrintGrid(finPos)
+				return SetTrace(finPos, newGrid)
+			else:
+				var DirectionArr = (RectDirections if Grid[node.x][node.y].interZonePoint else RoundDirections)
+				for dir in DirectionArr:
+					if isCellCheck(node, dir, newGrid, zPoint.start, zPoint.end):
+						ScanningNodes.append(node + dir)
+		var startString = "Startpos - %s, Endpos - %s"
+		var actualstring = startString % [str(startPos), str(finPos)]
+		print(actualstring)
+	#	print(str(Grid))
+		PrintGrid(finPos)
+		ClearPoints()
+		print("Путь не был найден")
 	return []
 	pass
 
@@ -170,11 +183,11 @@ func PrintGrid(finPos):
 	pass
 
 #Проверяем, доступна ли нам соседняя ячейка по направлению dir ячейка и если да, то увеличиваем её вес на 1
-func isCellCheck(pos, direction, gridArr):
+func isCellCheck(pos, direction, gridArr, startZPoint, endZPoint):
 #	Проверка соседней клетки pos по направлению direction
 	var gridPos = (pos) + direction
 #	Проверка, находится ли точка в рамках сетки
-	if InGridCheck(pos, direction):
+	if InGridCheck(pos, direction, startZPoint, endZPoint):
 #		Проверка, что точка свободна для передвижения
 		if  gridArr[gridPos.x][gridPos.y].content == GridPoint.EMPTY && gridArr[gridPos.x][gridPos.y].step == null:
 #			print(str(gridArr[pos.x][pos.y]))
@@ -194,7 +207,13 @@ func SetTrace(finPos, gridArr):
 	var stepNum = gridArr[finPos.x][finPos.y].step
 	while stepNum != 1:
 #		Перебираем окружающие ячейки
+#		var DirectionArr = (RectDirections if Grid[newTrace[-1].x][newTrace[-1].y].interZonePoint else RoundDirections)
 		for dir in RoundDirections:
+#			Если и текущая и прошлая точки находятся в междузонье, то пропусти текущую точку
+			if (InGridCheck(newTrace[-1], dir, Vector2.ZERO, GridSize) &&
+			Grid[newTrace[-1].x][newTrace[-1].y].interZonePoint &&
+			gridArr[newTrace[-1].x + dir.x][newTrace[-1].y + dir.y].interZonePoint):
+				continue
 #			Берём одну из ближайших ячеек, относительно нашей сдвинутой на dir
 			var NextPoint = NextStep(newTrace[-1], gridArr, dir)
 #			Проверяем, что её вес меньше веса текущей ячейки
@@ -218,7 +237,7 @@ func ClearPoints():
 #Проверяем, что следующая, по направлению dir, ячейка весит меньше текущей
 #Если да, возвращаем положение этой новой ячейки, иначе возвращаем старое значение
 func NextStep(pos, nGrid, dir):
-	if (InGridCheck(pos, dir) &&
+	if (InGridCheck(pos, dir, Vector2.ZERO, GridSize) &&
 			nGrid[pos.x + dir.x][pos.y + dir.y].step != null &&
 			nGrid[pos.x + dir.x][pos.y + dir.y].step < nGrid[pos.x][pos.y].step):
 		return     Vector2(pos.x + dir.x, pos.y + dir.y)
@@ -227,11 +246,11 @@ func NextStep(pos, nGrid, dir):
 	pass
 
 #Проверяем, что ячейка находится внутри сетки
-func InGridCheck(pos, direction):
+func InGridCheck(pos, direction, ZoneStartPosition, ZoneEndPosition):
 	var gridPos = (pos) + direction
 #	print("GridSize - "+ str(GridSize))
-	if gridPos.x < GridSize.x && gridPos.x >= 0:
-		if gridPos.y < GridSize.y && gridPos.y >= 0:
+	if gridPos.x < ZoneEndPosition.x && gridPos.x >= ZoneStartPosition.x:
+		if gridPos.y < ZoneEndPosition.y && gridPos.y >= ZoneStartPosition.y:
 			return true
 	return false
 	pass
@@ -251,6 +270,31 @@ func CheckTrace(_Character, endPos):
 	print("FinalTrace - " + str(newTrace))
 	print("Cost - " + str(Cost))
 	print("GlobalPath - " + str(SetGlobalPath(newTrace)))
+#	Проверяем, что персонаж не перескакивает через междузонье в свою же зону
+
+#	Не дело, надо формировать запрос на моменте построения пути, а не обрезать готовый путь
+#	Надо если конечная точка и финальная точка пути находятся внутри одной зоны, то проводить поиск пути только внутри этой зоны
+#	Иначе уже охватывать зону больше, но с условием перехода в следующую зону, а не скачком через междузонье
+#	По сути надо проводить поиск пути в несколько этапов:
+#	Сначала локальный - ищем путь в своей зоне, а потом глобальный - ищем путь среди всех зон
+#	Так в приоритете будет путь без траты очков зоны
+#	while true:
+#		var count = 0
+##		Перебираем все точки пути
+#		for pPoint in newTrace:
+##			Если текущая точка первая в списке пути, то берём положение персонажа, иначе берём предыдущую точку
+#			var lpPoint = (_Character.ZonePosition if count == 0 else newTrace[count - 1])
+##			Если следующая точка не выходит за рамки массива пути, то берём следующую точку
+#			var npPoint = newTrace[(count + 1 if count + 1 != newTrace.size() else count)]
+#			if Grid[pPoint.x][pPoint.y].interZonePoint && pPoint == npPoint:
+#				newTrace.remove(count)
+#				break
+#			if (Grid[pPoint.x][pPoint.y].interZonePoint && # Если текущая точка - междузонье
+#			    (Grid[newTrace[count + 1].x][newTrace[count + 1].y].interZonePoint || # И если следующая точка - междузонье
+#				Grid[lpPoint.x][lpPoint.y].zoneID == Grid[npPoint.x][npPoint.y].zoneID)): # Или прошлая точка находится в той же зоне, что и следующая
+##				То удали все точки дальше
+#				pass
+#			count += 1
 	return {path = newTrace, cost = Cost}
 #	_Character.ZoneId
 #	_Character.movement
