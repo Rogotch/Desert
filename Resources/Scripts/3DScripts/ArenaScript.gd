@@ -156,7 +156,15 @@ func WaveFindPath(startPos, finPos):
 			else:
 				var DirectionArr = (RectDirections if Grid[node.x][node.y].interZonePoint else RoundDirections)
 				for dir in DirectionArr:
-					if isCellCheck(node, dir, newGrid, zPoint.start, zPoint.end):
+					# Проверка, чтобы проход через междузонье был строго прямо
+					if (InGridCheck(node, dir, zPoint.start, zPoint.end) && 
+						(Grid[node.x][node.y].interZonePoint && 
+						 Grid[node.x + dir.x][node.y + dir.y].interZonePoint ||
+						 Grid[node.x + dir.x][node.y + dir.y].interZonePoint &&
+						abs(dir.x) + abs(dir.y) > 1)):
+						continue
+						# Проверка, что следующая точка является доступной для перемещения и находится в рамках зоны
+					elif isCellCheck(node, dir, newGrid, zPoint.start, zPoint.end):
 						ScanningNodes.append(node + dir)
 		var startString = "Startpos - %s, Endpos - %s"
 		var actualstring = startString % [str(startPos), str(finPos)]
@@ -166,6 +174,82 @@ func WaveFindPath(startPos, finPos):
 		ClearPoints()
 		print("Путь не был найден")
 	return []
+	pass
+
+##Волнами берём зону передвижения игрока
+#func WavePathZone(character):
+#	var BigTrace = []
+#	var startPos = character.ZonePosition
+#	var actualZone = GetZoneByID(character.ZoneId)
+#	var newGrid = Grid.duplicate(true)
+#	var ScanningNodes = [startPos]
+#	for node in ScanningNodes:
+#		var DirectionArr = (RectDirections if Grid[node.x][node.y].interZonePoint else RoundDirections)
+#		for dir in DirectionArr:
+#			if isCellCheck(node, dir, newGrid, zPoint.start, zPoint.end):
+#				ScanningNodes.append(node + dir)
+##		PrintGrid(finPos)
+#		ClearPoints()
+#		print("Путь не был найден")
+#	return []
+#	pass
+
+func SetZoneGrid(character):
+	var cell = {movement = 0, zonePoints = 0, interzoneDir = Vector2.ZERO}
+	var startPos = character.ZonePosition
+	var movValue = character.movement
+	var zonValue = character.zonePoints
+	var ScanningNodes = {startPos : cell}
+	var nodesKeys = ScanningNodes.keys()
+	for node in nodesKeys:
+		var DirectionArr = (RectDirections if Grid[node.x][node.y].interZonePoint else RoundDirections)
+		for dir in DirectionArr:
+			# Проверка, чтобы проход через междузонье был строго прямо
+			if InGridCheck(node, dir, Vector2.ZERO, GridSize):
+				# Проверка, чтобы в интерзону можно было входить и выходить только прямо, а не диагонально
+				# Или проверка, чтобы нельзя было проходить диагонально при наличии боковых препятствий
+				if((Grid[node.x][node.y].interZonePoint && 
+					 Grid[node.x + dir.x][node.y + dir.y].interZonePoint ||
+					 Grid[node.x + dir.x][node.y + dir.y].interZonePoint &&
+					 abs(dir.x) + abs(dir.y) > 1) || 
+					(abs(dir.x) + abs(dir.y) > 1 &&
+					(Grid[node.x][node.y + dir.y].content != GridPoint.EMPTY ||
+					 Grid[node.x + dir.x][node.y].content != GridPoint.EMPTY))):
+					continue
+				else:
+					var gridPos = node + dir
+					# Если клетка пуста и её ещё нет в словаре сканированных клеток
+					if Grid[gridPos.x][gridPos.y].content == GridPoint.EMPTY && !ScanningNodes.has(gridPos):
+						# Поставь флаг, не интерзона ли это
+						var flag = Grid[gridPos.x][gridPos.y].interZonePoint
+						# Если не интерзона, увеличь стоимость передвижения на 1
+						var movementCost   = ScanningNodes[node].movement   + (0 if flag else 1)
+						# Если интерзона, увеличь стоимость очков зоны на 1
+						var zonePointsCost = ScanningNodes[node].zonePoints + (1 if flag else 0)
+						# Если интерзона, укажи направление прохода
+						var interzoneDir   = (dir if flag else Vector2.ZERO)
+						# Если стоимость укладывается в имеющиеся параметры персонажа, то добавь эту точку в словарь
+						if movValue >= movementCost && zonValue >= zonePointsCost:
+							ScanningNodes[gridPos] = {movement = movementCost, zonePoints = zonePointsCost, interzoneDir = Vector2.ZERO}
+							nodesKeys.append(gridPos)
+						pass
+					pass
+				pass
+			pass
+		pass
+	CreateVisualGrid(ScanningNodes)
+	pass
+
+func CreateVisualGrid(dic):
+	for i in Grid.size():
+		var Line = ""
+		for j in Grid[i].size():
+			if dic.has(Vector2(i, j)):
+				Line += "%5s" % (str(dic[Vector2(i, j)].movement) if !Grid[i][j].interZonePoint else "!")
+			else:
+				Line += "%5s" % ""
+				pass
+		print(str(Line))
 	pass
 
 func PrintGrid(finPos):
@@ -191,13 +275,17 @@ func isCellCheck(pos, direction, gridArr, startZPoint, endZPoint):
 #		Проверка, что точка свободна для передвижения
 		if  gridArr[gridPos.x][gridPos.y].content == GridPoint.EMPTY && gridArr[gridPos.x][gridPos.y].step == null:
 #			print(str(gridArr[pos.x][pos.y]))
-			var step = 0
-#			Проверка, что предыдущая точка не занята игроком и определение её шага
-			if  gridArr[pos.x][pos.y].step != null:
-				step = gridArr[pos.x][pos.y].step
-#			Увеличение шага текущей точки на 1 по сравнению с прошлой
-			gridArr[gridPos.x][gridPos.y].step = step + 1
-			return true
+#			Проверка, что при диагональном переходе обе боковые клетки пусты
+			if !(abs(direction.x) + abs(direction.y) > 1 &&
+			(gridArr[pos.x][pos.y + direction.y].content != GridPoint.EMPTY ||
+			 gridArr[pos.x + direction.x][pos.y].content != GridPoint.EMPTY)):
+				var step = 0
+	#			Проверка, что предыдущая точка не занята игроком и определение её шага
+				if  gridArr[pos.x][pos.y].step != null:
+					step = gridArr[pos.x][pos.y].step
+	#			Увеличение шага текущей точки на 1 по сравнению с прошлой
+				gridArr[gridPos.x][gridPos.y].step = step + 1
+				return true
 	return false
 	pass
 
@@ -270,37 +358,7 @@ func CheckTrace(_Character, endPos):
 	print("FinalTrace - " + str(newTrace))
 	print("Cost - " + str(Cost))
 	print("GlobalPath - " + str(SetGlobalPath(newTrace)))
-#	Проверяем, что персонаж не перескакивает через междузонье в свою же зону
-
-#	Не дело, надо формировать запрос на моменте построения пути, а не обрезать готовый путь
-#	Надо если конечная точка и финальная точка пути находятся внутри одной зоны, то проводить поиск пути только внутри этой зоны
-#	Иначе уже охватывать зону больше, но с условием перехода в следующую зону, а не скачком через междузонье
-#	По сути надо проводить поиск пути в несколько этапов:
-#	Сначала локальный - ищем путь в своей зоне, а потом глобальный - ищем путь среди всех зон
-#	Так в приоритете будет путь без траты очков зоны
-#	while true:
-#		var count = 0
-##		Перебираем все точки пути
-#		for pPoint in newTrace:
-##			Если текущая точка первая в списке пути, то берём положение персонажа, иначе берём предыдущую точку
-#			var lpPoint = (_Character.ZonePosition if count == 0 else newTrace[count - 1])
-##			Если следующая точка не выходит за рамки массива пути, то берём следующую точку
-#			var npPoint = newTrace[(count + 1 if count + 1 != newTrace.size() else count)]
-#			if Grid[pPoint.x][pPoint.y].interZonePoint && pPoint == npPoint:
-#				newTrace.remove(count)
-#				break
-#			if (Grid[pPoint.x][pPoint.y].interZonePoint && # Если текущая точка - междузонье
-#			    (Grid[newTrace[count + 1].x][newTrace[count + 1].y].interZonePoint || # И если следующая точка - междузонье
-#				Grid[lpPoint.x][lpPoint.y].zoneID == Grid[npPoint.x][npPoint.y].zoneID)): # Или прошлая точка находится в той же зоне, что и следующая
-##				То удали все точки дальше
-#				pass
-#			count += 1
 	return {path = newTrace, cost = Cost}
-#	_Character.ZoneId
-#	_Character.movement
-#	_Character.zonePoints
-	
-#	var cost = {movement = 0, zonePoints = 0}
 	pass
 
 func SetGlobalPath(mapPath):

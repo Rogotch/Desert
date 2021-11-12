@@ -121,6 +121,7 @@ func StartTurn():
 	movement = MaxMovement
 	zonePoints = ZoneCross
 	ActionPoints = MaxActionPoints
+	Arena.SetZoneGrid(self)
 	pass
 
 func EndTurn():
