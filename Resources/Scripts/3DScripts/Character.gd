@@ -36,6 +36,7 @@ var target = null
 #var Trace = []
 var startY
 
+var Moving = false
 var freeMovement = false
 var movement
 var zonePoints
@@ -66,6 +67,7 @@ func _ready():
 
 func _physics_process(_delta):
 	if path.size() > 0 && (movement > 0 || freeMovement):
+		Moving = true
 		velocity = transform.origin.direction_to(path[0]) * speed
 		if transform.origin.distance_to(path[0]) > 1:
 			velocity = move_and_slide(velocity, Vector3.UP)
@@ -74,6 +76,9 @@ func _physics_process(_delta):
 			transform.origin = path[0]
 			Arena.Grid[ZonePosition.x][ZonePosition.y].OnCellMove(self)
 			path.remove(0)
+		if path.size() == 0:
+			Moving = false
+			Arena.CreatePathZone(self)
 #			print("Movement - " + str(movement))
 		pass
 #			move_and_slide(move_vec.normalized() * speed, Vector3.UP)
@@ -121,9 +126,10 @@ func StartTurn():
 	movement = MaxMovement
 	zonePoints = ZoneCross
 	ActionPoints = MaxActionPoints
-	Arena.SetZoneGrid(self)
+	Arena.CreatePathZone(self)
 	pass
 
 func EndTurn():
 	Selecter.visible = false
+	Arena.ClearPathZone()
 	pass

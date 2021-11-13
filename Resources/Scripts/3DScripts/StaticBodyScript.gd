@@ -20,12 +20,8 @@ func _input_event(_camera, event, click_position, _click_normal, _shape_idx):
 #		var mapPoint = Grid.world_to_map(click_position)
 #		FightSystem.SelectedCharacter.draw_path(click_position)
 #		print(str(mapPoint))
-	if event is InputEventMouseButton && event.pressed:
-		var startPosition = FightSystem.SelectedCharacter.ZonePosition
-		var selectedPosition = Vector2(Grid.world_to_map(click_position).x, Grid.world_to_map(click_position).z)
-		var trace = Arena.CheckTrace(FightSystem.SelectedCharacter, selectedPosition)
-		var finalPath = Arena.SetGlobalPath(trace.path)
-		FightSystem.SelectedCharacter.path = finalPath
+	if event is InputEventMouseButton && event.pressed && event.button_index == 1 && !FightSystem.SelectedCharacter.Moving:
+		Arena.GoToClick(FightSystem.SelectedCharacter, click_position)
 #		print("Click!")
 #		Marker.transform.origin = Vector3(click_position.x, Marker.transform.origin.y, click_position.z)
 #		Marker.visible = true

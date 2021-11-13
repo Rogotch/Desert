@@ -1,6 +1,7 @@
 extends Spatial
 
 onready var GridClass = preload("res://Resources/Entities/3D/Grid.tscn")
+onready var tileClass = preload("res://Resources/Entities/3D/PathAreaTile.tscn")
 
 export var GridYValue : float
 export var Zones = [
@@ -12,10 +13,12 @@ export var Zones = [
 	]
 
 export var GridsPath            : NodePath
+export var _PathZone            : NodePath
 export var GridMapPath          : NodePath
 export var CharactersNodePath   : NodePath
 
 onready var gridMap          = get_node(GridMapPath)
+onready var PathZone         = get_node(_PathZone)
 onready var Grids            = get_node(GridsPath)
 onready var CharactersNode   = get_node(CharactersNodePath)
 
@@ -38,6 +41,7 @@ const RectDirections = [
 	Vector2( 0,-1)]
 
 func _ready():
+	add_to_group("Arena")
 	SetVisualGrids()
 	SetCharacters()
 	pass # Replace with function body.
@@ -45,6 +49,7 @@ func _ready():
 #Устанавливает персонажей в список системы боя и начинает ход
 func SetCharacters():
 	FightSystem.TurnsQueue.append_array(CharactersNode.get_children())
+	yield(get_tree(), "idle_frame")
 	FightSystem.StartTurn()
 	FightSystem.PlayerTurn = true
 	pass
@@ -176,24 +181,6 @@ func WaveFindPath(startPos, finPos):
 	return []
 	pass
 
-##Волнами берём зону передвижения игрока
-#func WavePathZone(character):
-#	var BigTrace = []
-#	var startPos = character.ZonePosition
-#	var actualZone = GetZoneByID(character.ZoneId)
-#	var newGrid = Grid.duplicate(true)
-#	var ScanningNodes = [startPos]
-#	for node in ScanningNodes:
-#		var DirectionArr = (RectDirections if Grid[node.x][node.y].interZonePoint else RoundDirections)
-#		for dir in DirectionArr:
-#			if isCellCheck(node, dir, newGrid, zPoint.start, zPoint.end):
-#				ScanningNodes.append(node + dir)
-##		PrintGrid(finPos)
-#		ClearPoints()
-#		print("Путь не был найден")
-#	return []
-#	pass
-
 func SetZoneGrid(character):
 	var cell = {movement = 0, zonePoints = 0, interzoneDir = Vector2.ZERO}
 	var startPos = character.ZonePosition
@@ -230,14 +217,17 @@ func SetZoneGrid(character):
 						var interzoneDir   = (dir if flag else Vector2.ZERO)
 						# Если стоимость укладывается в имеющиеся параметры персонажа, то добавь эту точку в словарь
 						if movValue >= movementCost && zonValue >= zonePointsCost:
-							ScanningNodes[gridPos] = {movement = movementCost, zonePoints = zonePointsCost, interzoneDir = Vector2.ZERO}
-							nodesKeys.append(gridPos)
+							# Проверка, чтобы в финальную область передвижения не попадали никуда не ведущие клетки междузония
+							if !(flag && movValue == movementCost):
+								ScanningNodes[gridPos] = {movement = movementCost, zonePoints = zonePointsCost, interzoneDir = Vector2.ZERO}
+								nodesKeys.append(gridPos)
 						pass
 					pass
 				pass
 			pass
 		pass
 	CreateVisualGrid(ScanningNodes)
+	return ScanningNodes
 	pass
 
 func CreateVisualGrid(dic):
@@ -250,6 +240,24 @@ func CreateVisualGrid(dic):
 				Line += "%5s" % ""
 				pass
 		print(str(Line))
+	pass
+
+func CreatePathZone(character):
+	var zone = SetZoneGrid(character)
+	for tilepos in zone.keys():
+		if !Grid[tilepos.x][tilepos.y].interZonePoint && !zone[tilepos].movement == 0:
+			var newTile = tileClass.instance()
+			PathZone.add_child(newTile)
+			newTile.transform.origin = gridMap.map_to_world(tilepos.x, 0, tilepos.y)
+			newTile.set_meta("moveStep", zone[tilepos].movement)
+		pass
+	get_tree().call_group("PathTiles", "_appear")
+	pass
+
+func ClearPathZone():
+	get_tree().call_group("PathTiles", "_quit")
+#	for tile in PathZone.get_children():
+#		tile.queue_free()
 	pass
 
 func PrintGrid(finPos):
@@ -369,6 +377,45 @@ func SetGlobalPath(mapPath):
 	return finalPath
 	pass
 
+# Функция, которая говорит персонажу двигаться к точке
+func GoToClick(character, click_position):
+	var startPosition = character.ZonePosition
+	var selectedPosition = Vector2(gridMap.world_to_map(click_position).x, gridMap.world_to_map(click_position).z)
+	if startPosition != selectedPosition:
+		ClearPathZone()
+		var trace = CheckTrace(character, selectedPosition)
+		var finalPath = SetGlobalPath(trace.path)
+		character.path = finalPath
+	pass
+
+#func draw_path(target_pos):
+#	var path_array = Arena._get_path(global_transform.origin, target_pos)
+#	var m = SpatialMaterial.new()
+#	var im = Draw
+#	im.set_material_override(m)
+#	im.clear()
+#	im.begin(Mesh.PRIMITIVE_POINTS, null)
+##	for pathPoint in path_array:
+##		im.add_vertex(pathPoint)
+#	if path_array.size() > 0:
+#		im.add_vertex(path_array[0])
+#		im.add_vertex(path_array[(path_array.size() - 1 if path_array.size() - 1 < movement else movement)])
+#		im.end()
+#		im.begin(Mesh.PRIMITIVE_LINE_STRIP, null)
+#		var count = 0
+#	#	var endPath = (path_array.size() -1 if path_array.size() -1 < movement else path_array.size() -1 - movement)
+#	#	print(str(endPath))
+#		for x in path_array:
+#	#		if count < movement:
+#	#			break
+#	#		if count < path_ind -1:
+#			if count >= movement:
+#				break
+#			count += 1
+#	#			continue
+#			im.add_vertex(x)
+#	im.end()
+#	pass
 
 #Переворачиваем массив и заполняем его мировыми координатами
 #func SetPath(trace):
