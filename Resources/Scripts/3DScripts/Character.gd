@@ -69,7 +69,7 @@ func _physics_process(_delta):
 	if path.size() > 0 && (movement > 0 || freeMovement):
 		Moving = true
 		velocity = transform.origin.direction_to(path[0]) * speed
-		if transform.origin.distance_to(path[0]) > 1:
+		if transform.origin.distance_to(path[0]) > 0.5:
 			velocity = move_and_slide(velocity, Vector3.UP)
 		else:
 			_SetCharacterPosition()

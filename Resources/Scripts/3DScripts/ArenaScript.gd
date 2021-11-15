@@ -137,14 +137,20 @@ func AutofilGridMap(EndPosition):
 		for j in EndPosition.y:
 			var NewPoint = GridPoint.new()
 			var pointZone = GetZoneByPosition(Vector2(i,j))
-			NewPoint.zoneID = pointZone.ZoneId
-			NewPoint.interZonePoint = pointZone.interzone
+			if pointZone:
+				NewPoint.zoneID = pointZone.ZoneId
+				NewPoint.interZonePoint = pointZone.interzone
+			else:
+				NewPoint.zoneID = null
+				NewPoint.interZonePoint = null
+				NewPoint.content = NewPoint.OUTZONE
 			line.append(NewPoint)
 		Grid.append(line)
 	pass
 
 #Волнами сканируем поле и ищем короткий путь
-func WaveFindPath(startPos, finPos):
+func WaveFindPath(_character, finPos):
+	var startPos = _character.ZonePosition
 	var BigTrace = []
 	var actualZone = GetZoneByPosition(startPos)
 	var ZonePoints = [{start = actualZone.StartPos, end = actualZone.EndPos}, {start = Vector2.ZERO, end = GridSize}]
@@ -169,7 +175,7 @@ func WaveFindPath(startPos, finPos):
 						abs(dir.x) + abs(dir.y) > 1)):
 						continue
 						# Проверка, что следующая точка является доступной для перемещения и находится в рамках зоны
-					elif isCellCheck(node, dir, newGrid, zPoint.start, zPoint.end):
+					elif isCellCheck(node, dir, newGrid, zPoint.start, zPoint.end, _character):
 						ScanningNodes.append(node + dir)
 		var startString = "Startpos - %s, Endpos - %s"
 		var actualstring = startString % [str(startPos), str(finPos)]
@@ -226,7 +232,7 @@ func SetZoneGrid(character):
 				pass
 			pass
 		pass
-	CreateVisualGrid(ScanningNodes)
+#	CreateVisualGrid(ScanningNodes)
 	return ScanningNodes
 	pass
 
@@ -275,18 +281,22 @@ func PrintGrid(finPos):
 	pass
 
 #Проверяем, доступна ли нам соседняя ячейка по направлению dir ячейка и если да, то увеличиваем её вес на 1
-func isCellCheck(pos, direction, gridArr, startZPoint, endZPoint):
+func isCellCheck(pos, direction, gridArr, startZPoint, endZPoint, _Character):
 #	Проверка соседней клетки pos по направлению direction
 	var gridPos = (pos) + direction
 #	Проверка, находится ли точка в рамках сетки
+	if gridPos == _Character.target:
+		print("Клетка была отсканирована")
 	if InGridCheck(pos, direction, startZPoint, endZPoint):
-#		Проверка, что точка свободна для передвижения
-		if  gridArr[gridPos.x][gridPos.y].content == GridPoint.EMPTY && gridArr[gridPos.x][gridPos.y].step == null:
+#		Проверка, что точка свободна для передвижения или она является целью персонажа и его предыдущая позиция не является междузоньем
+		if  ((gridArr[gridPos.x][gridPos.y].content == GridPoint.EMPTY || gridPos == _Character.target && !gridArr[pos.x][pos.y].interZonePoint) &&
+		gridArr[gridPos.x][gridPos.y].step == null):
 #			print(str(gridArr[pos.x][pos.y]))
 #			Проверка, что при диагональном переходе обе боковые клетки пусты
-			if !(abs(direction.x) + abs(direction.y) > 1 &&
+			if (!(abs(direction.x) + abs(direction.y) > 1 &&
 			(gridArr[pos.x][pos.y + direction.y].content != GridPoint.EMPTY ||
-			 gridArr[pos.x + direction.x][pos.y].content != GridPoint.EMPTY)):
+			 gridArr[pos.x + direction.x][pos.y].content != GridPoint.EMPTY)) ||
+			gridPos == _Character.target):
 				var step = 0
 	#			Проверка, что предыдущая точка не занята игроком и определение её шага
 				if  gridArr[pos.x][pos.y].step != null:
@@ -351,8 +361,8 @@ func InGridCheck(pos, direction, ZoneStartPosition, ZoneEndPosition):
 	return false
 	pass
 
-func CheckTrace(_Character, endPos):
-	var trace = WaveFindPath(_Character.ZonePosition, endPos)
+func BuildPathToTheEmptyZone(_Character, endPos):
+	var trace = WaveFindPath(_Character, endPos)
 	trace.invert()
 	var newTrace = []
 	var Cost = {movement = 0, zonePoints = 0}
@@ -362,12 +372,31 @@ func CheckTrace(_Character, endPos):
 			newTrace.append(tracePosition)
 		else:
 			break
-	print("StartTrace - " + str(trace))
-	print("FinalTrace - " + str(newTrace))
-	print("Cost - " + str(Cost))
-	print("GlobalPath - " + str(SetGlobalPath(newTrace)))
+#	print("StartTrace - " + str(trace))
+#	print("FinalTrace - " + str(newTrace))
+#	print("Cost - " + str(Cost))
+#	print("GlobalPath - " + str(SetGlobalPath(newTrace)))
 	return {path = newTrace, cost = Cost}
 	pass
+
+func BuildPathToTheTarget(_Character, endPos):
+	var trace = WaveFindPath(_Character, endPos)
+	trace.invert()
+	var newTrace = []
+	var Cost = {movement = 0, zonePoints = 0}
+	for tracePosition in trace:
+		if Grid[tracePosition.x][tracePosition.y].CheckMovement(_Character, Cost):
+			print("Один есть!")
+			newTrace.append(tracePosition)
+		else:
+			break
+	var SelectedTarget = null
+	if _Character.target == newTrace[-1]:
+		SelectedTarget = newTrace[-1]
+		newTrace.remove(newTrace.find(newTrace[-1]))
+	return {path = newTrace, cost = Cost, target = SelectedTarget}
+	pass
+
 
 func SetGlobalPath(mapPath):
 	var finalPath = []
@@ -383,7 +412,13 @@ func GoToClick(character, click_position):
 	var selectedPosition = Vector2(gridMap.world_to_map(click_position).x, gridMap.world_to_map(click_position).z)
 	if startPosition != selectedPosition:
 		ClearPathZone()
-		var trace = CheckTrace(character, selectedPosition)
+		var trace
+		if Grid[selectedPosition.x][selectedPosition.y].content == GridPoint.CHARACTER:
+			character.target = selectedPosition
+			trace = BuildPathToTheTarget(character, selectedPosition)
+			prints("target", str(trace.target))
+		elif Grid[selectedPosition.x][selectedPosition.y].content == GridPoint.EMPTY:
+			trace = BuildPathToTheEmptyZone(character, selectedPosition)
 		var finalPath = SetGlobalPath(trace.path)
 		character.path = finalPath
 	pass

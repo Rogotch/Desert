@@ -2,7 +2,7 @@ extends Node
 
 class_name GridPoint, "res://Resources/Images/GUI/SimpleIcons/White/1x/target.png"
 
-enum {EMPTY = 0, CHARACTER = 1, OBSTACLE = 2}
+enum {EMPTY = 0, CHARACTER = 1, OBSTACLE = 2, OUTZONE = 3}
 
 var step = null
 var content = EMPTY

@@ -21,8 +21,8 @@ func _ready():
 func _appear():
 	if Selectable:
 		var stepNum = get_meta("moveStep")
-		print("stepNum - " + str(float(stepNum)/20.0))
-		yield(get_tree().create_timer(float(stepNum)/20.0), "timeout")
+#		print("stepNum - " + str(float(stepNum)/10.0))
+		yield(get_tree().create_timer(float(stepNum)/10.0), "timeout")
 		Anim.play("appear")
 		yield(Anim, "animation_finished")
 		emit_signal("EndAppear")
@@ -31,7 +31,7 @@ func _appear():
 
 func _quit():
 	Selectable = false
-	Anim.play_backwards("appear")
+	Anim.play("disappear")
 	yield(Anim, "animation_finished")
 	if AppearEnd:
 		print("Выход 1")

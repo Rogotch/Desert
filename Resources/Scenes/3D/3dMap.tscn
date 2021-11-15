@@ -77,32 +77,32 @@ albedo_color = Color( 0.286275, 0.392157, 0.286275, 1 )
 script = ExtResource( 7 )
 GridYValue = 0.5
 Zones = [ {
-"EndPos": Vector2( 3, 5 ),
-"StartPos": Vector2( 0, 0 ),
+"EndPos": Vector2( 3, 15 ),
+"StartPos": Vector2( 0, 5 ),
 "ZoneId": 0,
 "ZoneName": "Zone1",
 "interzone": false
 }, {
-"EndPos": Vector2( 4, 5 ),
-"StartPos": Vector2( 3, 0 ),
+"EndPos": Vector2( 4, 15 ),
+"StartPos": Vector2( 3, 5 ),
 "ZoneId": 1,
 "ZoneName": "Interzone1",
 "interzone": true
 }, {
-"EndPos": Vector2( 7, 5 ),
-"StartPos": Vector2( 4, 0 ),
+"EndPos": Vector2( 7, 15 ),
+"StartPos": Vector2( 4, 5 ),
 "ZoneId": 2,
 "ZoneName": "Zone3",
 "interzone": false
 }, {
-"EndPos": Vector2( 8, 5 ),
-"StartPos": Vector2( 7, 0 ),
+"EndPos": Vector2( 8, 15 ),
+"StartPos": Vector2( 7, 5 ),
 "ZoneId": 3,
 "ZoneName": "Interzone2",
 "interzone": true
 }, {
-"EndPos": Vector2( 11, 5 ),
-"StartPos": Vector2( 8, 0 ),
+"EndPos": Vector2( 11, 15 ),
+"StartPos": Vector2( 8, 5 ),
 "ZoneId": 4,
 "ZoneName": "Zone5",
 "interzone": false
@@ -181,7 +181,7 @@ far = 190.3
 [node name="CharactersNode" type="Spatial" parent="."]
 
 [node name="Character" parent="CharactersNode" instance=ExtResource( 1 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 20.4581, 0, 15.1177 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 20.4581, 0, 76.0808 )
 speed = 30.0
 MaxMovement = 10
 ZoneCross = 1
@@ -191,7 +191,7 @@ DrawPath = NodePath("../../Environment/Draw")
 ArenaMainNodePath = NodePath("../..")
 
 [node name="Character2" parent="CharactersNode" instance=ExtResource( 1 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 58.9311, 0, 18.3106 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 58.9311, 0, 79.2737 )
 speed = 30.0
 MaxMovement = 5
 ZoneCross = 1
@@ -201,7 +201,7 @@ DrawPath = NodePath("../../Environment/Draw")
 ArenaMainNodePath = NodePath("../..")
 
 [node name="Character3" parent="CharactersNode" instance=ExtResource( 1 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 42.89, -7.62939e-06, 9.39161 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 42.89, -7.62939e-06, 70.3547 )
 speed = 30.0
 MaxMovement = 7
 ZoneCross = 1
