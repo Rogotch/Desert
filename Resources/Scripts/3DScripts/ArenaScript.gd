@@ -190,14 +190,14 @@ func WaveFindPath(_character, finPos):
 func SetZoneGrid(character):
 	var cell = {movement = 0, zonePoints = 0, interzoneDir = Vector2.ZERO}
 	var startPos = character.ZonePosition
-	var movValue = character.movement
-	var zonValue = character.zonePoints
+	var movValue = character.Movement
+	var zonValue = character.ZonePoints
 	var ScanningNodes = {startPos : cell}
 	var nodesKeys = ScanningNodes.keys()
 	for node in nodesKeys:
 		var DirectionArr = (RectDirections if Grid[node.x][node.y].interZonePoint else RoundDirections)
 		for dir in DirectionArr:
-			# Проверка, чтобы проход через междузонье был строго прямо
+			# Проверка, чтобы значение находилось в рамках зоны
 			if InGridCheck(node, dir, Vector2.ZERO, GridSize):
 				# Проверка, чтобы в интерзону можно было входить и выходить только прямо, а не диагонально
 				# Или проверка, чтобы нельзя было проходить диагонально при наличии боковых препятствий
@@ -361,6 +361,33 @@ func InGridCheck(pos, direction, ZoneStartPosition, ZoneEndPosition):
 	return false
 	pass
 
+func InDistanceCheck(character, Distance, targetPosition):
+	var cell = {stepLevel = 0}
+	var startPos = character.ZonePosition
+#	var targetPosition = character.target
+#	var Distance = character.AttackDistance
+	var ScanningNodes = {startPos : cell}
+	var nodesKeys = ScanningNodes.keys()
+	for node in nodesKeys:
+		for dir in RoundDirections:
+			# Проверка, чтобы значение находилось в рамках зоны
+			if InGridCheck(node, dir, Vector2.ZERO, GridSize):
+				var gridPos = node + dir
+				# Если клетки ещё нет в словаре сканированных клеток
+				if !ScanningNodes.has(gridPos):
+					# Увеличь уровень шага на 1
+					var newStepLevel   = ScanningNodes[node].stepLevel + 1
+					# Если клетка входит в доступную зону атаки
+					if Distance >= newStepLevel:
+						# Проверка, является ли эта точка целью
+						if gridPos == targetPosition:
+							return true
+						else: # иначе просто добавь её в массив сканируемых точек
+							ScanningNodes[gridPos] = {stepLevel = newStepLevel}
+							nodesKeys.append(gridPos)
+	return false
+	pass
+
 func BuildPathToTheEmptyZone(_Character, endPos):
 	var trace = WaveFindPath(_Character, endPos)
 	trace.invert()
@@ -391,7 +418,7 @@ func BuildPathToTheTarget(_Character, endPos):
 		else:
 			break
 	var SelectedTarget = null
-	if _Character.target == newTrace[-1]:
+	if newTrace.size() > 0 && _Character.target == newTrace[-1]:
 		SelectedTarget = newTrace[-1]
 		newTrace.remove(newTrace.find(newTrace[-1]))
 	return {path = newTrace, cost = Cost, target = SelectedTarget}
@@ -414,6 +441,7 @@ func GoToClick(character, click_position):
 		ClearPathZone()
 		var trace
 		if Grid[selectedPosition.x][selectedPosition.y].content == GridPoint.CHARACTER:
+#			print("Находится ли цель в зоне")
 			character.target = selectedPosition
 			trace = BuildPathToTheTarget(character, selectedPosition)
 			prints("target", str(trace.target))
@@ -423,40 +451,3 @@ func GoToClick(character, click_position):
 		character.path = finalPath
 	pass
 
-#func draw_path(target_pos):
-#	var path_array = Arena._get_path(global_transform.origin, target_pos)
-#	var m = SpatialMaterial.new()
-#	var im = Draw
-#	im.set_material_override(m)
-#	im.clear()
-#	im.begin(Mesh.PRIMITIVE_POINTS, null)
-##	for pathPoint in path_array:
-##		im.add_vertex(pathPoint)
-#	if path_array.size() > 0:
-#		im.add_vertex(path_array[0])
-#		im.add_vertex(path_array[(path_array.size() - 1 if path_array.size() - 1 < movement else movement)])
-#		im.end()
-#		im.begin(Mesh.PRIMITIVE_LINE_STRIP, null)
-#		var count = 0
-#	#	var endPath = (path_array.size() -1 if path_array.size() -1 < movement else path_array.size() -1 - movement)
-#	#	print(str(endPath))
-#		for x in path_array:
-#	#		if count < movement:
-#	#			break
-#	#		if count < path_ind -1:
-#			if count >= movement:
-#				break
-#			count += 1
-#	#			continue
-#			im.add_vertex(x)
-#	im.end()
-#	pass
-
-#Переворачиваем массив и заполняем его мировыми координатами
-#func SetPath(trace):
-#	trace.invert()
-#	var finalPath = []
-#	for point in trace:
-#		finalPath.append(map_to_world(point) + half_tile_size)
-#	return finalPath
-#	pass

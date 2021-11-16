@@ -34,11 +34,11 @@ func _quit():
 	Anim.play("disappear")
 	yield(Anim, "animation_finished")
 	if AppearEnd:
-		print("Выход 1")
+#		print("Выход 1")
 		queue_free()
 	else:
 		yield(self, "EndAppear")
-		print("Выход 2")
+#		print("Выход 2")
 		queue_free()
 	pass
 

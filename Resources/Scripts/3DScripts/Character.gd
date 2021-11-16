@@ -38,19 +38,21 @@ var startY
 
 var Moving = false
 var freeMovement = false
-var movement
-var zonePoints
+
+export var AttackDistance : int
+var Movement
+var ZonePoints
 var ActionPoints
 
-var path = []
+var path = [] setget SetPath
 #var path_ind = 0
 
-var ActivePointID = null
+#var ActivePointID = null
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	add_to_group("Units")
-	movement = MaxMovement
+	Movement = MaxMovement
 	yield(get_tree(), "idle_frame")
 	var V3Pos = Grid.world_to_map(transform.origin)
 	ZonePosition = Vector2(V3Pos.x, V3Pos.z)
@@ -66,7 +68,7 @@ func _ready():
 	pass # Replace with function body.
 
 func _physics_process(_delta):
-	if path.size() > 0 && (movement > 0 || freeMovement):
+	if path.size() > 0 && (Movement > 0 || freeMovement):
 		Moving = true
 		velocity = transform.origin.direction_to(path[0]) * speed
 		if transform.origin.distance_to(path[0]) > 0.5:
@@ -79,6 +81,11 @@ func _physics_process(_delta):
 		if path.size() == 0:
 			Moving = false
 			Arena.CreatePathZone(self)
+			printt(str(target), str(Movement), str(ActionPoints))
+			if target != null:
+				DoSomething()
+			elif Movement == 0 && ActionPoints == 0:
+				FightSystem.EndTurn()
 #			print("Movement - " + str(movement))
 		pass
 #			move_and_slide(move_vec.normalized() * speed, Vector3.UP)
@@ -103,7 +110,7 @@ func draw_path(target_pos):
 #		im.add_vertex(pathPoint)
 	if path_array.size() > 0:
 		im.add_vertex(path_array[0])
-		im.add_vertex(path_array[(path_array.size() - 1 if path_array.size() - 1 < movement else movement)])
+		im.add_vertex(path_array[(path_array.size() - 1 if path_array.size() - 1 < Movement else Movement)])
 		im.end()
 		im.begin(Mesh.PRIMITIVE_LINE_STRIP, null)
 		var count = 0
@@ -113,7 +120,7 @@ func draw_path(target_pos):
 	#		if count < movement:
 	#			break
 	#		if count < path_ind -1:
-			if count >= movement:
+			if count >= Movement:
 				break
 			count += 1
 	#			continue
@@ -123,8 +130,8 @@ func draw_path(target_pos):
 
 func StartTurn():
 	Selecter.visible = true
-	movement = MaxMovement
-	zonePoints = ZoneCross
+	Movement = MaxMovement
+	ZonePoints = ZoneCross
 	ActionPoints = MaxActionPoints
 	Arena.CreatePathZone(self)
 	pass
@@ -132,4 +139,28 @@ func StartTurn():
 func EndTurn():
 	Selecter.visible = false
 	Arena.ClearPathZone()
+	pass
+
+func SetPath(newPath):
+	print("Setter work!")
+	if target != null && Arena.InDistanceCheck(self, AttackDistance, target):
+		print("In distance without movement")
+		DoSomething()
+	elif newPath.size() == 0:
+		if target != null:
+			DoSomething()
+	elif newPath.size() > 0:
+		path = newPath
+	pass
+
+func DoSomething():
+	print("Somethimg!")
+	if Arena.InDistanceCheck(self, AttackDistance, target) && ActionPoints > 0:
+		ActionPoints -= 1
+		print("In AttackDistance")
+	target = null
+	if ActionPoints == 0 && Movement == 0:
+		FightSystem.EndTurn()
+	else:
+		Arena.CreatePathZone(self)
 	pass
