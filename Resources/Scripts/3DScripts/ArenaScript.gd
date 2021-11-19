@@ -188,9 +188,9 @@ func WaveFindPath(_character, finPos):
 	pass
 
 func SetZoneGrid(character):
-	var cell = {movement = 0, zonePoints = 0, interzoneDir = Vector2.ZERO}
+	var cell = {movement = 0, actionPoints = 0, zonePoints = 0, interzoneDir = Vector2.ZERO}
 	var startPos = character.ZonePosition
-	var movValue = character.Movement
+	var movValue = character.Speed * character.ActionPoints + character.Movement
 	var zonValue = character.ZonePoints
 	var ScanningNodes = {startPos : cell}
 	var nodesKeys = ScanningNodes.keys()
@@ -217,6 +217,9 @@ func SetZoneGrid(character):
 						var flag = Grid[gridPos.x][gridPos.y].interZonePoint
 						# Если не интерзона, увеличь стоимость передвижения на 1
 						var movementCost   = ScanningNodes[node].movement   + (0 if flag else 1)
+						# Проверь стоимость в AP
+						var actionsCost    = int(movementCost - character.Movement) / int(character.Speed)
+#						prints("movementCost", "character.Movement", "character.Speed", "actionsCost", str(movementCost), str(character.Movement), str(character.Speed), str(actionsCost))
 						# Если интерзона, увеличь стоимость очков зоны на 1
 						var zonePointsCost = ScanningNodes[node].zonePoints + (1 if flag else 0)
 						# Если интерзона, укажи направление прохода

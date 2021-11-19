@@ -182,10 +182,10 @@ far = 190.3
 
 [node name="Character" parent="CharactersNode" instance=ExtResource( 1 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 20.4581, 0, 76.0808 )
-speed = 30.0
-MaxMovement = 10
+physic_speed = 30.0
+MaxMovement = 1
 ZoneCross = 1
-MaxActionPoints = 2
+MaxActionPoints = 3
 GridPath = NodePath("../../Environment/GridMap")
 MarkerPath = NodePath("../../Environment/Marker")
 DrawPath = NodePath("../../Environment/Draw")
@@ -194,10 +194,10 @@ AttackDistance = 1
 
 [node name="Character2" parent="CharactersNode" instance=ExtResource( 1 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 58.9311, 0, 79.2737 )
-speed = 30.0
-MaxMovement = 5
+physic_speed = 30.0
+MaxMovement = 2
 ZoneCross = 1
-MaxActionPoints = 1
+MaxActionPoints = 2
 GridPath = NodePath("../../Environment/GridMap")
 MarkerPath = NodePath("../../Environment/Marker")
 DrawPath = NodePath("../../Environment/Draw")
@@ -206,8 +206,8 @@ AttackDistance = 2
 
 [node name="Character3" parent="CharactersNode" instance=ExtResource( 1 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 42.89, -7.62939e-06, 70.3547 )
-speed = 30.0
-MaxMovement = 7
+physic_speed = 30.0
+MaxMovement = 3
 ZoneCross = 1
 MaxActionPoints = 1
 GridPath = NodePath("../../Environment/GridMap")

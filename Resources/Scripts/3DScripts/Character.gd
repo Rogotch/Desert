@@ -2,7 +2,7 @@ extends KinematicBody
 
 class_name Character
 
-export var speed           : float
+export var physic_speed    : float
 export var MaxMovement     : int
 export var ZoneCross       : int
 export var MaxActionPoints : int
@@ -21,11 +21,11 @@ onready var Selecter      = get_node(SelecterPath)
 onready var Grid          = get_node(GridPath)
 onready var Draw          = get_node(DrawPath)
 onready var Arena         = get_node(ArenaMainNodePath)
-#onready var PlayerCamera = $Camera
 
-#var Trace = []
-#var rayOrigin = Vector3()
-#var rayEnd = Vector3()
+#Блок Характеристик
+var Speed        = MaxMovement
+var Multitasking = MaxActionPoints
+#var Constitution
 
 var HitPoints
 
@@ -52,7 +52,9 @@ var path = [] setget SetPath
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	add_to_group("Units")
-	Movement = MaxMovement
+	Movement = 0
+	Speed        = MaxMovement
+	Multitasking = MaxActionPoints
 	yield(get_tree(), "idle_frame")
 	var V3Pos = Grid.world_to_map(transform.origin)
 	ZonePosition = Vector2(V3Pos.x, V3Pos.z)
@@ -68,9 +70,9 @@ func _ready():
 	pass # Replace with function body.
 
 func _physics_process(_delta):
-	if path.size() > 0 && (Movement > 0 || freeMovement):
+	if path.size() > 0 && (Movement + Speed * ActionPoints > 0 || freeMovement):
 		Moving = true
-		velocity = transform.origin.direction_to(path[0]) * speed
+		velocity = transform.origin.direction_to(path[0]) * physic_speed
 		if transform.origin.distance_to(path[0]) > 0.5:
 			velocity = move_and_slide(velocity, Vector3.UP)
 		else:
@@ -130,9 +132,9 @@ func draw_path(target_pos):
 
 func StartTurn():
 	Selecter.visible = true
-	Movement = MaxMovement
+	Movement = 0
 	ZonePoints = ZoneCross
-	ActionPoints = MaxActionPoints
+	ActionPoints = Multitasking
 	Arena.CreatePathZone(self)
 	pass
 
@@ -153,6 +155,7 @@ func SetPath(newPath):
 		path = newPath
 	pass
 
+# Атака или другие действия. Срабатывает всегда, когда target != null 
 func DoSomething():
 	print("Somethimg!")
 	if Arena.InDistanceCheck(self, AttackDistance, target) && ActionPoints > 0:
