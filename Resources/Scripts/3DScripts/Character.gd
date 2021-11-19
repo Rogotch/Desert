@@ -82,12 +82,14 @@ func _physics_process(_delta):
 			path.remove(0)
 		if path.size() == 0:
 			Moving = false
-			Arena.CreatePathZone(self)
+#			Arena.CreatePathZone(self)
 			printt(str(target), str(Movement), str(ActionPoints))
 			if target != null:
 				DoSomething()
 			elif Movement == 0 && ActionPoints == 0:
 				FightSystem.EndTurn()
+			else:
+				Arena.CreatePathZone(self)
 #			print("Movement - " + str(movement))
 		pass
 #			move_and_slide(move_vec.normalized() * speed, Vector3.UP)
@@ -145,7 +147,7 @@ func EndTurn():
 
 func SetPath(newPath):
 	print("Setter work!")
-	if target != null && Arena.InDistanceCheck(self, AttackDistance, target):
+	if target != null && Arena.InDistanceCheck(ZonePosition, AttackDistance, target):
 		print("In distance without movement")
 		DoSomething()
 	elif newPath.size() == 0:
@@ -158,7 +160,7 @@ func SetPath(newPath):
 # Атака или другие действия. Срабатывает всегда, когда target != null 
 func DoSomething():
 	print("Somethimg!")
-	if Arena.InDistanceCheck(self, AttackDistance, target) && ActionPoints > 0:
+	if Arena.InDistanceCheck(ZonePosition, AttackDistance, target) && ActionPoints > 0:
 		ActionPoints -= 1
 		print("In AttackDistance")
 	target = null

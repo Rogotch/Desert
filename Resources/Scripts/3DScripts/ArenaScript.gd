@@ -24,6 +24,8 @@ onready var CharactersNode   = get_node(CharactersNodePath)
 
 var Grid = []
 var GridSize
+var GridStart
+
 const RoundDirections = [
 	Vector2( 1, 0),
 	Vector2( 0, 1),
@@ -95,14 +97,14 @@ func GetZoneByPosition(objPos):
 #Устанавливает визуальное отображение сетки
 func SetVisualGrids():
 	var count = 0
-#	var MinPos = Vector2(0,0)
+	var MinPos = Vector2(99,99)
 	var MaxPos = Vector2(0,0)
 #	print(str(Zones))
 	for zone in Zones:
 		if zone.interzone:
 			continue
-#		MinPos.x = (MinPos.x if zone.StartPos.x >= MinPos.x else zone.StartPos.x)
-#		MinPos.y = (MinPos.y if zone.StartPos.y >= MinPos.y else zone.StartPos.y)
+		MinPos.x = (MinPos.x if zone.StartPos.x >= MinPos.x else zone.StartPos.x)
+		MinPos.y = (MinPos.y if zone.StartPos.y >= MinPos.y else zone.StartPos.y)
 		MaxPos.x = (MaxPos.x if zone.EndPos.x <= MaxPos.x else zone.EndPos.x)
 		MaxPos.y = (MaxPos.y if zone.EndPos.y <= MaxPos.y else zone.EndPos.y)
 		var newGrid = GridClass.instance()
@@ -117,6 +119,7 @@ func SetVisualGrids():
 		count += 1
 	print("MaxPos - " + str(MaxPos))
 	GridSize = MaxPos
+	GridStart = MinPos
 	AutofilGridMap(MaxPos)
 	pass
 
@@ -139,10 +142,10 @@ func AutofilGridMap(EndPosition):
 			var pointZone = GetZoneByPosition(Vector2(i,j))
 			if pointZone:
 				NewPoint.zoneID = pointZone.ZoneId
-				NewPoint.interZonePoint = pointZone.interzone
+				NewPoint.interzoneFlag = pointZone.interzone
 			else:
 				NewPoint.zoneID = null
-				NewPoint.interZonePoint = null
+				NewPoint.interzoneFlag = null
 				NewPoint.content = NewPoint.OUTZONE
 			line.append(NewPoint)
 		Grid.append(line)
@@ -162,26 +165,26 @@ func WaveFindPath(_character, finPos):
 			if node == finPos:
 				print("Дошли до обратной постройки пути!")
 	#			break
-				PrintGrid(finPos)
+#				PrintGrid(finPos)
 				return SetTrace(finPos, newGrid)
 			else:
-				var DirectionArr = (RectDirections if Grid[node.x][node.y].interZonePoint else RoundDirections)
+				var DirectionArr = (RectDirections if Grid[node.x][node.y].interzoneFlag else RoundDirections)
 				for dir in DirectionArr:
 					# Проверка, чтобы проход через междузонье был строго прямо
 					if (InGridCheck(node, dir, zPoint.start, zPoint.end) && 
-						(Grid[node.x][node.y].interZonePoint && 
-						 Grid[node.x + dir.x][node.y + dir.y].interZonePoint ||
-						 Grid[node.x + dir.x][node.y + dir.y].interZonePoint &&
+						(Grid[node.x][node.y].interzoneFlag && 
+						 Grid[node.x + dir.x][node.y + dir.y].interzoneFlag ||
+						 Grid[node.x + dir.x][node.y + dir.y].interzoneFlag &&
 						abs(dir.x) + abs(dir.y) > 1)):
 						continue
 						# Проверка, что следующая точка является доступной для перемещения и находится в рамках зоны
 					elif isCellCheck(node, dir, newGrid, zPoint.start, zPoint.end, _character):
 						ScanningNodes.append(node + dir)
-		var startString = "Startpos - %s, Endpos - %s"
-		var actualstring = startString % [str(startPos), str(finPos)]
-		print(actualstring)
+#		var startString = "Startpos - %s, Endpos - %s"
+#		var actualstring = startString % [str(startPos), str(finPos)]
+#		print(actualstring)
 	#	print(str(Grid))
-		PrintGrid(finPos)
+#		PrintGrid(finPos)
 		ClearPoints()
 		print("Путь не был найден")
 	return []
@@ -195,15 +198,15 @@ func SetZoneGrid(character):
 	var ScanningNodes = {startPos : cell}
 	var nodesKeys = ScanningNodes.keys()
 	for node in nodesKeys:
-		var DirectionArr = (RectDirections if Grid[node.x][node.y].interZonePoint else RoundDirections)
+		var DirectionArr = (RectDirections if Grid[node.x][node.y].interzoneFlag else RoundDirections)
 		for dir in DirectionArr:
 			# Проверка, чтобы значение находилось в рамках зоны
 			if InGridCheck(node, dir, Vector2.ZERO, GridSize):
 				# Проверка, чтобы в интерзону можно было входить и выходить только прямо, а не диагонально
 				# Или проверка, чтобы нельзя было проходить диагонально при наличии боковых препятствий
-				if((Grid[node.x][node.y].interZonePoint && 
-					 Grid[node.x + dir.x][node.y + dir.y].interZonePoint ||
-					 Grid[node.x + dir.x][node.y + dir.y].interZonePoint &&
+				if((Grid[node.x][node.y].interzoneFlag && 
+					 Grid[node.x + dir.x][node.y + dir.y].interzoneFlag ||
+					 Grid[node.x + dir.x][node.y + dir.y].interzoneFlag &&
 					 abs(dir.x) + abs(dir.y) > 1) || 
 					(abs(dir.x) + abs(dir.y) > 1 &&
 					(Grid[node.x][node.y + dir.y].content != GridPoint.EMPTY ||
@@ -214,7 +217,7 @@ func SetZoneGrid(character):
 					# Если клетка пуста и её ещё нет в словаре сканированных клеток
 					if Grid[gridPos.x][gridPos.y].content == GridPoint.EMPTY && !ScanningNodes.has(gridPos):
 						# Поставь флаг, не интерзона ли это
-						var flag = Grid[gridPos.x][gridPos.y].interZonePoint
+						var flag = Grid[gridPos.x][gridPos.y].interzoneFlag
 						# Если не интерзона, увеличь стоимость передвижения на 1
 						var movementCost   = ScanningNodes[node].movement   + (0 if flag else 1)
 						# Проверь стоимость в AP
@@ -244,7 +247,7 @@ func CreateVisualGrid(dic):
 		var Line = ""
 		for j in Grid[i].size():
 			if dic.has(Vector2(i, j)):
-				Line += "%5s" % (str(dic[Vector2(i, j)].movement) if !Grid[i][j].interZonePoint else "!")
+				Line += "%5s" % (str(dic[Vector2(i, j)].movement) if !Grid[i][j].interzoneFlag else "!")
 			else:
 				Line += "%5s" % ""
 				pass
@@ -254,7 +257,7 @@ func CreateVisualGrid(dic):
 func CreatePathZone(character):
 	var zone = SetZoneGrid(character)
 	for tilepos in zone.keys():
-		if !Grid[tilepos.x][tilepos.y].interZonePoint && !zone[tilepos].movement == 0:
+		if !Grid[tilepos.x][tilepos.y].interzoneFlag && !zone[tilepos].movement == 0:
 			var newTile = tileClass.instance()
 			PathZone.add_child(newTile)
 			newTile.transform.origin = gridMap.map_to_world(tilepos.x, 0, tilepos.y)
@@ -292,7 +295,7 @@ func isCellCheck(pos, direction, gridArr, startZPoint, endZPoint, _Character):
 		print("Клетка была отсканирована")
 	if InGridCheck(pos, direction, startZPoint, endZPoint):
 #		Проверка, что точка свободна для передвижения или она является целью персонажа и его предыдущая позиция не является междузоньем
-		if  ((gridArr[gridPos.x][gridPos.y].content == GridPoint.EMPTY || gridPos == _Character.target && !gridArr[pos.x][pos.y].interZonePoint) &&
+		if  ((gridArr[gridPos.x][gridPos.y].content == GridPoint.EMPTY || gridPos == _Character.target && !gridArr[pos.x][pos.y].interzoneFlag) &&
 		gridArr[gridPos.x][gridPos.y].step == null):
 #			print(str(gridArr[pos.x][pos.y]))
 #			Проверка, что при диагональном переходе обе боковые клетки пусты
@@ -316,12 +319,12 @@ func SetTrace(finPos, gridArr):
 	var stepNum = gridArr[finPos.x][finPos.y].step
 	while stepNum != 1:
 #		Перебираем окружающие ячейки
-#		var DirectionArr = (RectDirections if Grid[newTrace[-1].x][newTrace[-1].y].interZonePoint else RoundDirections)
+#		var DirectionArr = (RectDirections if Grid[newTrace[-1].x][newTrace[-1].y].interzoneFlag else RoundDirections)
 		for dir in RoundDirections:
 #			Если и текущая и прошлая точки находятся в междузонье, то пропусти текущую точку
 			if (InGridCheck(newTrace[-1], dir, Vector2.ZERO, GridSize) &&
-			Grid[newTrace[-1].x][newTrace[-1].y].interZonePoint &&
-			gridArr[newTrace[-1].x + dir.x][newTrace[-1].y + dir.y].interZonePoint):
+			Grid[newTrace[-1].x][newTrace[-1].y].interzoneFlag &&
+			gridArr[newTrace[-1].x + dir.x][newTrace[-1].y + dir.y].interzoneFlag):
 				continue
 #			Берём одну из ближайших ячеек, относительно нашей сдвинутой на dir
 			var NextPoint = NextStep(newTrace[-1], gridArr, dir)
@@ -355,7 +358,7 @@ func NextStep(pos, nGrid, dir):
 	pass
 
 #Проверяем, что ячейка находится внутри сетки
-func InGridCheck(pos, direction, ZoneStartPosition, ZoneEndPosition):
+func InGridCheck(pos, direction, ZoneStartPosition = GridStart, ZoneEndPosition = GridSize):
 	var gridPos = (pos) + direction
 #	print("GridSize - "+ str(GridSize))
 	if gridPos.x < ZoneEndPosition.x && gridPos.x >= ZoneStartPosition.x:
@@ -364,13 +367,14 @@ func InGridCheck(pos, direction, ZoneStartPosition, ZoneEndPosition):
 	return false
 	pass
 
-func InDistanceCheck(character, Distance, targetPosition):
+func InDistanceCheck(startPos, Distance, targetPosition):
 	var cell = {stepLevel = 0}
-	var startPos = character.ZonePosition
+#	var startPos = character.ZonePosition
 #	var targetPosition = character.target
 #	var Distance = character.AttackDistance
 	var ScanningNodes = {startPos : cell}
 	var nodesKeys = ScanningNodes.keys()
+	print("targetPosition " + str(targetPosition))
 	for node in nodesKeys:
 		for dir in RoundDirections:
 			# Проверка, чтобы значение находилось в рамках зоны
@@ -388,6 +392,7 @@ func InDistanceCheck(character, Distance, targetPosition):
 						else: # иначе просто добавь её в массив сканируемых точек
 							ScanningNodes[gridPos] = {stepLevel = newStepLevel}
 							nodesKeys.append(gridPos)
+#	print("ScanningNodes " + str(ScanningNodes.keys()))
 	return false
 	pass
 
@@ -409,24 +414,52 @@ func BuildPathToTheEmptyZone(_Character, endPos):
 	return {path = newTrace, cost = Cost}
 	pass
 
-func BuildPathToTheTarget(_Character, endPos):
+#Строит путь до цели, может просто до неё вплотную, а может до позиции, пока цель не окажется в зоне поражения
+#Можно расширить так, что мы определяем какая зона поражения
+#Скорее всего мы добавляем в персонажа энумератор действия и даём геттер, чтобы он выдавал параметры действия - урон, дистанция и т.д.
+func BuildPathToTheTarget(_Character, endPos, attack = false):
 	var trace = WaveFindPath(_Character, endPos)
 	trace.invert()
 	var newTrace = []
+	var InDistance = false
 	var Cost = {movement = 0, zonePoints = 0}
+	print()
 	for tracePosition in trace:
 		if Grid[tracePosition.x][tracePosition.y].CheckMovement(_Character, Cost):
-			print("Один есть!")
+#			print("Cost - " + str(Cost))
 			newTrace.append(tracePosition)
+#			print("NewCost - " + str(GetCostMovement(_Character, newTrace)))
+			if attack:
+				if (InDistanceCheck(tracePosition, _Character.AttackDistance, _Character.target) && #Если цель на этой точке находится в дистанции поражения
+				!Grid[tracePosition.x][tracePosition.y].interzoneFlag && # И если это не интерзона
+				GetCostMovement(_Character, newTrace).actionPoints < _Character.ActionPoints): # И если у игрока есть хотя бы 1 AP
+					print("newTrace - " + str(newTrace))
+					InDistance = true
+					break
 		else:
 			break
 	var SelectedTarget = null
+	print("newTrace - " + str(newTrace))
 	if newTrace.size() > 0 && _Character.target == newTrace[-1]:
 		SelectedTarget = newTrace[-1]
 		newTrace.remove(newTrace.find(newTrace[-1]))
-	return {path = newTrace, cost = Cost, target = SelectedTarget}
+	return {path = newTrace, cost = Cost, target = SelectedTarget, InDistance = false}
 	pass
 
+# Высчитывание стоимости передвижения по пути
+func GetCostMovement(character, path):
+	var Cost = {movement = 0, actionPoints = 0, zonePoints = 0}
+	for point in path:
+		if !Grid[point.x][point.y].interzoneFlag:
+			if character.Movement + character.Speed * Cost.actionPoints > Cost.movement:
+				Cost.movement += 1
+			else:
+				Cost.movement += 1
+				Cost.actionPoints += 1
+		else:
+			Cost.zonePoints += 1
+	return Cost
+	pass
 
 func SetGlobalPath(mapPath):
 	var finalPath = []
@@ -440,17 +473,18 @@ func SetGlobalPath(mapPath):
 func GoToClick(character, click_position):
 	var startPosition = character.ZonePosition
 	var selectedPosition = Vector2(gridMap.world_to_map(click_position).x, gridMap.world_to_map(click_position).z)
-	if startPosition != selectedPosition:
-		ClearPathZone()
+	if InGridCheck(selectedPosition, Vector2.ZERO) && startPosition != selectedPosition:
 		var trace
-		if Grid[selectedPosition.x][selectedPosition.y].content == GridPoint.CHARACTER:
-#			print("Находится ли цель в зоне")
-			character.target = selectedPosition
-			trace = BuildPathToTheTarget(character, selectedPosition)
-			prints("target", str(trace.target))
-		elif Grid[selectedPosition.x][selectedPosition.y].content == GridPoint.EMPTY:
-			trace = BuildPathToTheEmptyZone(character, selectedPosition)
-		var finalPath = SetGlobalPath(trace.path)
-		character.path = finalPath
+		if !Grid[selectedPosition.x][selectedPosition.y].interzoneFlag:
+			ClearPathZone()
+			if Grid[selectedPosition.x][selectedPosition.y].content == GridPoint.CHARACTER:
+	#			print("Находится ли цель в зоне")
+				character.target = selectedPosition
+				trace = BuildPathToTheTarget(character, selectedPosition, true)
+				prints("target", str(trace.target))
+			elif Grid[selectedPosition.x][selectedPosition.y].content == GridPoint.EMPTY:
+				trace = BuildPathToTheEmptyZone(character, selectedPosition)
+			var finalPath = SetGlobalPath(trace.path)
+			character.path = finalPath
 	pass
 

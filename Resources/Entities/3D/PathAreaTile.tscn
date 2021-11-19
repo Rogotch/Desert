@@ -191,6 +191,16 @@ tracks/2/keys = {
 "update": 0,
 "values": [ Color( 1, 1, 1, 0 ), Color( 1, 1, 1, 0.0862745 ) ]
 }
+tracks/3/type = "bezier"
+tracks/3/path = NodePath(".:translation:y")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = false
+tracks/3/keys = {
+"points": PoolRealArray( -0.985722, -0.25, 0, 0.05, 2.00188, 0, -0.1, 1.01616, 0.25, 0 ),
+"times": PoolRealArray( 0.15, 0.45 )
+}
 
 [sub_resource type="Animation" id=7]
 resource_name = "disappear"

@@ -7,7 +7,7 @@ enum {EMPTY = 0, CHARACTER = 1, OBSTACLE = 2, OUTZONE = 3}
 var step = null
 var content = EMPTY
 var zoneID
-var interZonePoint = false
+var interzoneFlag = false
 
 func _ready():
 	add_to_group("GridPoints")
@@ -21,19 +21,20 @@ func ClearPoint():
 #Проверка возможности прохождения через эту клетку персонажем
 func CheckMovement(_character, lastPointsCost):
 	var potentialMovement = _character.Speed * _character.ActionPoints + _character.Movement
+	
 #	Если это межзонье, но у игрока есть и пункты движения и пункты перехода между зонами
-	if interZonePoint && _character.ZonePoints > lastPointsCost.zonePoints && potentialMovement > lastPointsCost.movement:
+	if interzoneFlag && _character.ZonePoints > lastPointsCost.zonePoints && potentialMovement > lastPointsCost.movement:
 #		То увеличь в стоимости пути количество необходимых пунктов межзония, не меняя при этом пункты движения
 		lastPointsCost.zonePoints += 1
 #		Верни истину, если у персонажа ещё есть очки передвижения и ложь в обратном случае
 		return (potentialMovement > lastPointsCost.movement)
 	else:
 #		Если это межзонье, но у игрока нет очков перехода между зонами, то верни ложь
-		if interZonePoint && _character.ZonePoints <= lastPointsCost.zonePoints:
+		if interzoneFlag && _character.ZonePoints <= lastPointsCost.zonePoints:
 			return false
 		else:
 #			Если это межзонье, верни ложь
-			if interZonePoint:
+			if interzoneFlag:
 				return false
 			else:
 #				Иначе верни результат в зависимости от того, достаточно ли у игрока очков передвижения и увеличь стоимость передвижения на 1
@@ -48,7 +49,7 @@ func OnCellEnd():
 	pass
 
 func OnCellMove(_Character):
-	if interZonePoint:
+	if interzoneFlag:
 		_Character.ZonePoints -= 1
 	else:
 		if !_Character.freeMovement:
