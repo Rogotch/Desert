@@ -111,7 +111,12 @@ func SetVisualGrids():
 		Grids.add_child(newGrid)
 		var CellsNum = zone.EndPos - zone.StartPos
 #		print(str($Environment/GridVisualizers/Line.get_active_material(0).set_shader_param("Offset", Vector2((0 if CellsNum.x % 2 == 0 else 5), (0 if CellsNum.y % 2 == 0 else 5)))))
-		newGrid.get_active_material(0).set_shader_param("Offset", Vector2((0 if int(CellsNum.x) % 2 == 0 else 5), (0 if int(CellsNum.y) % 2 == 0 else 5)))
+#		newGrid.AlfaMultiply = 0.5
+#		newGrid.SetAlfaMultiplySmooth(2)
+#		newGrid.GridColor = Color.yellow
+		newGrid.SetGridColorSmooth(Color.green)
+		newGrid.Offset = Vector2((0 if int(CellsNum.x) % 2 == 0 else 5), (0 if int(CellsNum.y) % 2 == 0 else 5))
+#		newGrid.get_active_material(0).set_shader_param("Offset", Vector2((0 if int(CellsNum.x) % 2 == 0 else 5), (0 if int(CellsNum.y) % 2 == 0 else 5)))
 		newGrid.transform.origin = Vector3(CellsNum.x * 10/2 + zone.StartPos.x * 10, GridYValue, CellsNum.y * 10/2 + zone.StartPos.y * 10)
 		var newMesh = CubeMesh.new()
 		newMesh.size = Vector3(CellsNum.x * 10, 0.01, CellsNum.y * 10)
@@ -443,7 +448,7 @@ func BuildPathToTheTarget(_Character, endPos, attack = false):
 	if newTrace.size() > 0 && _Character.target == newTrace[-1]:
 		SelectedTarget = newTrace[-1]
 		newTrace.remove(newTrace.find(newTrace[-1]))
-	return {path = newTrace, cost = Cost, target = SelectedTarget, InDistance = false}
+	return {path = newTrace, cost = Cost, target = SelectedTarget, InDistance = InDistance}
 	pass
 
 # Высчитывание стоимости передвижения по пути

@@ -1,9 +1,11 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://Resources/Shaders/3D/GridVisualizer.gdshader" type="Shader" id=1]
 [ext_resource path="res://Resources/Images/Shaders/noise_combined.png" type="Texture" id=2]
+[ext_resource path="res://Resources/Entities/3D/VisualGrid.gd" type="Script" id=3]
 
 [sub_resource type="CubeMesh" id=1]
+resource_local_to_scene = true
 size = Vector3( 30, 0.01, 30 )
 
 [sub_resource type="ShaderMaterial" id=2]
@@ -21,6 +23,6 @@ shader_param/color2 = Color( 0, 1, 0.937255, 0.635294 )
 shader_param/noize_img = ExtResource( 2 )
 
 [node name="Line" type="MeshInstance"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 115, 1, 15 )
 mesh = SubResource( 1 )
 material/0 = SubResource( 2 )
+script = ExtResource( 3 )
