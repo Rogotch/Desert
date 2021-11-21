@@ -1,5 +1,6 @@
 extends Node
 
+#var Arena
 var SelectedCharacter = null
 var PlayerTurn = true
 
@@ -13,6 +14,8 @@ func _ready():
 func StartTurn():
 	SelectedCharacter = TurnsQueue[queueIndex]
 	TurnsQueue[queueIndex].StartTurn()
+#	var zone = Arena.GetZoneByID(ZoneId)
+#	zone.GetAllCharacters()
 	pass
 
 func EndTurn():

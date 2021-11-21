@@ -27,9 +27,9 @@ var Speed        = MaxMovement
 var Multitasking = MaxActionPoints
 #var Constitution
 
-var HitPoints
+var Health 
 
-var ZonePosition = Vector2()
+var ZonePosition setget _SetCharacterPosition
 var ZoneId
 var velocity = Vector3.ZERO
 var target = null
@@ -58,7 +58,7 @@ func _ready():
 	yield(get_tree(), "idle_frame")
 	var V3Pos = Grid.world_to_map(transform.origin)
 	ZonePosition = Vector2(V3Pos.x, V3Pos.z)
-	_SetCharacterPosition()
+	_SetCharacterPosition(ZonePosition)
 #	Arena.Grid[ZonePosition.x][ZonePosition.y].content = GridPoint.PLAYER
 	ZoneId = Arena.GetActualZoneId(ZonePosition)
 	transform.origin = Grid.map_to_world(ZonePosition.x, 0, ZonePosition.y)
@@ -76,7 +76,9 @@ func _physics_process(_delta):
 		if transform.origin.distance_to(path[0]) > 0.5:
 			velocity = move_and_slide(velocity, Vector3.UP)
 		else:
-			_SetCharacterPosition()
+			var V3Pos = Grid.world_to_map(transform.origin)
+			var newpos = Vector2(V3Pos.x, V3Pos.z)
+			_SetCharacterPosition(newpos)
 			transform.origin = path[0]
 			Arena.Grid[ZonePosition.x][ZonePosition.y].OnCellMove(self)
 			path.remove(0)
@@ -91,16 +93,26 @@ func _physics_process(_delta):
 			else:
 				Arena.CreatePathZone(self)
 #			print("Movement - " + str(movement))
+		else:
+			SignalsScript.emit_signal("LeftThePosition", self, ZonePosition)
 		pass
 #			move_and_slide(move_vec.normalized() * speed, Vector3.UP)
 	pass
 
-func _SetCharacterPosition():
 #Смена принадлежности клетки
-	Arena.Grid[ZonePosition.x][ZonePosition.y].content = GridPoint.EMPTY
-	var V3Pos = Grid.world_to_map(transform.origin)
-	ZonePosition = Vector2(V3Pos.x, V3Pos.z)
-	Arena.Grid[ZonePosition.x][ZonePosition.y].content = GridPoint.CHARACTER
+func _SetCharacterPosition(newPosition):
+	Arena.Grid[ZonePosition.x][ZonePosition.y].content   = GridPoint.EMPTY
+	Arena.Grid[ZonePosition.x][ZonePosition.y].character = null
+	ZonePosition = newPosition
+	SignalsScript.emit_signal("CameOnPosition", self, ZonePosition)
+	if !Arena.Grid[ZonePosition.x][ZonePosition.y].interzone && ZoneId != Arena.Grid[ZonePosition.x][ZonePosition.y].zoneID:
+		ZoneId = Arena.Grid[ZonePosition.x][ZonePosition.y].zoneID
+		SignalsScript.emit_signal("CameOnZone", self, ZoneId)
+	elif Arena.Grid[ZonePosition.x][ZonePosition.y].interzone:
+		SignalsScript.emit_signal("LeftTheZone", self, ZoneId)
+		pass
+	Arena.Grid[ZonePosition.x][ZonePosition.y].content   = GridPoint.CHARACTER
+	Arena.Grid[ZonePosition.x][ZonePosition.y].character = self
 	pass
 
 func draw_path(target_pos):
@@ -133,6 +145,9 @@ func draw_path(target_pos):
 	pass
 
 func StartTurn():
+	print("ZoneID - " + str(ZoneId))
+	SignalsScript.emit_signal("StartTurnOnPosition", self, ZonePosition)
+	SignalsScript.emit_signal("StartTurnOnZone", self, ZoneId)
 	Selecter.visible = true
 	Movement = 0
 	ZonePoints = ZoneCross
@@ -141,6 +156,8 @@ func StartTurn():
 	pass
 
 func EndTurn():
+	SignalsScript.emit_signal("EndTurnOnPosition", self, ZonePosition)
+	SignalsScript.emit_signal("EndTurnOnZone", self, ZoneId)
 	Selecter.visible = false
 	Arena.ClearPathZone()
 	pass
@@ -162,10 +179,16 @@ func DoSomething():
 	print("Somethimg!")
 	if Arena.InDistanceCheck(ZonePosition, AttackDistance, target) && ActionPoints > 0:
 		ActionPoints -= 1
+		SignalsScript.emit_signal("Attack", self, Arena.Grid[target.x][target.y].character)
 		print("In AttackDistance")
 	target = null
 	if ActionPoints == 0 && Movement == 0:
 		FightSystem.EndTurn()
 	else:
 		Arena.CreatePathZone(self)
+	pass
+
+func TakeDamage(DamgeValue):
+	SignalsScript.emit_signal("TakingDamage", self)
+	Health -= DamgeValue
 	pass

@@ -18,10 +18,16 @@ _global_script_classes=[ {
 "class": "GridPoint",
 "language": "GDScript",
 "path": "res://Resources/Scripts/NodeScripts/GridPoint.gd"
+}, {
+"base": "Node",
+"class": "Zone",
+"language": "GDScript",
+"path": "res://Resources/Scripts/NodeScripts/Zone.gd"
 } ]
 _global_script_class_icons={
 "Character": "",
-"GridPoint": "res://Resources/Images/GUI/SimpleIcons/White/1x/target.png"
+"GridPoint": "res://Resources/Images/GUI/SimpleIcons/White/1x/target.png",
+"Zone": "res://Resources/Images/GUI/SimpleIcons/White/1x/tablet.png"
 }
 
 [application]
@@ -33,7 +39,12 @@ config/icon="res://icon.png"
 
 Global="*res://Resources/Scripts/GlobalScripts/Global.gd"
 FightSystem="*res://Resources/Scripts/GlobalScripts/FightSystem.gd"
+SignalsScript="*res://Resources/Scripts/GlobalScripts/SignalsScript.gd"
 FightUi="*res://Resources/Scenes/UI/FightUI.tscn"
+
+[debug]
+
+gdscript/warnings/unused_signal=false
 
 [input]
 

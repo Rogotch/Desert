@@ -2,7 +2,7 @@
 
 [ext_resource path="res://Resources/Shaders/3D/GridVisualizer.gdshader" type="Shader" id=1]
 [ext_resource path="res://Resources/Images/Shaders/noise_combined.png" type="Texture" id=2]
-[ext_resource path="res://Resources/Entities/3D/VisualGrid.gd" type="Script" id=3]
+[ext_resource path="res://Resources/Scripts/3DScripts/VisualGrid.gd" type="Script" id=3]
 
 [sub_resource type="CubeMesh" id=1]
 resource_local_to_scene = true
