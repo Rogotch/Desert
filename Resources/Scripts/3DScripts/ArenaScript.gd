@@ -312,8 +312,7 @@ func isCellCheck(pos, direction, gridArr, startZPoint, endZPoint, _Character):
 #			print(str(gridArr[pos.x][pos.y]))
 #			Проверка, что при диагональном переходе обе боковые клетки пусты
 			if (!(abs(direction.x) + abs(direction.y) > 1 &&
-			(gridArr[pos.x][pos.y + direction.y].content != GridPoint.EMPTY ||
-			 gridArr[pos.x + direction.x][pos.y].content != GridPoint.EMPTY)) ||
+			_Character.CheckDiagonalPosition(pos, direction)) ||
 			gridPos == _Character.target):
 				var step = 0
 	#			Проверка, что предыдущая точка не занята игроком и определение её шага

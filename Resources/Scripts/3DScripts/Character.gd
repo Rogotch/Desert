@@ -192,3 +192,8 @@ func TakeDamage(DamgeValue):
 	SignalsScript.emit_signal("TakingDamage", self)
 	Health -= DamgeValue
 	pass
+
+func CheckDiagonalPosition(pos, direction):
+	return (Arena.Grid[pos.x][pos.y + direction.y].content != GridPoint.EMPTY ||
+	Arena.Grid[pos.x + direction.x][pos.y].content != GridPoint.EMPTY)
+	pass
