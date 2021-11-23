@@ -2,7 +2,7 @@ extends Node
 
 class_name Zone, "res://Resources/Images/GUI/SimpleIcons/White/1x/tablet.png"
 
-enum {NONE, INTERZONE, FRIEND, ENEMY, PLAYER}
+enum {NONE, INTERZONE, FRIEND, ENEMY, PLAYER, COMMON}
 
 var Arena
 var Status = NONE
@@ -19,8 +19,6 @@ var Characters = []
 var VisualGrid
 
 func _ready():
-	SignalsScript.connect("CameOnZone",  self, "CheckSignal")
-	SignalsScript.connect("LeftTheZone", self, "CheckSignal")
 	pass # Replace with function body.
 
 func SetZoneParams(params):
@@ -34,7 +32,7 @@ func SetZoneParams(params):
 	pass
 
 func GetAllCharacters():
-#	Characters.clear()
+	Characters.clear()
 	var grid = Arena.Grid
 	var XCount = StartPos.x
 	var YCount = StartPos.y
@@ -47,9 +45,55 @@ func GetAllCharacters():
 			YCount += 1
 		YCount = StartPos.y
 		XCount += 1
+	CheckCondition()
 	pass
 
 func CheckSignal(_character, zoneID):
+	print("Zone id - " + str(zoneID))
 	if zoneID == ZoneId:
 		GetAllCharacters()
+		call_deferred("CheckCondition")
+	pass
+
+# Установка цвета сетки
+#		VisualGrid.GridColor = Color.yellow - мгновенная
+#		VisualGrid.SetGridColorSmooth(Color.green) - плавная
+func CheckCondition():
+	print("Check Condition!")
+	if !Interzone:
+		if Characters.size() == 0:
+			SetStatus(NONE)
+		else:
+			var teamNums = {}
+			print("Characters in zone - " + str(Characters.size()))
+			for _char in Characters:
+				if teamNums.has(_char.TeamNum):
+					teamNums[_char.TeamNum] += 1
+				else:
+					teamNums[_char.TeamNum] = 1
+			prints("teamNums", str(teamNums))
+			if teamNums.keys().size() > 1:
+				SetStatus(COMMON)
+			else:
+				match teamNums.keys()[0]:
+					0:
+						SetStatus(PLAYER)
+					1:
+						SetStatus(ENEMY)
+	pass
+
+func SetStatus(status):
+	match status:
+		NONE:
+			VisualGrid.SetGridColorSmooth(Color.white)
+			pass
+		PLAYER:
+			VisualGrid.SetGridColorSmooth(Color.aqua)
+			pass
+		ENEMY:
+			VisualGrid.SetGridColorSmooth(Color.red)
+			pass
+		COMMON:
+			VisualGrid.SetGridColorSmooth(Color.yellow)
+			pass
 	pass

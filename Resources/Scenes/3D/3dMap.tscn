@@ -199,6 +199,7 @@ AttackDistance = 1
 
 [node name="Character2" parent="CharactersNode" instance=ExtResource( 1 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 58.9311, 0, 99.7841 )
+TeamNum = 1
 physic_speed = 30.0
 MaxMovement = 2
 ZoneCross = 1
@@ -211,6 +212,7 @@ AttackDistance = 2
 
 [node name="Character3" parent="CharactersNode" instance=ExtResource( 1 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 42.89, -7.62939e-06, 90.8651 )
+TeamNum = 1
 physic_speed = 30.0
 MaxMovement = 3
 ZoneCross = 1

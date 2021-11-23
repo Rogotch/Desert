@@ -45,9 +45,18 @@ const RectDirections = [
 
 func _ready():
 	add_to_group("Arena")
+	
+	SignalsScript.connect("CameOnZone",  self, "CheckZone")
+	SignalsScript.connect("LeftTheZone", self, "CheckZone")
+	
 	SetVisualGrids()
 	SetCharacters()
 	pass # Replace with function body.
+
+func CheckZone(character, zoneID):
+	yield(get_tree(), "idle_frame")
+	GetZoneByID(zoneID).CheckSignal(character, zoneID)
+	pass
 
 #Устанавливает персонажей в список системы боя и начинает ход
 func SetCharacters():
@@ -55,6 +64,8 @@ func SetCharacters():
 	yield(get_tree(), "idle_frame")
 	FightSystem.StartTurn()
 	FightSystem.PlayerTurn = true
+	for zone in Zones:
+		zone.GetAllCharacters()
 	pass
 
 #Возвращает ID зоны по координатам
@@ -117,10 +128,10 @@ func SetVisualGrids():
 		Grids.add_child(newGrid)
 		var CellsNum = zone.EndPos - zone.StartPos
 #		print(str($Environment/GridVisualizers/Line.get_active_material(0).set_shader_param("Offset", Vector2((0 if CellsNum.x % 2 == 0 else 5), (0 if CellsNum.y % 2 == 0 else 5)))))
-#		newGrid.AlfaMultiply = 0.5
+		newGrid.AlfaMultiply = 0.7
 #		newGrid.SetAlfaMultiplySmooth(2)
 #		newGrid.GridColor = Color.yellow
-		newGrid.SetGridColorSmooth(Color.green)
+#		newGrid.SetGridColorSmooth(Color.green)
 		newGrid.Offset = Vector2((0 if int(CellsNum.x) % 2 == 0 else 5), (0 if int(CellsNum.y) % 2 == 0 else 5))
 #		newGrid.get_active_material(0).set_shader_param("Offset", Vector2((0 if int(CellsNum.x) % 2 == 0 else 5), (0 if int(CellsNum.y) % 2 == 0 else 5)))
 		newGrid.transform.origin = Vector3(CellsNum.x * 10/2 + zone.StartPos.x * 10, GridYValue, CellsNum.y * 10/2 + zone.StartPos.y * 10)
@@ -220,9 +231,7 @@ func SetZoneGrid(character):
 					 Grid[node.x + dir.x][node.y + dir.y].interzone ||
 					 Grid[node.x + dir.x][node.y + dir.y].interzone &&
 					 abs(dir.x) + abs(dir.y) > 1) || 
-					(abs(dir.x) + abs(dir.y) > 1 &&
-					(Grid[node.x][node.y + dir.y].content != GridPoint.EMPTY ||
-					 Grid[node.x + dir.x][node.y].content != GridPoint.EMPTY))):
+					(!character.CheckDiagonalPosition(node, dir))):
 					continue
 				else:
 					var gridPos = node + dir
@@ -311,10 +320,9 @@ func isCellCheck(pos, direction, gridArr, startZPoint, endZPoint, _Character):
 		gridArr[gridPos.x][gridPos.y].step == null):
 #			print(str(gridArr[pos.x][pos.y]))
 #			Проверка, что при диагональном переходе обе боковые клетки пусты
-			if (!(abs(direction.x) + abs(direction.y) > 1 &&
-			_Character.CheckDiagonalPosition(pos, direction)) ||
-			gridPos == _Character.target):
+			if (_Character.CheckDiagonalPosition(pos, direction) || gridPos == _Character.target):
 				var step = 0
+				print("")
 	#			Проверка, что предыдущая точка не занята игроком и определение её шага
 				if  gridArr[pos.x][pos.y].step != null:
 					step = gridArr[pos.x][pos.y].step

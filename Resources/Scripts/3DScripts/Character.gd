@@ -2,6 +2,8 @@ extends KinematicBody
 
 class_name Character
 
+
+export var TeamNum         : int
 export var physic_speed    : float
 export var MaxMovement     : int
 export var ZoneCross       : int
@@ -104,15 +106,16 @@ func _SetCharacterPosition(newPosition):
 	Arena.Grid[ZonePosition.x][ZonePosition.y].content   = GridPoint.EMPTY
 	Arena.Grid[ZonePosition.x][ZonePosition.y].character = null
 	ZonePosition = newPosition
+	Arena.Grid[ZonePosition.x][ZonePosition.y].content   = GridPoint.CHARACTER
+	Arena.Grid[ZonePosition.x][ZonePosition.y].character = self
+	
 	SignalsScript.emit_signal("CameOnPosition", self, ZonePosition)
 	if !Arena.Grid[ZonePosition.x][ZonePosition.y].interzone && ZoneId != Arena.Grid[ZonePosition.x][ZonePosition.y].zoneID:
 		ZoneId = Arena.Grid[ZonePosition.x][ZonePosition.y].zoneID
 		SignalsScript.emit_signal("CameOnZone", self, ZoneId)
-	elif Arena.Grid[ZonePosition.x][ZonePosition.y].interzone:
+	if Arena.Grid[ZonePosition.x][ZonePosition.y].interzone:
 		SignalsScript.emit_signal("LeftTheZone", self, ZoneId)
 		pass
-	Arena.Grid[ZonePosition.x][ZonePosition.y].content   = GridPoint.CHARACTER
-	Arena.Grid[ZonePosition.x][ZonePosition.y].character = self
 	pass
 
 func draw_path(target_pos):
@@ -193,7 +196,11 @@ func TakeDamage(DamgeValue):
 	Health -= DamgeValue
 	pass
 
+# Как персонаж будет вести себя при проходе через диагональные клетки, если в них кто-то есть
 func CheckDiagonalPosition(pos, direction):
-	return (Arena.Grid[pos.x][pos.y + direction.y].content != GridPoint.EMPTY ||
-	Arena.Grid[pos.x + direction.x][pos.y].content != GridPoint.EMPTY)
+	# Если это проход прямо, а не диагонально или оба угла пусты
+	return (abs(direction.x) + abs(direction.y) == 1 ||
+	(Arena.Grid[pos.x][pos.y + direction.y].content == GridPoint.EMPTY &&
+	 Arena.Grid[pos.x + direction.x][pos.y].content == GridPoint.EMPTY))
+#	return true
 	pass
