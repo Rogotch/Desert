@@ -15,6 +15,16 @@ _global_script_classes=[ {
 "path": "res://Resources/Scripts/3DScripts/Character.gd"
 }, {
 "base": "Node",
+"class": "Effect",
+"language": "GDScript",
+"path": "res://Resources/Scripts/NodeScripts/Effect.gd"
+}, {
+"base": "Node",
+"class": "EffectsHolder",
+"language": "GDScript",
+"path": "res://Resources/Scripts/NodeScripts/EffectsHolder.gd"
+}, {
+"base": "Node",
 "class": "GridPoint",
 "language": "GDScript",
 "path": "res://Resources/Scripts/NodeScripts/GridPoint.gd"
@@ -26,6 +36,8 @@ _global_script_classes=[ {
 } ]
 _global_script_class_icons={
 "Character": "",
+"Effect": "res://Resources/Images/GUI/SimpleIcons/25.png",
+"EffectsHolder": "res://Resources/Images/GUI/SimpleIcons/Icon16.png",
 "GridPoint": "res://Resources/Images/GUI/SimpleIcons/White/1x/target.png",
 "Zone": "res://Resources/Images/GUI/SimpleIcons/White/1x/tablet.png"
 }

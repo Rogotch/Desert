@@ -128,7 +128,7 @@ func SetVisualGrids():
 		Grids.add_child(newGrid)
 		var CellsNum = zone.EndPos - zone.StartPos
 #		print(str($Environment/GridVisualizers/Line.get_active_material(0).set_shader_param("Offset", Vector2((0 if CellsNum.x % 2 == 0 else 5), (0 if CellsNum.y % 2 == 0 else 5)))))
-		newGrid.AlfaMultiply = 0.7
+		newGrid.AlfaMultiply = 0.5
 #		newGrid.SetAlfaMultiplySmooth(2)
 #		newGrid.GridColor = Color.yellow
 #		newGrid.SetGridColorSmooth(Color.green)
