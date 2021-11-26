@@ -67,18 +67,18 @@ func CheckCondition():
 			var teamNums = {}
 			print("Characters in zone - " + str(Characters.size()))
 			for _char in Characters:
-				if teamNums.has(_char.TeamNum):
-					teamNums[_char.TeamNum] += 1
+				if teamNums.has(_char.PlayerTeam):
+					teamNums[_char.PlayerTeam] += 1
 				else:
-					teamNums[_char.TeamNum] = 1
+					teamNums[_char.PlayerTeam] = 1
 			prints("teamNums", str(teamNums))
 			if teamNums.keys().size() > 1:
 				SetStatus(COMMON)
 			else:
 				match teamNums.keys()[0]:
-					0:
+					true:
 						SetStatus(PLAYER)
-					1:
+					false:
 						SetStatus(ENEMY)
 	pass
 

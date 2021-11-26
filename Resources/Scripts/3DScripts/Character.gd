@@ -3,7 +3,7 @@ extends KinematicBody
 class_name Character
 
 
-export var TeamNum         : int
+export var PlayerTeam      : bool
 export var physic_speed    : float
 export var MaxMovement     : int
 export var ZoneCross       : int
