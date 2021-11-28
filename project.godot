@@ -50,6 +50,7 @@ config/icon="res://icon.png"
 [autoload]
 
 Global="*res://Resources/Scripts/GlobalScripts/Global.gd"
+DataBase="*res://Resources/Scripts/GlobalScripts/DataBase.gd"
 FightSystem="*res://Resources/Scripts/GlobalScripts/FightSystem.gd"
 SignalsScript="*res://Resources/Scripts/GlobalScripts/SignalsScript.gd"
 FightUi="*res://Resources/Scenes/UI/FightUI.tscn"

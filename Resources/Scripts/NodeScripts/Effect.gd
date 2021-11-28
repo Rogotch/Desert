@@ -2,9 +2,10 @@ extends Node
 
 class_name Effect, "res://Resources/Images/GUI/SimpleIcons/25.png"
 
-enum Type {POSITIVE, NEGATIVE, NEUTRAL}
+#enum Type {POSITIVE, NEGATIVE, NEUTRAL}
 enum ActivationTrigger {InZone, OutZone, InDistance, OutDistance, StartTurnOnZone, EndTurnOnZone, StartTurn, EndTurn}
-enum Target {Team, All}
+enum Target {Team, Enemy, All}
+enum Type {ZONE, POSITION, CHARACTER}
 
 export (String)            var EffectName
 export (bool)              var PlayerEffect

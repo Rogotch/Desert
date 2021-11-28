@@ -1,0 +1,16 @@
+[
+	{
+		"Name" : "HEAL",
+		"id" : 0,
+		"Type"    : "ZONE",
+		"Trigger" : "StartTurn",
+		"Target"  : "Team",
+		"Effects" : 
+			[
+				{
+					"parameter" : "Health",
+					"value" : 2
+				},
+			]
+	},
+]

@@ -16,6 +16,7 @@ export var SelecterPath        : NodePath
 export var MarkerPath          : NodePath
 export var DrawPath            : NodePath
 export var ArenaMainNodePath   : NodePath
+export (Array, int) var EmmEff
 
 onready var Marker        = get_node(MarkerPath)
 onready var Selecter      = get_node(SelecterPath)
@@ -36,7 +37,9 @@ var ZoneId
 var velocity = Vector3.ZERO
 var target = null
 #var Trace = []
-var startY
+var EmittedEffects = EffectsHolder.new()
+var ReceivedEffects = EffectsHolder.new()
+
 
 var Moving = false
 var freeMovement = false
@@ -51,9 +54,15 @@ var path = [] setget SetPath
 
 #var ActivePointID = null
 
+func LoadEmmEffects():
+	for effect in EmmEff:
+		EmittedEffects.SetEffectByID(effect)
+	pass
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	add_to_group("Units")
+	LoadEmmEffects()
 	Movement = 0
 	Speed        = MaxMovement
 	Multitasking = MaxActionPoints
@@ -156,6 +165,7 @@ func StartTurn():
 	ZonePoints = ZoneCross
 	ActionPoints = Multitasking
 	Arena.CreatePathZone(self)
+	EmittedEffects.ActivateEffects(Effect.ActivationTrigger.StartTurn, Effect.Type.ZONE)
 	pass
 
 func EndTurn():

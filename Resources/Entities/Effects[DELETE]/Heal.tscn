@@ -1,0 +1,10 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://Resources/Scripts/NodeScripts/Effect.gd" type="Script" id=1]
+
+[node name="Heal" type="Node"]
+script = ExtResource( 1 )
+EffectName = "HEAL"
+Trigger = 6
+Health = 2
+permanent = true
