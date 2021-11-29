@@ -6,6 +6,7 @@ class_name Character
 export var PlayerTeam      : bool
 export var physic_speed    : float
 export var MaxMovement     : int
+export var MaxHealth       : int
 export var ZoneCross       : int
 export var MaxActionPoints : int
 #export var gravity : float
@@ -66,6 +67,9 @@ func _ready():
 	Movement = 0
 	Speed        = MaxMovement
 	Multitasking = MaxActionPoints
+	EmittedEffects.Parent = self
+	ReceivedEffects.Parent = self
+	Health = MaxHealth
 	yield(get_tree(), "idle_frame")
 	var V3Pos = Grid.world_to_map(transform.origin)
 	ZonePosition = Vector2(V3Pos.x, V3Pos.z)
@@ -165,7 +169,7 @@ func StartTurn():
 	ZonePoints = ZoneCross
 	ActionPoints = Multitasking
 	Arena.CreatePathZone(self)
-	EmittedEffects.ActivateEffects(Effect.ActivationTrigger.StartTurn, Effect.Type.ZONE)
+	ReceivedEffects.ActivateEffectsByTriggerAndType(Effect.ActivationTrigger.StartTurn, Effect.Type.ZONE)
 	pass
 
 func EndTurn():

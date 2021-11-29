@@ -8,6 +8,7 @@ var Arena
 var Status = NONE
 
 var ZoneParameters setget SetZoneParams
+var ZoneEffects = EffectsHolder.new()
 
 var ZoneName
 var ZoneId
@@ -96,4 +97,16 @@ func SetStatus(status):
 		COMMON:
 			VisualGrid.SetGridColorSmooth(Color.yellow)
 			pass
+	pass
+
+func UpdateZoneEffects():
+	ZoneEffects.Effects.clear()
+	for character in Characters:
+		ZoneEffects.Effects.append_array(character.EmittedEffects.GetEffectsByType(Effect.Type.ZONE))
+		character.ReceivedEffects.DeleteAllEffectsByType(Effect.Type.ZONE)
+		pass
+	
+	for character in Characters:
+		character.ReceivedEffects.Effects.append_array(ZoneEffects.Effects)
+		pass
 	pass

@@ -8,6 +8,9 @@ class_name EffectsHolder, "res://Resources/Images/GUI/SimpleIcons/Icon16.png"
 var Effects = []
 var Parent = null
 
+func _init():
+	pass
+
 func _ready():
 	pass
 
@@ -17,14 +20,20 @@ func GetEffectsInfo():
 func GetEffects():
 	pass
 
-func ActivateEffects(trigger, type):
-	var effects = GetEffectByType(type)
+func ActivateEffectsByTriggerAndType(trigger, type):
+	var effects = GetEffectsByType(type)
 	for effect in effects:
 		if effect.Trigger == trigger:
 			Activate(effect)
 	pass
 
-func GetEffectByType(type):
+func ActivateEffectsByType(type):
+	var effects = GetEffectsByType(type)
+	for effect in effects:
+		Activate(effect)
+	pass
+
+func GetEffectsByType(type):
 	var finalEffects = []
 	for effect in Effects:
 		if effect.EffectType == type:
@@ -33,21 +42,44 @@ func GetEffectByType(type):
 	pass
 
 func Activate(effect):
-	match effect.EffectType:
-		Effect.Type.ZONE:
-			print("Активируется зональный эффект")
-			pass
-		Effect.Type.CHARSACTER:
-			print("Активируется эффект на персонаже")
-			pass
-		Effect.Type.POSITION:
-			print("Активируется эффект на позиции")
-			pass
+	for paramMod in effect.Parameters.keys():
+		if effect.Parameters[paramMod] != 0:
+			match paramMod:
+				"Health":
+					Parent.Health += effect.Parameters[paramMod]
+					pass
+				"Accuracy":
+					pass
+				"ActionPoints":
+					pass
+				"Speed":
+					pass
+#	match effect.EffectType:
+#		Effect.Type.ZONE:
+#			print("Активируется зональный эффект")
+#			SignalsScript.emit_signal("ZoneEffectsActivate")
+#			pass
+#		Effect.Type.CHARSACTER:
+#			print("Активируется эффект на персонаже")
+#			pass
+#		Effect.Type.POSITION:
+#			print("Активируется эффект на позиции")
+#			pass
+	pass
+
+func DeleteAllEffectsByType(type):
+	var count = 0
+	for effect in Effects:
+		if effect.EffectType == type:
+			Effects.remove(count)
+		else:
+			count += 1
 	pass
 
 func SetEffectByID(id):
 	var effectParams = DataBase.GetObjFromArrByID(DataBase.Effects, id)
 	var newEffect = Effect.new()
+	newEffect.Parameters = effectParams.Effects
 	match effectParams.Target:
 		"Team":
 			newEffect.EffectTarget = Effect.Target.Team

@@ -48,6 +48,7 @@ func _ready():
 	
 	SignalsScript.connect("CameOnZone",  self, "CheckZone")
 	SignalsScript.connect("LeftTheZone", self, "CheckZone")
+	SignalsScript.connect("UpdateZoneEffects", self, "UpdateAllZonesEffects")
 	
 	SetVisualGrids()
 	SetCharacters()
@@ -104,6 +105,15 @@ func GetZoneByPosition(objPos):
 			zone.EndPos.y > objPos.y):
 				return zone
 	return null
+	pass
+
+# 
+func UpdateAllZonesEffects():
+	for zone in Zones:
+		if zone.Interzone:
+			continue
+		else:
+			zone.UpdateZoneEffects()
 	pass
 
 #Устанавливает визуальное отображение сетки

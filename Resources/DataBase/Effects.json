@@ -6,11 +6,8 @@
 		"Trigger" : "StartTurn",
 		"Target"  : "Team",
 		"Effects" : 
-			[
-				{
-					"parameter" : "Health",
-					"value" : 2
-				},
-			]
+			{
+				"Health" : 2
+			},
 	},
 ]

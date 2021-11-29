@@ -43,18 +43,23 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="ZonePoints" type="Label" parent="UnitInformation/Strings"]
+[node name="Health" type="Label" parent="UnitInformation/Strings"]
 margin_right = 40.0
 margin_bottom = 14.0
 
-[node name="Movement" type="Label" parent="UnitInformation/Strings"]
+[node name="ZonePoints" type="Label" parent="UnitInformation/Strings"]
 margin_top = 18.0
 margin_right = 40.0
 margin_bottom = 32.0
 
-[node name="ActionPoints" type="Label" parent="UnitInformation/Strings"]
+[node name="Movement" type="Label" parent="UnitInformation/Strings"]
 margin_top = 36.0
 margin_right = 40.0
 margin_bottom = 50.0
+
+[node name="ActionPoints" type="Label" parent="UnitInformation/Strings"]
+margin_top = 54.0
+margin_right = 40.0
+margin_bottom = 68.0
 
 [connection signal="pressed" from="EndTurnButton" to="." method="NextTurn"]
