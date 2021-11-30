@@ -63,12 +63,12 @@ func LoadEmmEffects():
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	add_to_group("Units")
-	LoadEmmEffects()
 	Movement = 0
 	Speed        = MaxMovement
 	Multitasking = MaxActionPoints
 	EmittedEffects.Parent = self
 	ReceivedEffects.Parent = self
+	LoadEmmEffects()
 	Health = MaxHealth
 	yield(get_tree(), "idle_frame")
 	var V3Pos = Grid.world_to_map(transform.origin)

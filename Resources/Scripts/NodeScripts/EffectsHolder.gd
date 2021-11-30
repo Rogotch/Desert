@@ -46,7 +46,8 @@ func Activate(effect):
 		if effect.Parameters[paramMod] != 0:
 			match paramMod:
 				"Health":
-					Parent.Health += effect.Parameters[paramMod]
+					if Parent.PlayerTeam == effect.PlayerEffect:
+						Parent.Health += effect.Parameters[paramMod]
 					pass
 				"Accuracy":
 					pass
@@ -79,6 +80,7 @@ func DeleteAllEffectsByType(type):
 func SetEffectByID(id):
 	var effectParams = DataBase.GetObjFromArrByID(DataBase.Effects, id)
 	var newEffect = Effect.new()
+	newEffect.PlayerEffect = Parent.PlayerTeam
 	newEffect.Parameters = effectParams.Effects
 	match effectParams.Target:
 		"Team":

@@ -20,6 +20,5 @@ var Parameters = {Health = 0, Accuracy = 0, ActionPoints = 0, Speed = 0}
 export (bool)              var permanent = false
 export (int)               var duration = 1
 
-
 func _ready():
 	pass
