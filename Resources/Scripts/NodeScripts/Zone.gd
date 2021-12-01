@@ -2,7 +2,7 @@ extends Node
 
 class_name Zone, "res://Resources/Images/GUI/SimpleIcons/White/1x/tablet.png"
 
-enum {NONE, INTERZONE, FRIEND, ENEMY, PLAYER, COMMON}
+enum {NONE, INTERZONE, ENEMY, PLAYER, COMMON}
 
 var Arena
 var Status = NONE
@@ -30,6 +30,7 @@ func SetZoneParams(params):
 	StartPos       = params.StartPos
 	EndPos         = params.EndPos
 	Interzone      = params.interzone
+	ZoneEffects.ZoneObj = self
 	pass
 
 func GetAllCharacters():

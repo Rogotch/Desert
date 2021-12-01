@@ -6,7 +6,8 @@ class_name EffectsHolder, "res://Resources/Images/GUI/SimpleIcons/Icon16.png"
 #
 #var Out = false
 var Effects = []
-var Parent = null
+var Parent  = null
+var ZoneObj = null
 
 func _init():
 	pass
@@ -24,13 +25,19 @@ func ActivateEffectsByTriggerAndType(trigger, type):
 	var effects = GetEffectsByType(type)
 	for effect in effects:
 		if effect.Trigger == trigger:
-			Activate(effect)
+			if (effect.EffectTarget == Effect.Target.Team && Parent.PlayerTeam == effect.PlayerEffect ||
+				effect.EffectTarget == Effect.Target.Enemy && Parent.PlayerTeam != effect.PlayerEffect ||
+				effect.EffectTarget == Effect.Target.All):
+					Activate(effect)
 	pass
 
 func ActivateEffectsByType(type):
 	var effects = GetEffectsByType(type)
 	for effect in effects:
-		Activate(effect)
+		if (effect.EffectTarget == Effect.Target.Team && Parent.PlayerTeam == effect.PlayerEffect ||
+			effect.EffectTarget == Effect.Target.Enemy && Parent.PlayerTeam != effect.PlayerEffect ||
+			effect.EffectTarget == Effect.Target.All):
+				Activate(effect)
 	pass
 
 func GetEffectsByType(type):
@@ -42,12 +49,12 @@ func GetEffectsByType(type):
 	pass
 
 func Activate(effect):
+#	ZoneObj.GetZones
 	for paramMod in effect.Parameters.keys():
 		if effect.Parameters[paramMod] != 0:
 			match paramMod:
 				"Health":
-					if Parent.PlayerTeam == effect.PlayerEffect:
-						Parent.Health += effect.Parameters[paramMod]
+					Parent.Health += effect.Parameters[paramMod]
 					pass
 				"Accuracy":
 					pass
@@ -81,7 +88,9 @@ func SetEffectByID(id):
 	var effectParams = DataBase.GetObjFromArrByID(DataBase.Effects, id)
 	var newEffect = Effect.new()
 	newEffect.PlayerEffect = Parent.PlayerTeam
-	newEffect.Parameters = effectParams.Effects
+	newEffect.Parameters   = effectParams.Effects
+	newEffect.TargetsZones = effectParams.TargetsZones
+	
 	match effectParams.Target:
 		"Team":
 			newEffect.EffectTarget = Effect.Target.Team

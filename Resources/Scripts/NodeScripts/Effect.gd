@@ -16,6 +16,7 @@ export (Target)            var EffectTarget
 export (int)               var distance
 
 var Parameters = {Health = 0, Accuracy = 0, ActionPoints = 0, Speed = 0}
+var TargetsZones
 
 export (bool)              var permanent = false
 export (int)               var duration = 1

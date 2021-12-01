@@ -2,9 +2,10 @@
 	{
 		"Name" : "HEAL",
 		"id" : 0,
-		"Type"    : "ZONE",
-		"Trigger" : "StartTurn",
-		"Target"  : "Team",
+		"Type"           : "ZONE",
+		"Trigger"        : "StartTurn",
+		"Target"         : "Team",
+		"TargetsZones"   : [-1, 0]
 		"Effects" : 
 			{
 				"Health" : 2
