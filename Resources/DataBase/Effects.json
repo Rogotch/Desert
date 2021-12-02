@@ -5,7 +5,7 @@
 		"Type"           : "ZONE",
 		"Trigger"        : "StartTurn",
 		"Target"         : "Team",
-		"TargetsZones"   : [-1, 0]
+		"TargetsZones"   : [-1, 0],
 		"Effects" : 
 			{
 				"Health" : 2

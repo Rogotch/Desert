@@ -125,6 +125,7 @@ func SetVisualGrids():
 	for zone in ZonesParameters:
 		var newZone = Zone.new()
 		newZone.Arena = self
+		newZone.AllZones = Zones
 		newZone.ZoneParameters = zone
 		Zones.append(newZone)
 		if zone.interzone:

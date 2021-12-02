@@ -16,6 +16,7 @@ var Interzone
 var StartPos
 var EndPos
 
+var AllZones = []
 var Characters = []
 var VisualGrid
 
@@ -101,13 +102,34 @@ func SetStatus(status):
 	pass
 
 func UpdateZoneEffects():
+	GetNeighborZones([0, 1, 2], false)
 	ZoneEffects.Effects.clear()
 	for character in Characters:
 		ZoneEffects.Effects.append_array(character.EmittedEffects.GetEffectsByType(Effect.Type.ZONE))
+		# По-хорошему, надо раскидывать эффекты по зонам
+		# Что-то вроде - сначала собираем массив эффектов зональных
+		# А потом в цикле их перебираем и раскидываем по соседним зонам
+		# 
 		character.ReceivedEffects.DeleteAllEffectsByType(Effect.Type.ZONE)
 		pass
 	
 	for character in Characters:
 		character.ReceivedEffects.Effects.append_array(ZoneEffects.Effects)
 		pass
+	pass
+
+func GetNeighborZones(zones, mirrorFlag = true):
+	var ZonePos = AllZones.find(self)
+	prints("AllZones", AllZones)
+	prints("ZonePos", AllZones.find(self))
+	var finalZones = []
+	for zoneCount in zones:
+		var count = zoneCount
+		if count == 0:
+			finalZones.append(self.ZoneId)
+		else:
+			var mod = (2 if mirrorFlag else -2) * count
+			if ZonePos + mod >= 0 && ZonePos + mod < AllZones.size():
+				finalZones.append(AllZones[ZonePos + mod].ZoneId)
+	print("Final zones", finalZones)
 	pass
