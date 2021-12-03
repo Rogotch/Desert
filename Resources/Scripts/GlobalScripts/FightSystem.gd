@@ -19,7 +19,9 @@ func StartTurn():
 	pass
 
 func EndTurn():
+	yield(get_tree(), "idle_frame")
 	TurnsQueue[queueIndex].EndTurn()
 	queueIndex = (queueIndex + 1) % TurnsQueue.size()
-	StartTurn()
+	call_deferred("StartTurn")
+#	StartTurn()
 	pass

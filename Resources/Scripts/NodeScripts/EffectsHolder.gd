@@ -87,6 +87,7 @@ func DeleteAllEffectsByType(type):
 func SetEffectByID(id):
 	var effectParams = DataBase.GetObjFromArrByID(DataBase.Effects, id)
 	var newEffect = Effect.new()
+	newEffect.EffectName   = effectParams.Name
 	newEffect.PlayerEffect = Parent.PlayerTeam
 	newEffect.Parameters   = effectParams.Effects
 	newEffect.TargetsZones = effectParams.TargetsZones
@@ -122,6 +123,15 @@ func SetEffectByID(id):
 			newEffect.EffectType = Effect.Type.CHARACTER
 		"POSITION":
 			newEffect.EffectType = Effect.Type.POSITION
+	match effectParams.ZoneCondition:
+		"NONE":
+			newEffect.ZoneStatus = Effect.ZoneCondition.NONE
+		"PLAYER":
+			newEffect.ZoneStatus = Effect.ZoneCondition.PLAYER
+		"ENEMY":
+			newEffect.ZoneStatus = Effect.ZoneCondition.ENEMY
+		"COMMON":
+			newEffect.ZoneStatus = Effect.ZoneCondition.COMMON
 	
 	Effects.append(newEffect)
 	pass

@@ -16,6 +16,7 @@ var Interzone
 var StartPos
 var EndPos
 
+var ZoneStatus
 var AllZones = []
 var Characters = []
 var VisualGrid
@@ -86,6 +87,7 @@ func CheckCondition():
 	pass
 
 func SetStatus(status):
+	ZoneStatus = status
 	match status:
 		NONE:
 			VisualGrid.SetGridColorSmooth(Color.white)
@@ -105,31 +107,75 @@ func UpdateZoneEffects():
 	GetNeighborZones([0, 1, 2], false)
 	ZoneEffects.Effects.clear()
 	for character in Characters:
-		ZoneEffects.Effects.append_array(character.EmittedEffects.GetEffectsByType(Effect.Type.ZONE))
-		# По-хорошему, надо раскидывать эффекты по зонам
-		# Что-то вроде - сначала собираем массив эффектов зональных
+#		ZoneEffects.Effects.append_array(character.EmittedEffects.GetEffectsByType(Effect.Type.ZONE))
+		# Сначала собираем массив эффектов зональных
+		var effects = character.EmittedEffects.GetEffectsByType(Effect.Type.ZONE)
 		# А потом в цикле их перебираем и раскидываем по соседним зонам
-		# 
-		character.ReceivedEffects.DeleteAllEffectsByType(Effect.Type.ZONE)
+		for effect in effects:
+			var zones = GetNeighborZones(effect.TargetsZones, effect.PlayerEffect)
+			for zone in zones:
+				zone.SetEffect(effect)
 		pass
 	
-	for character in Characters:
-		character.ReceivedEffects.Effects.append_array(ZoneEffects.Effects)
-		pass
 	pass
 
 func GetNeighborZones(zones, mirrorFlag = true):
 	var ZonePos = AllZones.find(self)
-	prints("AllZones", AllZones)
-	prints("ZonePos", AllZones.find(self))
+#	prints("AllZones", AllZones)
+#	prints("ZonePos", AllZones.find(self))
 	var finalZones = []
 	for zoneCount in zones:
 		var count = zoneCount
 		if count == 0:
-			finalZones.append(self.ZoneId)
+			finalZones.append(self)
 		else:
 			var mod = (2 if mirrorFlag else -2) * count
 			if ZonePos + mod >= 0 && ZonePos + mod < AllZones.size():
-				finalZones.append(AllZones[ZonePos + mod].ZoneId)
-	print("Final zones", finalZones)
+				finalZones.append(AllZones[ZonePos + mod])
+	return finalZones
+#	print("Final zones", finalZones)
+	pass
+
+func SetEffect(effect):
+	PrintZoneInfo()
+	PrintEffectInfo(effect)
+	if ((effect.ZoneStatus == Effect.ZoneCondition.NONE   && ZoneStatus == NONE)   || # Если зона пустая
+		((effect.ZoneStatus == Effect.ZoneCondition.ENEMY && effect.PlayerEffect   || # Или если зона принадлежит противоположной команде
+		 effect.ZoneStatus == Effect.ZoneCondition.PLAYER && !effect.PlayerEffect) && 
+		ZoneStatus == ENEMY)  ||
+		((effect.ZoneStatus == Effect.ZoneCondition.PLAYER && effect.PlayerEffect   || # Или если зона принадлежит союзной команде
+		  effect.ZoneStatus == Effect.ZoneCondition.ENEMY && !effect.PlayerEffect)  && 
+		ZoneStatus == PLAYER)  ||
+		(effect.ZoneStatus == Effect.ZoneCondition.COMMON && ZoneStatus == COMMON)) : # Или если зона смешанная
+			ZoneEffects.Effects.append(effect) # то добавь этот эффект к эффектам зоны 
+	for character in Characters:
+		character.ReceivedEffects.DeleteAllEffectsByType(Effect.Type.ZONE)
+		character.ReceivedEffects.Effects.append_array(ZoneEffects.Effects)
+		pass
+	pass
+
+func PrintZoneInfo():
+	var status = ""
+	match ZoneStatus:
+		NONE:
+			status = "NONE"
+		PLAYER:
+			status = "PLAYER"
+		ENEMY:
+			status = "ENEMY"
+		COMMON:
+			status = "COMMON"
+	prints("Zone Status", status, "ZoneID", ZoneId)
+	pass
+
+func PrintEffectInfo(effect):
+	var status = ""
+	match effect.ZoneStatus:
+		Effect.ZoneCondition.PLAYER:
+			status = "PLAYER"
+		Effect.ZoneCondition.ENEMY:
+			status = "ENEMY"
+		Effect.ZoneCondition.COMMON:
+			status = "COMMON"
+	prints("Effect Status", status, "playerEffect -", effect.PlayerEffect)
 	pass

@@ -3,12 +3,26 @@
 		"Name" : "HEAL",
 		"id" : 0,
 		"Type"           : "ZONE",
+		"ZoneCondition"  : "COMMON",
 		"Trigger"        : "StartTurn",
 		"Target"         : "Team",
 		"TargetsZones"   : [-1, 0],
 		"Effects" : 
 			{
 				"Health" : 2
+			},
+	},
+	{
+		"Name" : "DAMAGE",
+		"id" : 1,
+		"Type"           : "ZONE",
+		"ZoneCondition"  : "ENEMY",
+		"Trigger"        : "StartTurn",
+		"Target"         : "Enemy",
+		"TargetsZones"   : [1, 0],
+		"Effects" : 
+			{
+				"Health" : -2
 			},
 	},
 ]

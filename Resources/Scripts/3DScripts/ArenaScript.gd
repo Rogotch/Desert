@@ -517,4 +517,3 @@ func GoToClick(character, click_position):
 			var finalPath = SetGlobalPath(trace.path)
 			character.path = finalPath
 	pass
-
