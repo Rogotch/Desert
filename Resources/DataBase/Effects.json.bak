@@ -33,7 +33,7 @@
 		"Type"           : "CHARACTER",
 		"Trigger"        : "StartTurn",
 		"Target"         : "Player",
-		"Duration"       : 3,
+		"Duration"       : 0,
 		"Effects" : 
 			{
 				"Health" : 2

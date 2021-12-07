@@ -18,6 +18,7 @@ export var MarkerPath          : NodePath
 export var DrawPath            : NodePath
 export var ArenaMainNodePath   : NodePath
 export (Array, int) var EmmEff
+export (Array, int) var RecEff
 
 onready var Marker        = get_node(MarkerPath)
 onready var Selecter      = get_node(SelecterPath)
@@ -58,6 +59,8 @@ var path = [] setget SetPath
 func LoadEmmEffects():
 	for effect in EmmEff:
 		EmittedEffects.SetEffectByID(effect)
+	for effect in RecEff:
+		ReceivedEffects.SetEffectByID(effect)
 	pass
 
 # Called when the node enters the scene tree for the first time.
@@ -170,6 +173,7 @@ func StartTurn():
 	ActionPoints = Multitasking
 	Arena.CreatePathZone(self)
 	ReceivedEffects.ActivateEffectsByTriggerAndType(Effect.ActivationTrigger.StartTurn, Effect.Type.ZONE)
+	ReceivedEffects.ActivateEffectsByTriggerAndType(Effect.ActivationTrigger.StartTurn, Effect.Type.CHARACTER)
 	pass
 
 func EndTurn():
