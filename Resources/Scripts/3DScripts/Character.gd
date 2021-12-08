@@ -35,6 +35,7 @@ var Multitasking = MaxActionPoints
 var Health 
 
 var ZonePosition setget _SetCharacterPosition
+var SelectedAction
 var ZoneId
 var velocity = Vector3.ZERO
 var target = null
@@ -185,7 +186,7 @@ func EndTurn():
 
 func SetPath(newPath):
 	print("Setter work!")
-	if target != null && Arena.InDistanceCheck(ZonePosition, AttackDistance, target):
+	if target != null && SelectedAction && SelectedAction.ActivationCheck():
 		print("In distance without movement")
 		DoSomething()
 	elif newPath.size() == 0:
@@ -198,7 +199,7 @@ func SetPath(newPath):
 # Атака или другие действия. Срабатывает всегда, когда target != null 
 func DoSomething():
 	print("Somethimg!")
-	if Arena.InDistanceCheck(ZonePosition, AttackDistance, target) && ActionPoints > 0:
+	if SelectedAction && SelectedAction.ActivationCheck():
 		ActionPoints -= 1
 		SignalsScript.emit_signal("Attack", self, Arena.Grid[target.x][target.y].character)
 		print("In AttackDistance")

@@ -1,6 +1,6 @@
 extends Node
 
-#var Arena
+var Arena
 var SelectedCharacter = null
 var PlayerTurn = true
 

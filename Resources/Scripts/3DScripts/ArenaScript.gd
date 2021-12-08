@@ -45,6 +45,7 @@ const RectDirections = [
 
 func _ready():
 	add_to_group("Arena")
+	FightSystem.Arena = self
 	
 	SignalsScript.connect("CameOnZone",  self, "CheckZone")
 	SignalsScript.connect("LeftTheZone", self, "CheckZone")
@@ -444,14 +445,18 @@ func BuildPathToTheEmptyZone(_Character, endPos):
 	return {path = newTrace, cost = Cost}
 	pass
 
+
+# Начал внедрять экшены, пока может не работать
 #Строит путь до цели, может просто до неё вплотную, а может до позиции, пока цель не окажется в зоне поражения
 #Можно расширить так, что мы определяем какая зона поражения
 #Скорее всего мы добавляем в персонажа энумератор действия и даём геттер, чтобы он выдавал параметры действия - урон, дистанция и т.д.
-func BuildPathToTheTarget(_Character, endPos, attack = false):
+func BuildPathToTheTarget(_Character, endPos, CharAction = null):
 	var trace = WaveFindPath(_Character, endPos)
 	trace.invert()
 	var newTrace = []
 	var InDistance = false
+	var inDistancePosition = null
+#	var CharAction = Action.new()
 	var Cost = {movement = 0, zonePoints = 0}
 	print()
 	for tracePosition in trace:
@@ -459,13 +464,15 @@ func BuildPathToTheTarget(_Character, endPos, attack = false):
 #			print("Cost - " + str(Cost))
 			newTrace.append(tracePosition)
 #			print("NewCost - " + str(GetCostMovement(_Character, newTrace)))
-			if attack:
-				if (InDistanceCheck(tracePosition, _Character.AttackDistance, _Character.target) && #Если цель на этой точке находится в дистанции поражения
-				!Grid[tracePosition.x][tracePosition.y].interzone && # И если это не интерзона
-				GetCostMovement(_Character, newTrace).actionPoints < _Character.ActionPoints): # И если у игрока есть хотя бы 1 AP
-					print("newTrace - " + str(newTrace))
-					InDistance = true
-					break
+			if CharAction:
+				if (InDistanceCheck(tracePosition, CharAction.Distance, CharAction.Target) && #Если цель на этой точке находится в дистанции поражения
+				!Grid[tracePosition.x][tracePosition.y].interzone): # И если это не интерзона
+					# Сохраняем позицию, с которой персонаж может достать до цели
+					inDistancePosition = tracePosition
+					if GetCostMovement(_Character, newTrace).actionPoints + CharAction.ActionCost <= _Character.ActionPoints: # И если у игрока достаточно AP для действия
+						print("newTrace - " + str(newTrace))
+						InDistance = true
+						break
 		else:
 			break
 	var SelectedTarget = null
@@ -473,7 +480,7 @@ func BuildPathToTheTarget(_Character, endPos, attack = false):
 	if newTrace.size() > 0 && _Character.target == newTrace[-1]:
 		SelectedTarget = newTrace[-1]
 		newTrace.remove(newTrace.find(newTrace[-1]))
-	return {path = newTrace, cost = Cost, target = SelectedTarget, InDistance = InDistance}
+	return {path = newTrace, cost = Cost, target = SelectedTarget, InDistance = InDistance, inDistancePosition = inDistancePosition}
 	pass
 
 # Высчитывание стоимости передвижения по пути
@@ -510,7 +517,7 @@ func GoToClick(character, click_position):
 			if Grid[selectedPosition.x][selectedPosition.y].content == GridPoint.CHARACTER:
 	#			print("Находится ли цель в зоне")
 				character.target = selectedPosition
-				trace = BuildPathToTheTarget(character, selectedPosition, true)
+				trace = BuildPathToTheTarget(character, selectedPosition, character.SelectedAction)
 				prints("target", str(trace.target))
 			elif Grid[selectedPosition.x][selectedPosition.y].content == GridPoint.EMPTY:
 				trace = BuildPathToTheEmptyZone(character, selectedPosition)
