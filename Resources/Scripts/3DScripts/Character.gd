@@ -11,6 +11,8 @@ export var ZoneCross       : int
 export var MaxActionPoints : int
 #export var gravity : float
 
+export (Array, Resource) var Actions
+
 export var GridPath            : NodePath
 export var SelecterPath        : NodePath
 #export var CameraPath          : NodePath
@@ -67,6 +69,8 @@ func LoadEmmEffects():
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	add_to_group("Units")
+	SelectedAction = Actions[0]
+	ActionPoints = MaxActionPoints
 	Movement = 0
 	Speed        = MaxMovement
 	Multitasking = MaxActionPoints
@@ -82,10 +86,11 @@ func _ready():
 	ZoneId = Arena.GetActualZoneId(ZonePosition)
 	transform.origin = Grid.map_to_world(ZonePosition.x, 0, ZonePosition.y)
 	print("ZoneId - " + str(ZoneId))
-#	print(str((Grid.world_to_map(transform.origin))))
-#	var newPosition = Grid.world_to_map(transform.origin) * Grid.cell_size + Grid.cell_size/2
-#	newPosition.y = transform.origin.y
-#	transform.origin = newPosition
+	
+	for action in Actions:
+		action.OwnCharacter = self
+		action.Arena = FightSystem.Arena
+	
 	pass # Replace with function body.
 
 func _physics_process(_delta):
@@ -186,7 +191,7 @@ func EndTurn():
 
 func SetPath(newPath):
 	print("Setter work!")
-	if target != null && SelectedAction && SelectedAction.ActivationCheck():
+	if target != null && SelectedAction && SelectedAction.ActivationCheck(target):
 		print("In distance without movement")
 		DoSomething()
 	elif newPath.size() == 0:
@@ -199,8 +204,10 @@ func SetPath(newPath):
 # Атака или другие действия. Срабатывает всегда, когда target != null 
 func DoSomething():
 	print("Somethimg!")
-	if SelectedAction && SelectedAction.ActivationCheck():
-		ActionPoints -= 1
+	prints( SelectedAction != null, SelectedAction.ActivationCheck(target))
+	if SelectedAction != null && SelectedAction.ActivationCheck(target):
+		print("Activation in character")
+		SelectedAction.Activate()
 		SignalsScript.emit_signal("Attack", self, Arena.Grid[target.x][target.y].character)
 		print("In AttackDistance")
 	target = null

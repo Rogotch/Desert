@@ -25,3 +25,7 @@ func EndTurn():
 	call_deferred("StartTurn")
 #	StartTurn()
 	pass
+
+func GetCharacterByPos(position):
+	return Arena.Grid[position.x][position.y].character
+	pass
