@@ -12,7 +12,17 @@ _global_script_classes=[ {
 "base": "Resource",
 "class": "Action",
 "language": "GDScript",
-"path": "res://Resources/Scripts/NodeScripts/Actions/Action.gd"
+"path": "res://Resources/Scripts/ResourcesScripts/Actions/Action.gd"
+}, {
+"base": "Action",
+"class": "ActionAttack",
+"language": "GDScript",
+"path": "res://Resources/Scripts/ResourcesScripts/Actions/ActionAttack.gd"
+}, {
+"base": "Action",
+"class": "ActionFireBall",
+"language": "GDScript",
+"path": "res://Resources/Scripts/ResourcesScripts/Actions/ActionFireBall.gd"
 }, {
 "base": "KinematicBody",
 "class": "Character",
@@ -41,6 +51,8 @@ _global_script_classes=[ {
 } ]
 _global_script_class_icons={
 "Action": "res://Resources/Images/GUI/SimpleIcons/White/1x/star.png",
+"ActionAttack": "",
+"ActionFireBall": "",
 "Character": "",
 "Effect": "res://Resources/Images/GUI/SimpleIcons/25.png",
 "EffectsHolder": "res://Resources/Images/GUI/SimpleIcons/Icon16.png",

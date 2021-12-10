@@ -19,6 +19,7 @@ func _ready():
 	connect("StartTurnOnZone", self, "UpdateZonesEffects")
 	connect("EndTurnOnZone", self, "UpdateZonesEffects")
 	connect("UpdateZoneEffects", self, "CheckSignal3")
+	
 #	connect("StartTurnOnZone", self, "CheckSignal3")
 #	connect("EndTurnOnZone", self, "CheckSignal4")
 	pass

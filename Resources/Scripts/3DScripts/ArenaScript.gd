@@ -427,6 +427,33 @@ func InDistanceCheck(startPos, Distance, targetPosition):
 	return false
 	pass
 
+func GetCharactersInArea(startPos, areaRadius):
+	var charactersArray = []
+	var cell = {stepLevel = 0}
+	var ScanningNodes = {startPos : cell}
+	var nodesKeys = ScanningNodes.keys()
+	if Grid[startPos.x][startPos.y].character:
+		charactersArray.append(Grid[startPos.x][startPos.y].character)
+	for node in nodesKeys:
+		for dir in RoundDirections:
+			# Проверка, чтобы значение находилось в рамках зоны
+			if InGridCheck(node, dir, Vector2.ZERO, GridSize):
+				var gridPos = node + dir
+				# Если клетки ещё нет в словаре сканированных клеток
+				if !ScanningNodes.has(gridPos):
+					# Увеличь уровень шага на 1
+					var newStepLevel   = ScanningNodes[node].stepLevel + 1
+					# Если клетка входит в доступную зону атаки
+					if areaRadius >= newStepLevel:
+						# Проверка, является ли эта точка целью
+						if Grid[gridPos.x][gridPos.y].character:
+							charactersArray.append(Grid[gridPos.x][gridPos.y].character)
+						ScanningNodes[gridPos] = {stepLevel = newStepLevel}
+						nodesKeys.append(gridPos)
+#	print("ScanningNodes " + str(ScanningNodes.keys()))
+	return charactersArray
+	pass
+
 func BuildPathToTheEmptyZone(_Character, endPos):
 	var trace = WaveFindPath(_Character, endPos)
 	trace.invert()
@@ -445,8 +472,6 @@ func BuildPathToTheEmptyZone(_Character, endPos):
 	return {path = newTrace, cost = Cost}
 	pass
 
-
-# Начал внедрять экшены, пока может не работать
 #Строит путь до цели, может просто до неё вплотную, а может до позиции, пока цель не окажется в зоне поражения
 #Можно расширить так, что мы определяем какая зона поражения
 #Скорее всего мы добавляем в персонажа энумератор действия и даём геттер, чтобы он выдавал параметры действия - урон, дистанция и т.д.
@@ -465,7 +490,7 @@ func BuildPathToTheTarget(_Character, endPos, CharAction = null):
 			newTrace.append(tracePosition)
 #			print("NewCost - " + str(GetCostMovement(_Character, newTrace)))
 			if CharAction:
-				if (InDistanceCheck(tracePosition, CharAction.Distance, CharAction.Target) && #Если цель на этой точке находится в дистанции поражения
+				if (CharAction.ActivationCheck(endPos) && #Если цель на этой точке находится в дистанции поражения
 				!Grid[tracePosition.x][tracePosition.y].interzone): # И если это не интерзона
 					# Сохраняем позицию, с которой персонаж может достать до цели
 					inDistancePosition = tracePosition
