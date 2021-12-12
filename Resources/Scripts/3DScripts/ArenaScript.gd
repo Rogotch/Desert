@@ -305,6 +305,62 @@ func ClearPathZone():
 #		tile.queue_free()
 	pass
 
+func CircleArea(startPos, radius):
+	var directions = [
+		Vector2( 1, 1), 
+		Vector2(-1, 1), 
+		Vector2( 1,-1), 
+		Vector2(-1,-1),
+	]
+	var StartPoint = startPos
+	var Octan = []
+	var AllPoints = []
+	# This defines how many tiles are roughly within the radius of the circle
+	for i in radius+1:
+		for j in radius+1:
+			
+			prints(i, j, radius, Vector2(i,j).length())
+			if int(round(Vector2(i,j).length()))<= radius:
+				Octan.append(Vector2(i,j))
+#	for i in radius:
+#		if i == 0:
+#			Octan.append(Vector2(radius, 0))
+#		else:
+##			prints(pow(Octan[i-1].x, 2), 2 * Octan[i-1].y, pow(Octan[i-1].x, 2) - 2 * Octan[i-1].y - 1, sqrt(pow(Octan[i-1].x, 2) - 2 * Octan[i-1].y - 1))
+##			var preX = ((pow(Octan[i-1].x, 2) - 2 * Octan[i-1].y - 1) * -1 if pow(Octan[i-1].x, 2) - 2 * Octan[i-1].y - 1 < 0 else pow(Octan[i-1].x, 2) - 2 * Octan[i-1].y - 1)
+#			var y = i
+#			var x = int(sqrt(pow(Octan[i-1].x, 2) - 2 * Octan[i-1].y - 1))
+##			var y = int((pow(Octan[i-1].x, 2) - (pow(Octan[i-1].x, 2) - 2 * Octan[i-1].y - 1) - 1) / 2)
+#			prints(i, x, y, (Vector2(x,y)))
+#			Octan.append(Vector2(x,y))
+#	Octan.append(Vector2(0, radius))
+	
+#	prints("Все точки одного октана", Octan)
+	
+	for octPoint in Octan:
+		for dir in directions:
+			if !AllPoints.has(octPoint * dir):
+				AllPoints.append(Vector2(octPoint * dir))
+	
+#	prints("Все точки              ", AllPoints)
+	
+	for i in AllPoints.size():
+		AllPoints[i] = StartPoint + AllPoints[i]
+	
+#	var count = 0
+#	while true:
+#		if InGridCheck(AllPoints[count]):
+#			count += 1
+#		else:
+#			AllPoints.remove(count)
+#
+#		if AllPoints.size() == count:
+#			break
+#	prints("Все точки перед выводом", AllPoints)
+#	PrintMap(AllPoints)
+	return AllPoints
+	pass
+
 func PrintGrid(finPos):
 	for i in Grid.size():
 		var Line = ""
@@ -316,6 +372,18 @@ func PrintGrid(finPos):
 				Line += "     "
 			else:
 				Line += ("%5d" % Grid[i][j].step)
+		print(str(Line))
+	pass
+
+func PrintMap(PositionsArr):
+	for i in Grid.size():
+		var Line = ""
+		for j in Grid[0].size():
+#			print()
+			if PositionsArr.has(Vector2(i,j)):
+				Line += (" *")
+			else:
+				Line += ("  ")
 		print(str(Line))
 	pass
 
@@ -389,7 +457,7 @@ func NextStep(pos, nGrid, dir):
 	pass
 
 #Проверяем, что ячейка находится внутри сетки
-func InGridCheck(pos, direction, ZoneStartPosition = GridStart, ZoneEndPosition = GridSize):
+func InGridCheck(pos, direction = Vector2.ZERO, ZoneStartPosition = GridStart, ZoneEndPosition = GridSize):
 	var gridPos = (pos) + direction
 #	print("GridSize - "+ str(GridSize))
 	if gridPos.x < ZoneEndPosition.x && gridPos.x >= ZoneStartPosition.x:
@@ -427,29 +495,12 @@ func InDistanceCheck(startPos, Distance, targetPosition):
 	return false
 	pass
 
-func GetCharactersInArea(startPos, areaRadius):
+func GetCharactersInPointsArray(array):
 	var charactersArray = []
-	var cell = {stepLevel = 0}
-	var ScanningNodes = {startPos : cell}
-	var nodesKeys = ScanningNodes.keys()
-	if Grid[startPos.x][startPos.y].character:
-		charactersArray.append(Grid[startPos.x][startPos.y].character)
-	for node in nodesKeys:
-		for dir in RoundDirections:
-			# Проверка, чтобы значение находилось в рамках зоны
-			if InGridCheck(node, dir, Vector2.ZERO, GridSize):
-				var gridPos = node + dir
-				# Если клетки ещё нет в словаре сканированных клеток
-				if !ScanningNodes.has(gridPos):
-					# Увеличь уровень шага на 1
-					var newStepLevel   = ScanningNodes[node].stepLevel + 1
-					# Если клетка входит в доступную зону атаки
-					if areaRadius >= newStepLevel:
-						# Проверка, является ли эта точка целью
-						if Grid[gridPos.x][gridPos.y].character:
-							charactersArray.append(Grid[gridPos.x][gridPos.y].character)
-						ScanningNodes[gridPos] = {stepLevel = newStepLevel}
-						nodesKeys.append(gridPos)
+	for arrPoint in array:
+		# Проверка, является ли эта точка целью
+		if Grid[arrPoint.x][arrPoint.y].character:
+			charactersArray.append(Grid[arrPoint.x][arrPoint.y].character)
 #	print("ScanningNodes " + str(ScanningNodes.keys()))
 	return charactersArray
 	pass
@@ -549,3 +600,5 @@ func GoToClick(character, click_position):
 			var finalPath = SetGlobalPath(trace.path)
 			character.path = finalPath
 	pass
+
+

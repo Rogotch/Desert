@@ -6,4 +6,3 @@
 resource_local_to_scene = true
 script = ExtResource( 1 )
 ActionCost = 1
-Distance = 2

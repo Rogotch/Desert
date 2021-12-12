@@ -28,4 +28,5 @@ func Activate():
 #	OwnCharacter.ActionPoints -= ActionCost
 	FightSystem.GetCharacterByPos(OwnCharacter.target).Health -= 5
 ##	OwnCharacter.Health -= 5
+	FightSystem.Mode = FightSystem.SelectMode.NONE
 	pass

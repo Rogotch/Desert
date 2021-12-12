@@ -1,8 +1,11 @@
 extends Node
 
+enum SelectMode {NONE, TARGET, POSITION, ZONE}
+
 var Arena
 var SelectedCharacter = null
 var PlayerTurn = true
+var Mode = SelectMode.NONE
 
 var TurnsQueue = []
 var queueIndex = 0

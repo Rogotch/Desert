@@ -69,7 +69,6 @@ func LoadEmmEffects():
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	add_to_group("Units")
-	SelectedAction = Actions[0]
 	ActionPoints = MaxActionPoints
 	Movement = 0
 	Speed        = MaxMovement
@@ -90,6 +89,7 @@ func _ready():
 	for action in Actions:
 		action.OwnCharacter = self
 		action.Arena = FightSystem.Arena
+	Actions[0].Select()
 	
 	pass # Replace with function body.
 
@@ -170,6 +170,7 @@ func draw_path(target_pos):
 	pass
 
 func StartTurn():
+	Actions[0].Select()
 	print("ZoneID - " + str(ZoneId))
 	SignalsScript.emit_signal("StartTurnOnPosition", self, ZonePosition)
 	SignalsScript.emit_signal("StartTurnOnZone", self, ZoneId)
@@ -204,7 +205,7 @@ func SetPath(newPath):
 # Атака или другие действия. Срабатывает всегда, когда target != null 
 func DoSomething():
 	print("Somethimg!")
-	prints( SelectedAction != null, SelectedAction.ActivationCheck(target))
+#	prints( SelectedAction != null, SelectedAction.ActivationCheck(target))
 	if SelectedAction != null && SelectedAction.ActivationCheck(target):
 		print("Activation in character")
 		SelectedAction.Activate()
