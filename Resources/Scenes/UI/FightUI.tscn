@@ -1,10 +1,57 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=15 format=2]
 
 [ext_resource path="res://Resources/Scripts/UIScripts/FightUI.gd" type="Script" id=1]
 [ext_resource path="res://Resources/Fonts/DynamicFont.tres" type="DynamicFont" id=2]
+[ext_resource path="res://Resources/Entities/UI/Cell.tscn" type="PackedScene" id=3]
+[ext_resource path="res://Resources/Images/GUI/02.png" type="Texture" id=4]
 
 [sub_resource type="Theme" id=1]
 default_font = ExtResource( 2 )
+
+[sub_resource type="AtlasTexture" id=2]
+flags = 4
+atlas = ExtResource( 4 )
+region = Rect2( 25, 22, 5, 5 )
+
+[sub_resource type="AtlasTexture" id=3]
+flags = 4
+atlas = ExtResource( 4 )
+region = Rect2( 2, 24, 14, 5 )
+
+[sub_resource type="AtlasTexture" id=4]
+flags = 4
+atlas = ExtResource( 4 )
+region = Rect2( 400, 20, 14, 5 )
+
+[sub_resource type="AtlasTexture" id=5]
+flags = 4
+atlas = ExtResource( 4 )
+region = Rect2( 35, 2, 5, 14 )
+
+[sub_resource type="AtlasTexture" id=6]
+flags = 4
+atlas = ExtResource( 4 )
+region = Rect2( 23, 76, 5, 14 )
+
+[sub_resource type="AtlasTexture" id=7]
+flags = 4
+atlas = ExtResource( 4 )
+region = Rect2( 0, 0, 20, 20 )
+
+[sub_resource type="AtlasTexture" id=8]
+flags = 4
+atlas = ExtResource( 4 )
+region = Rect2( 0, 71, 20, 20 )
+
+[sub_resource type="AtlasTexture" id=9]
+flags = 4
+atlas = ExtResource( 4 )
+region = Rect2( 395, 0, 20, 20 )
+
+[sub_resource type="AtlasTexture" id=10]
+flags = 4
+atlas = ExtResource( 4 )
+region = Rect2( 395, 71, 20, 20 )
 
 [node name="FightUI" type="Control"]
 anchor_right = 1.0
@@ -16,6 +63,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 _UnitUI = NodePath("UnitInformation")
+_ActionsCells = NodePath("Actions/ActionsContainer/ActionsCells")
 UnitUIOffset = Vector2( -10, -10 )
 
 [node name="EndTurnButton" type="Button" parent="."]
@@ -67,5 +115,253 @@ margin_bottom = 68.0
 margin_top = 72.0
 margin_right = 142.0
 margin_bottom = 92.0
+
+[node name="Actions" type="Control" parent="."]
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_top = -100.0
+margin_right = -134.0
+
+[node name="Container" type="Control" parent="Actions"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 1.0
+margin_top = 4.5
+margin_right = -1.0
+margin_bottom = -4.5
+
+[node name="Center" type="TextureRect" parent="Actions/Container"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 10.0
+margin_top = 10.0
+margin_right = -9.0
+margin_bottom = -10.0
+texture = SubResource( 2 )
+expand = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="LeftBord" type="TextureRect" parent="Actions/Container"]
+anchor_bottom = 1.0
+margin_left = 2.0
+margin_top = 20.0
+margin_right = 16.0
+margin_bottom = -22.0
+rect_min_size = Vector2( 14, 0 )
+texture = SubResource( 3 )
+expand = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="RightBord" type="TextureRect" parent="Actions/Container"]
+anchor_left = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -15.0
+margin_top = 20.0
+margin_right = -1.0
+margin_bottom = -22.0
+rect_min_size = Vector2( 14, 0 )
+texture = SubResource( 4 )
+expand = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TopBord" type="TextureRect" parent="Actions/Container"]
+anchor_right = 1.0
+margin_left = 20.0
+margin_top = 2.0
+margin_right = -20.0
+margin_bottom = 16.0
+rect_min_size = Vector2( 0, 14 )
+texture = SubResource( 5 )
+expand = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="DownBord" type="TextureRect" parent="Actions/Container"]
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 20.0
+margin_top = -17.0
+margin_right = -20.0
+margin_bottom = -3.0
+rect_min_size = Vector2( 0, 14 )
+texture = SubResource( 6 )
+expand = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="LeftTop" type="TextureRect" parent="Actions/Container"]
+margin_right = 21.0
+margin_bottom = 22.0
+texture = SubResource( 7 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="LeftDown" type="TextureRect" parent="Actions/Container"]
+anchor_top = 1.0
+anchor_bottom = 1.0
+margin_top = -22.0
+margin_right = 21.0
+texture = SubResource( 8 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="RightTop" type="TextureRect" parent="Actions/Container"]
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -20.0
+margin_bottom = 20.0
+texture = SubResource( 9 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="RightDown" type="TextureRect" parent="Actions/Container"]
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -20.0
+margin_top = -22.0
+margin_bottom = -2.0
+texture = SubResource( 10 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ActionsContainer" type="CenterContainer" parent="Actions"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ActionsCells" type="HBoxContainer" parent="Actions/ActionsContainer"]
+margin_left = 7.0
+margin_top = 12.0
+margin_right = 883.0
+margin_bottom = 88.0
+
+[node name="Cell" parent="Actions/ActionsContainer/ActionsCells" instance=ExtResource( 3 )]
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 0.0
+margin_top = 0.0
+margin_right = 76.0
+margin_bottom = 76.0
+
+[node name="Cell2" parent="Actions/ActionsContainer/ActionsCells" instance=ExtResource( 3 )]
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 80.0
+margin_top = 0.0
+margin_right = 156.0
+margin_bottom = 76.0
+
+[node name="Cell3" parent="Actions/ActionsContainer/ActionsCells" instance=ExtResource( 3 )]
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 160.0
+margin_top = 0.0
+margin_right = 236.0
+margin_bottom = 76.0
+
+[node name="Cell4" parent="Actions/ActionsContainer/ActionsCells" instance=ExtResource( 3 )]
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 240.0
+margin_top = 0.0
+margin_right = 316.0
+margin_bottom = 76.0
+
+[node name="Cell5" parent="Actions/ActionsContainer/ActionsCells" instance=ExtResource( 3 )]
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 320.0
+margin_top = 0.0
+margin_right = 396.0
+margin_bottom = 76.0
+
+[node name="Cell6" parent="Actions/ActionsContainer/ActionsCells" instance=ExtResource( 3 )]
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 400.0
+margin_top = 0.0
+margin_right = 476.0
+margin_bottom = 76.0
+
+[node name="Cell7" parent="Actions/ActionsContainer/ActionsCells" instance=ExtResource( 3 )]
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 480.0
+margin_top = 0.0
+margin_right = 556.0
+margin_bottom = 76.0
+
+[node name="Cell8" parent="Actions/ActionsContainer/ActionsCells" instance=ExtResource( 3 )]
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 560.0
+margin_top = 0.0
+margin_right = 636.0
+margin_bottom = 76.0
+
+[node name="Cell9" parent="Actions/ActionsContainer/ActionsCells" instance=ExtResource( 3 )]
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 640.0
+margin_top = 0.0
+margin_right = 716.0
+margin_bottom = 76.0
+
+[node name="Cell10" parent="Actions/ActionsContainer/ActionsCells" instance=ExtResource( 3 )]
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 720.0
+margin_top = 0.0
+margin_right = 796.0
+margin_bottom = 76.0
+
+[node name="Cell11" parent="Actions/ActionsContainer/ActionsCells" instance=ExtResource( 3 )]
+anchor_left = 0.0
+anchor_top = 0.0
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 800.0
+margin_top = 0.0
+margin_right = 876.0
+margin_bottom = 76.0
 
 [connection signal="pressed" from="EndTurnButton" to="." method="NextTurn"]

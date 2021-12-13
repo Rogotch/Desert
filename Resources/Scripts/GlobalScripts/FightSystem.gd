@@ -10,6 +10,7 @@ var Mode = SelectMode.NONE
 var TurnsQueue = []
 var queueIndex = 0
 
+
 func _ready():
 	pass
 

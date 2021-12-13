@@ -195,7 +195,7 @@ material/0 = SubResource( 13 )
 [node name="PathZone" type="Spatial" parent="Environment"]
 
 [node name="Camera" type="Camera" parent="."]
-transform = Transform( -4.37114e-08, 0.866025, -0.5, 0, 0.5, 0.866025, 1, 3.78552e-08, -2.18557e-08, -1.51293, 112.568, 102.266 )
+transform = Transform( -4.36541e-08, 0.890475, -0.455032, 2.23663e-09, 0.455032, 0.890475, 1, 3.78552e-08, -2.18557e-08, -1.51293, 112.568, 102.266 )
 current = true
 fov = 67.5
 far = 190.3
