@@ -13,9 +13,19 @@ onready var UnitMP = UnitUI.get_node("Strings/Movement")
 onready var UnitAP = UnitUI.get_node("Strings/ActionPoints")
 
 var SelectedAction = null
+var SelectedCharacter = null
 
 func _ready():
 	ConnectAllCells()
+	FightSystem.connect("EndTurn", self, "ClearCells")
+	FightSystem.connect("StartTurn", self, "FillCells")
+	SignalsScript.connect("DoAction", self, "UnselectActivedAction")
+	pass
+
+func UnselectActivedAction(_character, action_id):
+	if SelectedAction:
+		SelectedAction.Unselect()
+		SelectedAction = null
 	pass
 
 func NextTurn():
@@ -32,19 +42,52 @@ func _physics_process(_delta):
 		UnitAP.text = "Очки действий       - " + str(FightSystem.SelectedCharacter.ActionPoints)
 	pass
 
+func FillCells(character):
+	SelectedCharacter = character
+	var count = 0
+	for cell in ActionsCells.get_children():
+		if count < character.Actions.size():
+			cell.Icon = load(character.Actions[count].IconOpen)
+			cell._change_disabled(false)
+		else:
+			cell._change_disabled(true)
+		count += 1
+	pass
+
+func ClearCells():
+	SelectedCharacter = null
+	if SelectedAction:
+		SelectedAction.Unselect()
+		SelectedAction = null
+	for cell in ActionsCells.get_children():
+		cell._change_disabled(true)
+		cell.ClearIcon()
+	pass
+
 func ConnectAllCells():
 	var Cells = ActionsCells.get_children()
 	for cell in Cells:
 		cell.connect("pressed", self, "SelectCell", [cell])
+		cell.connect("Select", self, "CellSelected")
 	pass
 
 func SelectCell(cell):
 	if cell != SelectedAction:
 		if SelectedAction:
+			if SelectedCharacter:
+				SelectedCharacter.Actions[SelectedAction.get_index()].Unselect()
 			SelectedAction.Unselect()
 		SelectedAction = cell
 		cell.Select()
 	else:
+		if SelectedCharacter:
+			SelectedCharacter.Actions[SelectedAction.get_index()].Unselect()
 		SelectedAction.Unselect()
 		SelectedAction = null
+	pass
+
+func CellSelected(cell):
+	prints("index - ", cell.get_index())
+	if SelectedCharacter:
+		SelectedCharacter.Actions[cell.get_index()].Select()
 	pass

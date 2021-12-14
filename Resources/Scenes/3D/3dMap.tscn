@@ -1,4 +1,4 @@
-[gd_scene load_steps=27 format=2]
+[gd_scene load_steps=29 format=2]
 
 [ext_resource path="res://Resources/Entities/3D/Character.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Resources/Scripts/ResourcesScripts/Actions/Action.gd" type="Script" id=2]
@@ -9,6 +9,7 @@
 [ext_resource path="res://Resources/Scripts/3DScripts/ArenaScript.gd" type="Script" id=7]
 [ext_resource path="res://Resources/Images/Shaders/noise_combined.png" type="Texture" id=8]
 [ext_resource path="res://Resources/Scripts/ResourcesScripts/Actions/ActionFireBall.gd" type="Script" id=9]
+[ext_resource path="res://Resources/Scripts/ResourcesScripts/Actions/ActionAttack.gd" type="Script" id=10]
 
 [sub_resource type="SpatialMaterial" id=1]
 flags_transparent = true
@@ -79,20 +80,35 @@ height = 8.087
 [sub_resource type="SpatialMaterial" id=13]
 albedo_color = Color( 0.286275, 0.392157, 0.286275, 1 )
 
+[sub_resource type="Resource" id=19]
+resource_name = "Attack"
+script = ExtResource( 10 )
+ActionCost = 1
+IconOpen = "res://Resources/Images/GUI/Icons/IconAtlas.tres"
+IconClose = ""
+Distance = 1
+
 [sub_resource type="Resource" id=18]
 script = ExtResource( 9 )
 ActionCost = 2
+IconOpen = "res://Resources/Images/GUI/Icons/ActionsIcons/11.png"
+IconClose = ""
 Radius = 2
+Damage = 5
 
 [sub_resource type="Resource" id=16]
 resource_local_to_scene = true
 script = ExtResource( 2 )
 ActionCost = 1
+IconOpen = "res://Resources/Images/GUI/Icons/ActionsIcons/14.png"
+IconClose = ""
 
 [sub_resource type="Resource" id=17]
 resource_local_to_scene = true
 script = ExtResource( 2 )
 ActionCost = 1
+IconOpen = "res://Resources/Images/GUI/Icons/ActionsIcons/32.png"
+IconClose = ""
 
 [node name="Arena" type="Spatial"]
 script = ExtResource( 7 )
@@ -210,7 +226,7 @@ MaxMovement = 1
 MaxHealth = 20
 ZoneCross = 1
 MaxActionPoints = 3
-Actions = [ SubResource( 18 ) ]
+Actions = [ SubResource( 19 ), SubResource( 18 ) ]
 GridPath = NodePath("../../Environment/GridMap")
 MarkerPath = NodePath("../../Environment/Marker")
 DrawPath = NodePath("../../Environment/Draw")

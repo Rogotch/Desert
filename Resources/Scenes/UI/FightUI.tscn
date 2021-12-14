@@ -1,9 +1,12 @@
-[gd_scene load_steps=15 format=2]
+[gd_scene load_steps=18 format=2]
 
 [ext_resource path="res://Resources/Scripts/UIScripts/FightUI.gd" type="Script" id=1]
 [ext_resource path="res://Resources/Fonts/DynamicFont.tres" type="DynamicFont" id=2]
 [ext_resource path="res://Resources/Entities/UI/Cell.tscn" type="PackedScene" id=3]
 [ext_resource path="res://Resources/Images/GUI/02.png" type="Texture" id=4]
+[ext_resource path="res://Resources/Images/GUI/Buttons/03.png" type="Texture" id=5]
+[ext_resource path="res://Resources/Images/GUI/Buttons/01.png" type="Texture" id=6]
+[ext_resource path="res://Resources/Images/GUI/Buttons/02.png" type="Texture" id=7]
 
 [sub_resource type="Theme" id=1]
 default_font = ExtResource( 2 )
@@ -63,20 +66,8 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 _UnitUI = NodePath("UnitInformation")
-_ActionsCells = NodePath("Actions/ActionsContainer/ActionsCells")
+_ActionsCells = NodePath("BottomUI/Actions/ActionsContainer/ActionsCells")
 UnitUIOffset = Vector2( -10, -10 )
-
-[node name="EndTurnButton" type="Button" parent="."]
-anchor_left = 1.0
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-margin_left = -131.0
-margin_top = -43.0
-text = "Конец хода"
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="UnitInformation" type="Control" parent="."]
 mouse_filter = 2
@@ -116,22 +107,38 @@ margin_top = 72.0
 margin_right = 142.0
 margin_bottom = 92.0
 
-[node name="Actions" type="Control" parent="."]
+[node name="BottomUI" type="HBoxContainer" parent="."]
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
+margin_left = 30.0
 margin_top = -100.0
-margin_right = -134.0
+margin_right = -30.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
-[node name="Container" type="Control" parent="Actions"]
+[node name="Actions" type="Control" parent="BottomUI"]
+margin_right = 740.0
+margin_bottom = 100.0
+rect_min_size = Vector2( 740, 0 )
+size_flags_horizontal = 3
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Container" type="Control" parent="BottomUI/Actions"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = 1.0
 margin_top = 4.5
 margin_right = -1.0
 margin_bottom = -4.5
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
-[node name="Center" type="TextureRect" parent="Actions/Container"]
+[node name="Center" type="TextureRect" parent="BottomUI/Actions/Container"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = 10.0
@@ -144,7 +151,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="LeftBord" type="TextureRect" parent="Actions/Container"]
+[node name="LeftBord" type="TextureRect" parent="BottomUI/Actions/Container"]
 anchor_bottom = 1.0
 margin_left = 2.0
 margin_top = 20.0
@@ -157,7 +164,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="RightBord" type="TextureRect" parent="Actions/Container"]
+[node name="RightBord" type="TextureRect" parent="BottomUI/Actions/Container"]
 anchor_left = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -172,7 +179,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="TopBord" type="TextureRect" parent="Actions/Container"]
+[node name="TopBord" type="TextureRect" parent="BottomUI/Actions/Container"]
 anchor_right = 1.0
 margin_left = 20.0
 margin_top = 2.0
@@ -185,7 +192,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="DownBord" type="TextureRect" parent="Actions/Container"]
+[node name="DownBord" type="TextureRect" parent="BottomUI/Actions/Container"]
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -200,7 +207,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="LeftTop" type="TextureRect" parent="Actions/Container"]
+[node name="LeftTop" type="TextureRect" parent="BottomUI/Actions/Container"]
 margin_right = 21.0
 margin_bottom = 22.0
 texture = SubResource( 7 )
@@ -208,7 +215,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="LeftDown" type="TextureRect" parent="Actions/Container"]
+[node name="LeftDown" type="TextureRect" parent="BottomUI/Actions/Container"]
 anchor_top = 1.0
 anchor_bottom = 1.0
 margin_top = -22.0
@@ -218,7 +225,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="RightTop" type="TextureRect" parent="Actions/Container"]
+[node name="RightTop" type="TextureRect" parent="BottomUI/Actions/Container"]
 anchor_left = 1.0
 anchor_right = 1.0
 margin_left = -20.0
@@ -228,7 +235,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="RightDown" type="TextureRect" parent="Actions/Container"]
+[node name="RightDown" type="TextureRect" parent="BottomUI/Actions/Container"]
 anchor_left = 1.0
 anchor_top = 1.0
 anchor_right = 1.0
@@ -241,20 +248,20 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="ActionsContainer" type="CenterContainer" parent="Actions"]
+[node name="ActionsContainer" type="CenterContainer" parent="BottomUI/Actions"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="ActionsCells" type="HBoxContainer" parent="Actions/ActionsContainer"]
-margin_left = 7.0
+[node name="ActionsCells" type="HBoxContainer" parent="BottomUI/Actions/ActionsContainer"]
+margin_left = 12.0
 margin_top = 12.0
-margin_right = 883.0
+margin_right = 728.0
 margin_bottom = 88.0
 
-[node name="Cell" parent="Actions/ActionsContainer/ActionsCells" instance=ExtResource( 3 )]
+[node name="Cell" parent="BottomUI/Actions/ActionsContainer/ActionsCells" instance=ExtResource( 3 )]
 anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
@@ -264,7 +271,7 @@ margin_top = 0.0
 margin_right = 76.0
 margin_bottom = 76.0
 
-[node name="Cell2" parent="Actions/ActionsContainer/ActionsCells" instance=ExtResource( 3 )]
+[node name="Cell2" parent="BottomUI/Actions/ActionsContainer/ActionsCells" instance=ExtResource( 3 )]
 anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
@@ -274,7 +281,7 @@ margin_top = 0.0
 margin_right = 156.0
 margin_bottom = 76.0
 
-[node name="Cell3" parent="Actions/ActionsContainer/ActionsCells" instance=ExtResource( 3 )]
+[node name="Cell3" parent="BottomUI/Actions/ActionsContainer/ActionsCells" instance=ExtResource( 3 )]
 anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
@@ -284,7 +291,7 @@ margin_top = 0.0
 margin_right = 236.0
 margin_bottom = 76.0
 
-[node name="Cell4" parent="Actions/ActionsContainer/ActionsCells" instance=ExtResource( 3 )]
+[node name="Cell4" parent="BottomUI/Actions/ActionsContainer/ActionsCells" instance=ExtResource( 3 )]
 anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
@@ -294,7 +301,7 @@ margin_top = 0.0
 margin_right = 316.0
 margin_bottom = 76.0
 
-[node name="Cell5" parent="Actions/ActionsContainer/ActionsCells" instance=ExtResource( 3 )]
+[node name="Cell5" parent="BottomUI/Actions/ActionsContainer/ActionsCells" instance=ExtResource( 3 )]
 anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
@@ -304,7 +311,7 @@ margin_top = 0.0
 margin_right = 396.0
 margin_bottom = 76.0
 
-[node name="Cell6" parent="Actions/ActionsContainer/ActionsCells" instance=ExtResource( 3 )]
+[node name="Cell6" parent="BottomUI/Actions/ActionsContainer/ActionsCells" instance=ExtResource( 3 )]
 anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
@@ -314,7 +321,7 @@ margin_top = 0.0
 margin_right = 476.0
 margin_bottom = 76.0
 
-[node name="Cell7" parent="Actions/ActionsContainer/ActionsCells" instance=ExtResource( 3 )]
+[node name="Cell7" parent="BottomUI/Actions/ActionsContainer/ActionsCells" instance=ExtResource( 3 )]
 anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
@@ -324,7 +331,7 @@ margin_top = 0.0
 margin_right = 556.0
 margin_bottom = 76.0
 
-[node name="Cell8" parent="Actions/ActionsContainer/ActionsCells" instance=ExtResource( 3 )]
+[node name="Cell8" parent="BottomUI/Actions/ActionsContainer/ActionsCells" instance=ExtResource( 3 )]
 anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
@@ -334,7 +341,7 @@ margin_top = 0.0
 margin_right = 636.0
 margin_bottom = 76.0
 
-[node name="Cell9" parent="Actions/ActionsContainer/ActionsCells" instance=ExtResource( 3 )]
+[node name="Cell9" parent="BottomUI/Actions/ActionsContainer/ActionsCells" instance=ExtResource( 3 )]
 anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
@@ -344,24 +351,43 @@ margin_top = 0.0
 margin_right = 716.0
 margin_bottom = 76.0
 
-[node name="Cell10" parent="Actions/ActionsContainer/ActionsCells" instance=ExtResource( 3 )]
-anchor_left = 0.0
-anchor_top = 0.0
-anchor_right = 0.0
-anchor_bottom = 0.0
-margin_left = 720.0
-margin_top = 0.0
-margin_right = 796.0
-margin_bottom = 76.0
+[node name="EndTurnButton" type="TextureButton" parent="BottomUI"]
+margin_left = 744.0
+margin_top = 20.0
+margin_right = 968.0
+margin_bottom = 80.0
+rect_min_size = Vector2( 224, 60 )
+size_flags_horizontal = 10
+size_flags_vertical = 4
+texture_normal = ExtResource( 6 )
+texture_pressed = ExtResource( 5 )
+texture_hover = ExtResource( 7 )
+expand = true
+stretch_mode = 5
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
-[node name="Cell11" parent="Actions/ActionsContainer/ActionsCells" instance=ExtResource( 3 )]
-anchor_left = 0.0
-anchor_top = 0.0
-anchor_right = 0.0
-anchor_bottom = 0.0
-margin_left = 800.0
-margin_top = 0.0
-margin_right = 876.0
-margin_bottom = 76.0
+[node name="Label" type="Label" parent="BottomUI/EndTurnButton"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 27.0
+margin_top = 14.0
+margin_right = -27.0
+margin_bottom = -14.0
+text = "Следующий ход"
+align = 1
+valign = 1
+uppercase = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
-[connection signal="pressed" from="EndTurnButton" to="." method="NextTurn"]
+[node name="NextTurnButton" type="Control" parent="BottomUI"]
+visible = false
+margin_left = 976.0
+margin_right = 1024.0
+margin_bottom = 100.0
+size_flags_horizontal = 3
+
+[connection signal="pressed" from="BottomUI/EndTurnButton" to="." method="NextTurn"]

@@ -89,7 +89,7 @@ func _ready():
 	for action in Actions:
 		action.OwnCharacter = self
 		action.Arena = FightSystem.Arena
-	Actions[0].Select()
+#	Actions[0].Select()
 	
 	pass # Replace with function body.
 
@@ -170,7 +170,7 @@ func draw_path(target_pos):
 	pass
 
 func StartTurn():
-	Actions[0].Select()
+#	Actions[0].Select()
 	print("ZoneID - " + str(ZoneId))
 	SignalsScript.emit_signal("StartTurnOnPosition", self, ZonePosition)
 	SignalsScript.emit_signal("StartTurnOnZone", self, ZoneId)
@@ -208,8 +208,8 @@ func DoSomething():
 #	prints( SelectedAction != null, SelectedAction.ActivationCheck(target))
 	if SelectedAction != null && SelectedAction.ActivationCheck(target):
 		print("Activation in character")
+		SignalsScript.emit_signal("DoAction", self, Actions.find(SelectedAction))
 		SelectedAction.Activate()
-		SignalsScript.emit_signal("Attack", self, Arena.Grid[target.x][target.y].character)
 		print("In AttackDistance")
 	target = null
 	if ActionPoints == 0 && Movement == 0:

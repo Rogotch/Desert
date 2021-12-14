@@ -8,6 +8,8 @@ var Arena
 
 var OwnCharacter
 export (int) var ActionCost = 1
+export (String, FILE) var IconOpen
+export (String, FILE) var IconClose
 var Target
 
 #func _init():
@@ -17,6 +19,11 @@ var Target
 func Select():
 	FightSystem.Mode = FightSystem.SelectMode.TARGET
 	OwnCharacter.SelectedAction = self
+	pass
+
+func Unselect():
+	FightSystem.Mode = FightSystem.SelectMode.NONE
+	OwnCharacter.SelectedAction = null
 	pass
 
 func InSelfDistance(distance, targetPosition):
@@ -33,5 +40,5 @@ func Activate():
 	OwnCharacter.ActionPoints -= ActionCost
 #	FightSystem.GetCharacterByPos(OwnCharacter.target).Health -= 5
 #	OwnCharacter.Health -= 5
-	FightSystem.Mode = FightSystem.SelectMode.NONE
+	Unselect()
 	pass

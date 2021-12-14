@@ -8,7 +8,7 @@ signal CameOnZone(character, ZoneID)
 signal LeftTheZone(character, ZoneID)
 signal StartTurnOnZone(character, ZoneID)
 signal EndTurnOnZone(character, ZoneID)
-signal Attack(attacked, attacking)
+signal DoAction(character, actionID)
 signal TakingDamage(character)
 signal ZoneEffectsActivate
 signal UpdateZoneEffects
