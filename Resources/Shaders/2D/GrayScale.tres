@@ -1,0 +1,27 @@
+[gd_resource type="Shader" format=2]
+
+[resource]
+resource_local_to_scene = true
+code = "shader_type canvas_item;
+
+uniform bool GrayScale = true;
+uniform float brightness = 0.5;
+
+void fragment()
+{
+	float text_r = texture(TEXTURE, UV).r;
+	float text_g = texture(TEXTURE, UV).g;
+	float text_b = texture(TEXTURE, UV).b;
+
+	vec3 textColor = vec3(text_r, text_g, text_b);
+	vec4 newColor = vec4(textColor, 1);
+	
+	if (GrayScale)
+	{
+		COLOR.rgb = vec3(dot(newColor.rgb, vec3(brightness, brightness, brightness)))
+	}
+	else
+	{
+		COLOR.rgb = newColor.rgb
+	}
+}"

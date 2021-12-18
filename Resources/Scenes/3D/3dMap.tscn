@@ -86,6 +86,7 @@ script = ExtResource( 10 )
 ActionCost = 1
 IconOpen = "res://Resources/Images/GUI/Icons/IconAtlas.tres"
 IconClose = ""
+Cooldown = 0
 Distance = 1
 
 [sub_resource type="Resource" id=18]
@@ -93,6 +94,7 @@ script = ExtResource( 9 )
 ActionCost = 2
 IconOpen = "res://Resources/Images/GUI/Icons/ActionsIcons/11.png"
 IconClose = ""
+Cooldown = 3
 Radius = 2
 Damage = 5
 
@@ -102,6 +104,7 @@ script = ExtResource( 2 )
 ActionCost = 1
 IconOpen = "res://Resources/Images/GUI/Icons/ActionsIcons/14.png"
 IconClose = ""
+Cooldown = 0
 
 [sub_resource type="Resource" id=17]
 resource_local_to_scene = true
@@ -109,6 +112,7 @@ script = ExtResource( 2 )
 ActionCost = 1
 IconOpen = "res://Resources/Images/GUI/Icons/ActionsIcons/32.png"
 IconClose = ""
+Cooldown = 0
 
 [node name="Arena" type="Spatial"]
 script = ExtResource( 7 )

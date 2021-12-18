@@ -1,8 +1,25 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://Resources/Scripts/UIScripts/Cell.gd" type="Script" id=1]
+[ext_resource path="res://Resources/Shaders/2D/GrayScale.tres" type="Shader" id=2]
 [ext_resource path="res://Resources/Images/GUI/Icons/Cells/05.png" type="Texture" id=3]
 [ext_resource path="res://Resources/Images/GUI/Icons/Cells/04.png" type="Texture" id=4]
+[ext_resource path="res://Resources/Scripts/UIScripts/CustomLabel.gd" type="Script" id=5]
+
+[sub_resource type="ShaderMaterial" id=3]
+resource_local_to_scene = true
+shader = ExtResource( 2 )
+shader_param/GrayScale = false
+shader_param/brightness = 0.5
+
+[sub_resource type="DynamicFontData" id=4]
+font_path = "res://Resources/Fonts/Nunito_Sans/NunitoSans-Black.ttf"
+
+[sub_resource type="DynamicFont" id=5]
+size = 26
+outline_size = 2
+outline_color = Color( 0, 0, 0, 1 )
+font_data = SubResource( 4 )
 
 [sub_resource type="Animation" id=1]
 length = 0.001
@@ -50,6 +67,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 _IconNode = NodePath("Icon")
+_CounterLabel = NodePath("Icon/CounterLabel")
 _ButtonNode = NodePath("CellButton")
 _CellAnimation = NodePath("CellPlayer")
 
@@ -82,6 +100,7 @@ __meta__ = {
 }
 
 [node name="Icon" type="TextureRect" parent="."]
+material = SubResource( 3 )
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = 13.0
@@ -92,6 +111,26 @@ expand = true
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="CounterLabel" type="Label" parent="Icon"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -20.0
+margin_top = -19.0
+margin_right = 20.0
+margin_bottom = 19.0
+custom_fonts/font = SubResource( 5 )
+align = 1
+valign = 1
+script = ExtResource( 5 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+font_size = 26
+font_outline_size = 2
+type = 1
 
 [node name="CellUp" type="TextureRect" parent="."]
 anchor_right = 1.0

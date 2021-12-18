@@ -12,6 +12,7 @@ signal DoAction(character, actionID)
 signal TakingDamage(character)
 signal ZoneEffectsActivate
 signal UpdateZoneEffects
+signal UpdateFightUI
 
 func _ready():
 	connect("CameOnZone", self, "UpdateZonesEffects")

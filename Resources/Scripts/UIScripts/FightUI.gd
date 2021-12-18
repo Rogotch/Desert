@@ -20,6 +20,7 @@ func _ready():
 	FightSystem.connect("EndTurn", self, "ClearCells")
 	FightSystem.connect("StartTurn", self, "FillCells")
 	SignalsScript.connect("DoAction", self, "UnselectActivedAction")
+	SignalsScript.connect("UpdateFightUI", self, "UpdateCells")
 	pass
 
 func UnselectActivedAction(_character, action_id):
@@ -46,12 +47,19 @@ func FillCells(character):
 	SelectedCharacter = character
 	var count = 0
 	for cell in ActionsCells.get_children():
-		if count < character.Actions.size():
-			cell.Icon = load(character.Actions[count].IconOpen)
+		if count < character.Actions.size() :
+#			cell.Icon = load(character.Actions[count].IconOpen)
+			cell.SetActionParams(character.Actions[count])
 			cell._change_disabled(false)
 		else:
+			cell.ClearActionParams()
 			cell._change_disabled(true)
 		count += 1
+	pass
+
+func UpdateCells():
+	if SelectedCharacter:
+		FillCells(SelectedCharacter)
 	pass
 
 func ClearCells():

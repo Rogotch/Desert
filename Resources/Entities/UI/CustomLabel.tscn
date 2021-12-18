@@ -1,0 +1,35 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://Resources/Scripts/UIScripts/CustomLabel.gd" type="Script" id=1]
+[ext_resource path="res://Resources/Fonts/DynamicFont.tres" type="DynamicFont" id=2]
+
+[sub_resource type="Theme" id=1]
+resource_local_to_scene = true
+resource_name = "MainTheme"
+default_font = ExtResource( 2 )
+
+[sub_resource type="DynamicFontData" id=2]
+font_path = "res://Resources/Fonts/Nunito_Sans/NunitoSans-Regular.ttf"
+
+[sub_resource type="DynamicFont" id=3]
+size = 42
+font_data = SubResource( 2 )
+
+[node name="CustomLabel" type="Label"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -81.5
+margin_top = -28.5
+margin_right = 81.5
+margin_bottom = 28.5
+theme = SubResource( 1 )
+custom_fonts/font = SubResource( 3 )
+text = "Рыба на безрыбье"
+align = 1
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+font_size = 42

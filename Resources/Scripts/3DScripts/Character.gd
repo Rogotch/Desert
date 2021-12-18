@@ -181,6 +181,14 @@ func StartTurn():
 	Arena.CreatePathZone(self)
 	ReceivedEffects.ActivateEffectsByTriggerAndType(Effect.ActivationTrigger.StartTurn, Effect.Type.ZONE)
 	ReceivedEffects.ActivateEffectsByTriggerAndType(Effect.ActivationTrigger.StartTurn, Effect.Type.CHARACTER)
+	CheckActions()
+	FightSystem.emit_signal("StartTurn", self)
+	pass
+
+func CheckActions():
+	for action in Actions:
+		if action.cooldownTime > 0:
+			action.cooldownTime -= 1
 	pass
 
 func EndTurn():
@@ -216,6 +224,7 @@ func DoSomething():
 		FightSystem.EndTurn()
 	else:
 		Arena.CreatePathZone(self)
+	SignalsScript.emit_signal("UpdateFightUI")
 	pass
 
 func TakeDamage(DamgeValue):

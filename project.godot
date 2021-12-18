@@ -29,6 +29,11 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://Resources/Scripts/3DScripts/Character.gd"
 }, {
+"base": "Label",
+"class": "CustomLabel",
+"language": "GDScript",
+"path": "res://Resources/Scripts/UIScripts/CustomLabel.gd"
+}, {
 "base": "Node",
 "class": "Effect",
 "language": "GDScript",
@@ -54,6 +59,7 @@ _global_script_class_icons={
 "ActionAttack": "",
 "ActionFireBall": "",
 "Character": "",
+"CustomLabel": "",
 "Effect": "res://Resources/Images/GUI/SimpleIcons/25.png",
 "EffectsHolder": "res://Resources/Images/GUI/SimpleIcons/Icon16.png",
 "GridPoint": "res://Resources/Images/GUI/SimpleIcons/White/1x/target.png",
@@ -76,6 +82,11 @@ FightUi="*res://Resources/Scenes/UI/FightUI.tscn"
 [debug]
 
 gdscript/warnings/unused_signal=false
+
+[gui]
+
+theme/custom="res://Resources/Themes/MainTheme.tres"
+theme/custom_font="res://Resources/Fonts/DynamicFont.tres"
 
 [input]
 
