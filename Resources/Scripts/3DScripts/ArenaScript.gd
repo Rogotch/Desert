@@ -108,7 +108,7 @@ func GetZoneByPosition(objPos):
 	return null
 	pass
 
-# 
+# Обновляет эффекты зоны, так как у неё нет своих эффектов, только те, что она получает от пероснажей
 func UpdateAllZonesEffects():
 	for zone in Zones:
 		if zone.Interzone:
@@ -116,6 +116,17 @@ func UpdateAllZonesEffects():
 		else:
 			zone.UpdateZoneEffects()
 	pass
+
+#Надо сначала поместить раундовые эффекты в отдельный EffectHolder, потому что иначе эффект при первом же UpdateAllZonesEffects будет удалён
+## Активирует эффекты во всех зонах по триггеру
+#func ActivateZoneEffectByTrigger(trigger):
+#	for zone in Zones:
+#		if zone.Interzone:
+#			continue
+#		else:
+#			zone.ZoneEffects.ActivateEffectsByTriggerAndType(trigger, Effect.Type.ZONE)
+#	UpdateAllZonesEffects()
+#	pass
 
 #Устанавливает визуальное отображение сетки
 func SetVisualGrids():

@@ -127,6 +127,8 @@ func SetEffectByID(id):
 			newEffect.Trigger = Effect.ActivationTrigger.InDistance
 		"OutDistance":
 			newEffect.Trigger = Effect.ActivationTrigger.OutDistance
+		"Round":
+			newEffect.Trigger = Effect.ActivationTrigger.Round
 	match effectParams.Type:
 		"ZONE":
 			newEffect.EffectType = Effect.Type.ZONE

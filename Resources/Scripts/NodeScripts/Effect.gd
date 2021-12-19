@@ -3,7 +3,7 @@ extends Node
 class_name Effect, "res://Resources/Images/GUI/SimpleIcons/25.png"
 
 #enum Type {POSITIVE, NEGATIVE, NEUTRAL}
-enum ActivationTrigger {InZone, OutZone, InDistance, OutDistance, StartTurnOnZone, EndTurnOnZone, StartTurn, EndTurn, Immediately}
+enum ActivationTrigger {InZone, OutZone, InDistance, OutDistance, StartTurnOnZone, EndTurnOnZone, StartTurn, EndTurn, Immediately, Round}
 enum Target {Team, Enemy, All}
 enum ZoneCondition {NONE, ENEMY, PLAYER, COMMON}
 enum Type {ZONE, POSITION, CHARACTER}

@@ -115,6 +115,7 @@ func _physics_process(_delta):
 			elif Movement == 0 && ActionPoints == 0:
 				FightSystem.EndTurn()
 			else:
+				print("Point 2")
 				Arena.CreatePathZone(self)
 #			print("Movement - " + str(movement))
 		else:
@@ -223,6 +224,10 @@ func DoSomething():
 	if ActionPoints == 0 && Movement == 0:
 		FightSystem.EndTurn()
 	else:
+#		print("Point 3")
+#		yield(get_tree(), "idle_frame")
+#		Arena.call_deferred("CreatePathZone", self)
+		Arena.ClearPathZone()
 		Arena.CreatePathZone(self)
 	SignalsScript.emit_signal("UpdateFightUI")
 	pass
