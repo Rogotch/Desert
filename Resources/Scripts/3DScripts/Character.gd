@@ -9,6 +9,7 @@ export var MaxMovement     : int
 export var MaxHealth       : int
 export var ZoneCross       : int
 export var MaxActionPoints : int
+export (String, FILE) var CharacterIcon
 #export var gravity : float
 
 export (Array, Resource) var Actions

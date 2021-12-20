@@ -9,7 +9,6 @@ var Arena
 var OwnCharacter
 export (int) var ActionCost = 1
 export (String, FILE) var IconOpen
-export (String, FILE) var IconClose
 export (int) var Cooldown = 0
 var cooldownTime = 0
 var Target
