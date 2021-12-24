@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=2]
+[gd_scene load_steps=22 format=2]
 
 [ext_resource path="res://Resources/Scripts/UIScripts/FightUI.gd" type="Script" id=1]
 [ext_resource path="res://Resources/Fonts/DynamicFont.tres" type="DynamicFont" id=2]
@@ -8,6 +8,7 @@
 [ext_resource path="res://Resources/Images/GUI/Buttons/01.png" type="Texture" id=6]
 [ext_resource path="res://Resources/Images/GUI/Buttons/02.png" type="Texture" id=7]
 [ext_resource path="res://Resources/Scripts/UIScripts/CustomLabel.gd" type="Script" id=8]
+[ext_resource path="res://Resources/Entities/UI/CharacterPortrait.tscn" type="PackedScene" id=9]
 
 [sub_resource type="Theme" id=1]
 default_font = ExtResource( 2 )
@@ -75,7 +76,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 _UnitUI = NodePath("UnitInformation")
-_ActionsCells = NodePath("BottomUI/Actions/ScrollContainer/ActionsCells")
+_ActionsCells = NodePath("BottomUI/Actions/ScrollContainer/ActionsContainer/ActionsCells")
 UnitUIOffset = Vector2( -10, -10 )
 
 [node name="UnitInformation" type="Control" parent="."]
@@ -130,6 +131,7 @@ __meta__ = {
 [node name="Actions" type="Control" parent="BottomUI"]
 margin_right = 740.0
 margin_bottom = 100.0
+mouse_filter = 2
 size_flags_horizontal = 3
 __meta__ = {
 "_edit_use_anchors_": false
@@ -259,21 +261,27 @@ __meta__ = {
 [node name="ScrollContainer" type="ScrollContainer" parent="BottomUI/Actions"]
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_left = 13.0
-margin_top = 13.0
-margin_right = -13.0
-margin_bottom = -14.0
+mouse_filter = 2
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="ActionsCells" type="HBoxContainer" parent="BottomUI/Actions/ScrollContainer"]
-margin_right = 716.0
-margin_bottom = 76.0
+[node name="ActionsContainer" type="CenterContainer" parent="BottomUI/Actions/ScrollContainer"]
+margin_right = 740.0
+margin_bottom = 100.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="Cell" parent="BottomUI/Actions/ScrollContainer/ActionsCells" instance=ExtResource( 3 )]
+[node name="ActionsCells" type="HBoxContainer" parent="BottomUI/Actions/ScrollContainer/ActionsContainer"]
+margin_left = 12.0
+margin_top = 12.0
+margin_right = 728.0
+margin_bottom = 88.0
+mouse_filter = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Cell" parent="BottomUI/Actions/ScrollContainer/ActionsContainer/ActionsCells" instance=ExtResource( 3 )]
 anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
@@ -284,7 +292,7 @@ margin_right = 76.0
 margin_bottom = 76.0
 size_flags_horizontal = 2
 
-[node name="Cell2" parent="BottomUI/Actions/ScrollContainer/ActionsCells" instance=ExtResource( 3 )]
+[node name="Cell2" parent="BottomUI/Actions/ScrollContainer/ActionsContainer/ActionsCells" instance=ExtResource( 3 )]
 anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
@@ -295,7 +303,7 @@ margin_right = 156.0
 margin_bottom = 76.0
 size_flags_horizontal = 2
 
-[node name="Cell3" parent="BottomUI/Actions/ScrollContainer/ActionsCells" instance=ExtResource( 3 )]
+[node name="Cell3" parent="BottomUI/Actions/ScrollContainer/ActionsContainer/ActionsCells" instance=ExtResource( 3 )]
 anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
@@ -306,7 +314,7 @@ margin_right = 236.0
 margin_bottom = 76.0
 size_flags_horizontal = 2
 
-[node name="Cell4" parent="BottomUI/Actions/ScrollContainer/ActionsCells" instance=ExtResource( 3 )]
+[node name="Cell4" parent="BottomUI/Actions/ScrollContainer/ActionsContainer/ActionsCells" instance=ExtResource( 3 )]
 anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
@@ -317,7 +325,7 @@ margin_right = 316.0
 margin_bottom = 76.0
 size_flags_horizontal = 2
 
-[node name="Cell5" parent="BottomUI/Actions/ScrollContainer/ActionsCells" instance=ExtResource( 3 )]
+[node name="Cell5" parent="BottomUI/Actions/ScrollContainer/ActionsContainer/ActionsCells" instance=ExtResource( 3 )]
 anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
@@ -328,7 +336,7 @@ margin_right = 396.0
 margin_bottom = 76.0
 size_flags_horizontal = 2
 
-[node name="Cell6" parent="BottomUI/Actions/ScrollContainer/ActionsCells" instance=ExtResource( 3 )]
+[node name="Cell6" parent="BottomUI/Actions/ScrollContainer/ActionsContainer/ActionsCells" instance=ExtResource( 3 )]
 anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
@@ -339,7 +347,7 @@ margin_right = 476.0
 margin_bottom = 76.0
 size_flags_horizontal = 2
 
-[node name="Cell7" parent="BottomUI/Actions/ScrollContainer/ActionsCells" instance=ExtResource( 3 )]
+[node name="Cell7" parent="BottomUI/Actions/ScrollContainer/ActionsContainer/ActionsCells" instance=ExtResource( 3 )]
 anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
@@ -350,7 +358,7 @@ margin_right = 556.0
 margin_bottom = 76.0
 size_flags_horizontal = 2
 
-[node name="Cell8" parent="BottomUI/Actions/ScrollContainer/ActionsCells" instance=ExtResource( 3 )]
+[node name="Cell8" parent="BottomUI/Actions/ScrollContainer/ActionsContainer/ActionsCells" instance=ExtResource( 3 )]
 anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
@@ -361,7 +369,7 @@ margin_right = 636.0
 margin_bottom = 76.0
 size_flags_horizontal = 2
 
-[node name="Cell9" parent="BottomUI/Actions/ScrollContainer/ActionsCells" instance=ExtResource( 3 )]
+[node name="Cell9" parent="BottomUI/Actions/ScrollContainer/ActionsContainer/ActionsCells" instance=ExtResource( 3 )]
 anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
@@ -371,13 +379,6 @@ margin_top = 0.0
 margin_right = 716.0
 margin_bottom = 76.0
 size_flags_horizontal = 2
-
-[node name="ActionsContainer" type="CenterContainer" parent="BottomUI/Actions"]
-margin_right = 716.0
-margin_bottom = 76.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="EndTurnButton" type="TextureButton" parent="BottomUI"]
 margin_left = 744.0
@@ -417,9 +418,58 @@ type = 1
 
 [node name="NextTurnButton" type="Control" parent="BottomUI"]
 visible = false
-margin_left = 976.0
-margin_right = 1024.0
+margin_left = 600.0
+margin_right = 968.0
 margin_bottom = 100.0
 size_flags_horizontal = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+anchor_right = 1.0
+rect_min_size = Vector2( 0, 125 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Control" type="Control" parent="HBoxContainer"]
+margin_right = 1024.0
+margin_bottom = 125.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="CenterContainer" type="CenterContainer" parent="HBoxContainer/Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer/Control/CenterContainer"]
+margin_left = 358.0
+margin_top = 7.0
+margin_right = 666.0
+margin_bottom = 117.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Control" parent="HBoxContainer/Control/CenterContainer/HBoxContainer" instance=ExtResource( 9 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_right = 100.0
+margin_bottom = 110.0
+
+[node name="Control2" parent="HBoxContainer/Control/CenterContainer/HBoxContainer" instance=ExtResource( 9 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 104.0
+margin_right = 204.0
+margin_bottom = 110.0
+
+[node name="Control3" parent="HBoxContainer/Control/CenterContainer/HBoxContainer" instance=ExtResource( 9 )]
+anchor_right = 0.0
+anchor_bottom = 0.0
+margin_left = 208.0
+margin_right = 308.0
+margin_bottom = 110.0
 
 [connection signal="pressed" from="BottomUI/EndTurnButton" to="." method="NextTurn"]
