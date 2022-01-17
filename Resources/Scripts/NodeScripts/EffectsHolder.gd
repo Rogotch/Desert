@@ -54,7 +54,7 @@ func Activate(effect):
 		if effect.Parameters[paramMod] != 0:
 			match paramMod:
 				"Health":
-					Parent.Health += effect.Parameters[paramMod]
+					Parent.Health = effect.Parameters[paramMod]
 					pass
 				"Accuracy":
 					pass

@@ -2,16 +2,21 @@ extends Control
 
 export (NodePath) var _Label
 export (NodePath) var _TweenNode
-onready var TweenNode = $Tween
+#onready var TweenNode = $Tween
 onready var Numbers = get_node(_Label)
-#onready var TweenNode = get_node(_TweenNode)
+onready var TweenNode = get_node(_TweenNode)
 onready var rng = RandomNumberGenerator.new()
 
 func _ready():
 #	ShowNumbers()
 	pass
 
-func ShowNumbers():
+func SetColor(color):
+	Numbers.self_modulate = color
+	pass
+
+func ShowNumbers(value):
+	Numbers.SetLabelText(value)
 	rng.randomize()
 	var randMod = (rng.randf_range(0.0, 2.0)-1.0) * 50
 	print(randMod)
@@ -24,8 +29,9 @@ func ShowNumbers():
 #	TweenNode.interpolate_property(self, "rect_scale:y", 0, 1, 1.1, Tween.TRANS_BOUNCE, Tween.EASE_OUT)
 	TweenNode.start()
 	yield(TweenNode, "tween_all_completed")
-	TweenNode.interpolate_property(self, "rect_scale:x", 1, 0, 1.2, Tween.TRANS_BOUNCE, Tween.EASE_OUT)
-	TweenNode.interpolate_property(self, "rect_scale:y", 1, 0, 1.1, Tween.TRANS_BOUNCE, Tween.EASE_OUT)
+	TweenNode.interpolate_property(self, "rect_scale:x", 1, 0, 0.5, Tween.TRANS_EXPO, Tween.EASE_OUT)
+	TweenNode.interpolate_property(self, "rect_scale:y", 1, 0, 0.5, Tween.TRANS_EXPO, Tween.EASE_OUT)
+	TweenNode.interpolate_property(self, "modulate", Color.white, Color.transparent, 0.5, Tween.TRANS_EXPO, Tween.EASE_OUT)
 	TweenNode.start()
 	yield(TweenNode, "tween_all_completed")
 	queue_free()

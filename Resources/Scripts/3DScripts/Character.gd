@@ -2,6 +2,7 @@ extends KinematicBody
 
 class_name Character
 
+onready var DamageNumbers = preload("res://Resources/Entities/UI/DamageNumbers.tscn")
 
 export var PlayerTeam      : bool
 export var physic_speed    : float
@@ -20,10 +21,12 @@ export var SelecterPath        : NodePath
 export var MarkerPath          : NodePath
 export var DrawPath            : NodePath
 export var ArenaMainNodePath   : NodePath
+export (NodePath) var _CharacterNode
 export (Array, int) var EmmEff
 export (Array, int) var RecEff
 
 onready var Marker        = get_node(MarkerPath)
+onready var CharacterNode = get_node(_CharacterNode)
 onready var Selecter      = get_node(SelecterPath)
 #onready var CharCamera    = get_node(CameraPath)
 onready var Grid          = get_node(GridPath)
@@ -35,7 +38,7 @@ var Speed        = MaxMovement
 var Multitasking = MaxActionPoints
 #var Constitution
 
-var Health 
+var Health setget ChangeHealth
 
 var ZonePosition setget _SetCharacterPosition
 var SelectedAction
@@ -123,6 +126,19 @@ func _physics_process(_delta):
 			SignalsScript.emit_signal("LeftThePosition", self, ZonePosition)
 		pass
 #			move_and_slide(move_vec.normalized() * speed, Vector3.UP)
+	pass
+
+# Изменение здоровья
+func ChangeHealth(value):
+	var damageNum = DamageNumbers.instance()
+	CharacterNode.add_child(damageNum)
+	if value > 0:
+		damageNum.SetColor(Color.green)
+		damageNum.ShowNumbers(value)
+	else:
+		damageNum.SetColor(Color.red)
+		damageNum.ShowNumbers(value * -1)
+	Health += value
 	pass
 
 #Смена принадлежности клетки

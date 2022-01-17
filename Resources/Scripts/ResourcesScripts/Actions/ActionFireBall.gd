@@ -24,7 +24,7 @@ func Activate():
 	.Activate()
 	var areaCharacters = Arena.GetCharactersInPointsArray(Arena.CircleArea(Target, Radius))
 	for character in areaCharacters:
-		character.Health -= Damage
+		character.Health = -Damage
 ##	OwnCharacter.Health -= 5
 	FightSystem.Mode = FightSystem.SelectMode.NONE
 	pass
