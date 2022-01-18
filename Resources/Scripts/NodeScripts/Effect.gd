@@ -17,6 +17,7 @@ export (ActivationTrigger) var Trigger
 export (Target)            var EffectTarget
 export (int)               var distance
 
+var timeDelay
 var Parameters = {Health = 0, Accuracy = 0, ActionPoints = 0, Speed = 0}
 var TargetsZones
 

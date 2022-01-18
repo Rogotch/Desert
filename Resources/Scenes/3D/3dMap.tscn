@@ -231,7 +231,7 @@ GridPath = NodePath("../../Environment/GridMap")
 MarkerPath = NodePath("../../Environment/Marker")
 DrawPath = NodePath("../../Environment/Draw")
 ArenaMainNodePath = NodePath("../..")
-RecEff = [ 2 ]
+RecEff = [ 2, 2 ]
 AttackDistance = 1
 
 [node name="Character2" parent="CharactersNode" instance=ExtResource( 1 )]

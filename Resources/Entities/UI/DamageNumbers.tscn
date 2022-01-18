@@ -7,7 +7,7 @@
 font_path = "res://Resources/Fonts/skandal/Skandal.ttf"
 
 [sub_resource type="DynamicFont" id=2]
-size = 37
+size = 30
 outline_size = 2
 outline_color = Color( 0, 0, 0, 1 )
 font_data = SubResource( 1 )
@@ -38,7 +38,7 @@ script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
-font_size = 37
+font_size = 30
 font_outline_size = 2
 type = 21
 

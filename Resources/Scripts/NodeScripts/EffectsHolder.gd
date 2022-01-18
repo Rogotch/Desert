@@ -29,6 +29,8 @@ func ActivateEffectsByTriggerAndType(trigger, type):
 				effect.EffectTarget == Effect.Target.Enemy && Parent.PlayerTeam != effect.PlayerEffect ||
 				effect.EffectTarget == Effect.Target.All):
 					Activate(effect)
+					Global._create_timer(effect.timeDelay)
+					yield(Global, "timeout")
 	pass
 
 func ActivateEffectsByType(type):
@@ -38,6 +40,8 @@ func ActivateEffectsByType(type):
 			effect.EffectTarget == Effect.Target.Enemy && Parent.PlayerTeam != effect.PlayerEffect ||
 			effect.EffectTarget == Effect.Target.All):
 				Activate(effect)
+				Global._create_timer(effect.timeDelay)
+				yield(Global, "timeout")
 	pass
 
 func GetEffectsByType(type):
@@ -95,6 +99,7 @@ func SetEffectByID(id):
 	newEffect.EffectName   = effectParams.Name
 	newEffect.PlayerEffect = Parent.PlayerTeam
 	newEffect.Parameters   = effectParams.Effects
+	newEffect.timeDelay    = effectParams.timeDelay
 	if effectParams.has("TargetsZones"):
 		newEffect.TargetsZones = effectParams.TargetsZones
 	

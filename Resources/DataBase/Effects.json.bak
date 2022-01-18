@@ -2,6 +2,7 @@
 	{
 		"Name" : "Zone HEAL",
 		"id" : 0,
+		"timeDelay" : 1.0,
 		"Type"           : "ZONE",
 		"ZoneCondition"  : "COMMON",
 		"Trigger"        : "StartTurn",
@@ -16,6 +17,7 @@
 	{
 		"Name" : "Zone DAMAGE",
 		"id" : 1,
+		"timeDelay" : 1.0,
 		"Type"           : "ZONE",
 		"ZoneCondition"  : "ENEMY",
 		"Trigger"        : "StartTurn",
@@ -30,10 +32,11 @@
 	{
 		"Name" : "Character Heal",
 		"id" : 2,
+		"timeDelay" : 1.0,
 		"Type"           : "CHARACTER",
 		"Trigger"        : "StartTurn",
 		"Target"         : "Player",
-		"Duration"       : 0,
+		"Duration"       : 3,
 		"Effects" : 
 			{
 				"Health" : 2
