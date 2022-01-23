@@ -133,12 +133,20 @@ func ChangeHealth(value):
 	var damageNum = DamageNumbers.instance()
 	CharacterNode.add_child(damageNum)
 	if value > 0:
+		SignalsScript.emit_signal("GetHealed", self)
 		damageNum.SetColor(Color.green)
 		damageNum.ShowNumbers(value)
 	else:
+		SignalsScript.emit_signal("TakingDamage", self)
 		damageNum.SetColor(Color.red)
 		damageNum.ShowNumbers(value * -1)
-	Health += value
+	
+	if Health + value > MaxHealth:
+		Health = MaxHealth
+	elif Health + value < 0:
+		Health = 0
+	else:
+		Health += value
 	pass
 
 #Смена принадлежности клетки
@@ -249,10 +257,6 @@ func DoSomething():
 	SignalsScript.emit_signal("UpdateFightUI")
 	pass
 
-func TakeDamage(DamgeValue):
-	SignalsScript.emit_signal("TakingDamage", self)
-	Health -= DamgeValue
-	pass
 
 # Как персонаж будет вести себя при проходе через диагональные клетки, если в них кто-то есть
 func CheckDiagonalPosition(pos, direction):

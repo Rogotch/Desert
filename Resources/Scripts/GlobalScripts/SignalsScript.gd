@@ -10,6 +10,7 @@ signal StartTurnOnZone(character, ZoneID)
 signal EndTurnOnZone(character, ZoneID)
 signal DoAction(character, actionID)
 signal TakingDamage(character)
+signal GetHealed(character)
 signal ZoneEffectsActivate
 signal UpdateZoneEffects
 signal UpdateFightUI

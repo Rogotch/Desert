@@ -37,7 +37,7 @@ func _physics_process(_delta):
 	if FightSystem.SelectedCharacter != null:
 		UnitStrings.rect_position = -UnitStrings.rect_size + UnitUIOffset
 		UnitUI.rect_position = get_viewport().get_camera().unproject_position(FightSystem.SelectedCharacter.transform.origin)
-		UnitHP.text = "Здоровье               - " + str(FightSystem.SelectedCharacter.Health)
+		UnitHP.text = "Здоровье                 - " + str(FightSystem.SelectedCharacter.Health) + "/" + str(FightSystem.SelectedCharacter.MaxHealth)
 		UnitZP.text = "Зональные Очки   - " + str(FightSystem.SelectedCharacter.ZonePoints)
 		UnitMP.text = "Передвижение      - " + str(FightSystem.SelectedCharacter.Movement)
 		UnitAP.text = "Очки действий       - " + str(FightSystem.SelectedCharacter.ActionPoints)
