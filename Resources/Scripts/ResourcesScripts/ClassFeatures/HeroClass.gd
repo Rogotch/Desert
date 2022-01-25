@@ -10,15 +10,21 @@ export (Array, Array, Resource) var BaseFeatures
 export (Array, Array, Resource) var SelectableFeatures
 
 var ActiveFeatures = []
+var Hero
 
 export (bool) var MovementFeatures
 export (bool) var ModifiersFeatures
+export (bool) var EffectsFeatures
 export (bool) var ActionFeatures
 export (bool) var DeathFeatures
 export (bool) var HealFeatures
 export (bool) var DamageFeatures
 
 func _init():
+	pass
+
+func SetParameters(hero):
+	Hero = hero
 	var count = 1
 	for arr in BaseFeatures:
 		if count <= Level:
@@ -26,7 +32,7 @@ func _init():
 				ActiveFeatures.append(feat)
 		count += 1
 	count = 1
-	for arr in BaseFeatures:
+	for arr in SelectableFeatures:
 		if count <= Level:
 			for feat in arr:
 				if feat.Active:
@@ -36,9 +42,22 @@ func _init():
 	for feat in ActiveFeatures:
 		MovementFeatures  = MovementFeatures  || feat.MovementFeature
 		ModifiersFeatures = ModifiersFeatures || feat.ModifiersFeature
+		EffectsFeatures   = EffectsFeatures   || feat.EffectsFeature
 		ActionFeatures    = ActionFeatures    || feat.ActionFeature
 		DeathFeatures     = DeathFeatures     || feat.DeathFeature
 		HealFeatures      = HealFeatures      || feat.HealFeature
 		DamageFeatures    = DamageFeatures    || feat.DamageFeature
 	
+	pass
+
+func set_hero_modifiers():
+	for feat in ActiveFeatures:
+		if feat.ModifiersFeature:
+			feat.Modifiers(Hero)
+	pass
+
+func set_hero_effects():
+	for feat in ActiveFeatures:
+		if feat.EffectsFeature:
+			feat.AddEffects(Hero)
 	pass

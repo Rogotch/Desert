@@ -9,6 +9,7 @@ export (String) var Description
 export (bool) var Active = false
 export (bool) var MovementFeature
 export (bool) var ModifiersFeature
+export (bool) var EffectsFeature
 export (bool) var ActionFeature
 export (bool) var DeathFeature
 export (bool) var HealFeature
@@ -19,10 +20,22 @@ export (int) var MaxHealth
 export (int) var ZoneCross
 export (int) var MaxActionPoints
 
+export (Array, int) var EmmitedEffects
+export (Array, int) var ReceivedEffects
+
 func Movement():
 	pass
 
-func Modifiers():
+func Modifiers(Hero):
+	Hero.MaxMovement += MaxMovement
+	Hero.MaxHealth += MaxHealth
+	Hero.ZoneCross += ZoneCross
+	Hero.MaxActionPoints += MaxActionPoints
+	pass
+
+func AddEffects(Hero):
+	Hero.RecEff.append_array(ReceivedEffects)
+	Hero.EmmEff.append_array(EmmitedEffects)
 	pass
 
 func AddAction():

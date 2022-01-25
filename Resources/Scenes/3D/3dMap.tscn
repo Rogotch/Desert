@@ -1,4 +1,4 @@
-[gd_scene load_steps=29 format=2]
+[gd_scene load_steps=39 format=2]
 
 [ext_resource path="res://Resources/Entities/3D/Character.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Resources/Scripts/ResourcesScripts/Actions/Action.gd" type="Script" id=2]
@@ -10,6 +10,8 @@
 [ext_resource path="res://Resources/Images/Shaders/noise_combined.png" type="Texture" id=8]
 [ext_resource path="res://Resources/Scripts/ResourcesScripts/Actions/ActionFireBall.gd" type="Script" id=9]
 [ext_resource path="res://Resources/Scripts/ResourcesScripts/Actions/ActionAttack.gd" type="Script" id=10]
+[ext_resource path="res://Resources/Scripts/ResourcesScripts/ClassFeatures/HeroClass.gd" type="Script" id=11]
+[ext_resource path="res://Resources/Scripts/ResourcesScripts/ClassFeatures/ClassFeature.gd" type="Script" id=12]
 
 [sub_resource type="SpatialMaterial" id=1]
 flags_transparent = true
@@ -96,6 +98,61 @@ Cooldown = 3
 Radius = 2
 Damage = 5
 
+[sub_resource type="Resource" id=20]
+script = ExtResource( 12 )
+ID = 0
+Name = ""
+Description = ""
+Active = false
+MovementFeature = false
+ModifiersFeature = true
+EffectsFeature = false
+ActionFeature = false
+DeathFeature = false
+HealFeature = false
+DamageFeature = false
+MaxMovement = 0
+MaxHealth = 2
+ZoneCross = 0
+MaxActionPoints = 0
+EmmitedEffects = [  ]
+ReceivedEffects = [  ]
+
+[sub_resource type="Resource" id=21]
+script = ExtResource( 12 )
+ID = 0
+Name = ""
+Description = ""
+Active = false
+MovementFeature = false
+ModifiersFeature = true
+EffectsFeature = false
+ActionFeature = false
+DeathFeature = false
+HealFeature = false
+DamageFeature = false
+MaxMovement = 1
+MaxHealth = 1
+ZoneCross = 0
+MaxActionPoints = 0
+EmmitedEffects = [  ]
+ReceivedEffects = [  ]
+
+[sub_resource type="Resource" id=22]
+script = ExtResource( 11 )
+Level = 3
+Name = ""
+Description = ""
+BaseFeatures = [ [ SubResource( 20 ) ], [ SubResource( 21 ) ] ]
+SelectableFeatures = [  ]
+MovementFeatures = false
+ModifiersFeatures = false
+EffectsFeatures = false
+ActionFeatures = false
+DeathFeatures = false
+HealFeatures = false
+DamageFeatures = false
+
 [sub_resource type="Resource" id=16]
 resource_local_to_scene = true
 script = ExtResource( 2 )
@@ -103,12 +160,102 @@ ActionCost = 1
 IconOpen = "res://Resources/Images/GUI/Icons/ActionsIcons/14.png"
 Cooldown = 0
 
+[sub_resource type="Resource" id=23]
+script = ExtResource( 12 )
+ID = 0
+Name = ""
+Description = ""
+Active = false
+MovementFeature = false
+ModifiersFeature = true
+EffectsFeature = false
+ActionFeature = false
+DeathFeature = false
+HealFeature = false
+DamageFeature = false
+MaxMovement = 0
+MaxHealth = 1
+ZoneCross = 0
+MaxActionPoints = 0
+EmmitedEffects = [  ]
+ReceivedEffects = [  ]
+
+[sub_resource type="Resource" id=27]
+script = ExtResource( 12 )
+ID = 0
+Name = ""
+Description = ""
+Active = false
+MovementFeature = false
+ModifiersFeature = false
+EffectsFeature = true
+ActionFeature = false
+DeathFeature = false
+HealFeature = false
+DamageFeature = false
+MaxMovement = 0
+MaxHealth = 0
+ZoneCross = 0
+MaxActionPoints = 0
+EmmitedEffects = [  ]
+ReceivedEffects = [ 2 ]
+
+[sub_resource type="Resource" id=24]
+script = ExtResource( 11 )
+Level = 1
+Name = ""
+Description = ""
+BaseFeatures = [ [ SubResource( 23 ), SubResource( 27 ) ] ]
+SelectableFeatures = [  ]
+MovementFeatures = false
+ModifiersFeatures = false
+EffectsFeatures = false
+ActionFeatures = false
+DeathFeatures = false
+HealFeatures = false
+DamageFeatures = false
+
 [sub_resource type="Resource" id=17]
 resource_local_to_scene = true
 script = ExtResource( 2 )
 ActionCost = 1
 IconOpen = "res://Resources/Images/GUI/Icons/ActionsIcons/32.png"
 Cooldown = 0
+
+[sub_resource type="Resource" id=25]
+script = ExtResource( 12 )
+ID = 0
+Name = ""
+Description = ""
+Active = false
+MovementFeature = false
+ModifiersFeature = true
+EffectsFeature = false
+ActionFeature = false
+DeathFeature = false
+HealFeature = false
+DamageFeature = false
+MaxMovement = 0
+MaxHealth = 10
+ZoneCross = 0
+MaxActionPoints = 0
+EmmitedEffects = [  ]
+ReceivedEffects = [  ]
+
+[sub_resource type="Resource" id=26]
+script = ExtResource( 11 )
+Level = 2
+Name = ""
+Description = ""
+BaseFeatures = [ [ SubResource( 25 ) ] ]
+SelectableFeatures = [  ]
+MovementFeatures = false
+ModifiersFeatures = false
+EffectsFeatures = false
+ActionFeatures = false
+DeathFeatures = false
+HealFeatures = false
+DamageFeatures = false
 
 [node name="Arena" type="Spatial"]
 script = ExtResource( 7 )
@@ -227,6 +374,7 @@ MaxHealth = 20
 ZoneCross = 1
 MaxActionPoints = 3
 Actions = [ SubResource( 19 ), SubResource( 18 ) ]
+CharacterClass = SubResource( 22 )
 GridPath = NodePath("../../Environment/GridMap")
 MarkerPath = NodePath("../../Environment/Marker")
 DrawPath = NodePath("../../Environment/Draw")
@@ -242,6 +390,7 @@ MaxHealth = 20
 ZoneCross = 1
 MaxActionPoints = 2
 Actions = [ SubResource( 16 ) ]
+CharacterClass = SubResource( 24 )
 GridPath = NodePath("../../Environment/GridMap")
 MarkerPath = NodePath("../../Environment/Marker")
 DrawPath = NodePath("../../Environment/Draw")
@@ -256,6 +405,7 @@ MaxHealth = 20
 ZoneCross = 1
 MaxActionPoints = 2
 Actions = [ SubResource( 17 ) ]
+CharacterClass = SubResource( 26 )
 GridPath = NodePath("../../Environment/GridMap")
 MarkerPath = NodePath("../../Environment/Marker")
 DrawPath = NodePath("../../Environment/Draw")

@@ -14,6 +14,7 @@ export (String, FILE) var CharacterIcon
 #export var gravity : float
 
 export (Array, Resource) var Actions
+export (Resource) var CharacterClass
 
 export var GridPath            : NodePath
 export var SelecterPath        : NodePath
@@ -73,23 +74,41 @@ func LoadEmmEffects():
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	add_to_group("Units")
-	ActionPoints = MaxActionPoints
-	Movement = 0
-	Speed        = MaxMovement
-	Multitasking = MaxActionPoints
+	
+	# Установка классовых опций персонажа
+	CharacterClass.SetParameters(self)
+	CharacterClass.set_hero_modifiers()
+	CharacterClass.set_hero_effects()
+	
+	# Ожидание, чтобы корректно поставить персонажа, надо подождать, пока прогрузятся сетки
+	yield(get_tree(), "idle_frame")
+	
+	# Установка излучаемых и принимаемых эффектов
 	EmittedEffects.Parent = self
 	ReceivedEffects.Parent = self
 	LoadEmmEffects()
-	Health = MaxHealth
-	yield(get_tree(), "idle_frame")
+	
+	# Установка параметров персонажа в соответствии с его максимальными значениями
+	ActionPoints = MaxActionPoints
+	Movement     = 0
+	Speed        = MaxMovement
+	Multitasking = MaxActionPoints
+	Health       = MaxHealth
+	
+	# Установка глобальной позиции персонажа на grid_map
 	var V3Pos = Grid.world_to_map(transform.origin)
 	ZonePosition = Vector2(V3Pos.x, V3Pos.z)
+	
+	# Установка персонажа на позицию
 	_SetCharacterPosition(ZonePosition)
+	
+	# Установка глобальных координат персонажа
 #	Arena.Grid[ZonePosition.x][ZonePosition.y].content = GridPoint.PLAYER
 	ZoneId = Arena.GetActualZoneId(ZonePosition)
 	transform.origin = Grid.map_to_world(ZonePosition.x, 0, ZonePosition.y)
 	print("ZoneId - " + str(ZoneId))
 	
+	# Перебор действий персонажа
 	for action in Actions:
 		action.OwnCharacter = self
 		action.Arena = FightSystem.Arena
