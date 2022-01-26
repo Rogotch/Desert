@@ -77,8 +77,7 @@ func _ready():
 	
 	# Установка классовых опций персонажа
 	CharacterClass.SetParameters(self)
-	CharacterClass.set_hero_modifiers()
-	CharacterClass.set_hero_effects()
+	CharacterClass.set_class_features()
 	
 	# Ожидание, чтобы корректно поставить персонажа, надо подождать, пока прогрузятся сетки
 	yield(get_tree(), "idle_frame")
@@ -108,7 +107,7 @@ func _ready():
 	transform.origin = Grid.map_to_world(ZonePosition.x, 0, ZonePosition.y)
 	print("ZoneId - " + str(ZoneId))
 	
-	# Перебор действий персонажа
+	# Перебор и установка действий персонажа
 	for action in Actions:
 		action.OwnCharacter = self
 		action.Arena = FightSystem.Arena

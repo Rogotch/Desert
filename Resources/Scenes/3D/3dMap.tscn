@@ -1,4 +1,4 @@
-[gd_scene load_steps=39 format=2]
+[gd_scene load_steps=40 format=2]
 
 [ext_resource path="res://Resources/Entities/3D/Character.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Resources/Scripts/ResourcesScripts/Actions/Action.gd" type="Script" id=2]
@@ -117,6 +117,7 @@ ZoneCross = 0
 MaxActionPoints = 0
 EmmitedEffects = [  ]
 ReceivedEffects = [  ]
+Actions = [  ]
 
 [sub_resource type="Resource" id=21]
 script = ExtResource( 12 )
@@ -137,6 +138,7 @@ ZoneCross = 0
 MaxActionPoints = 0
 EmmitedEffects = [  ]
 ReceivedEffects = [  ]
+Actions = [  ]
 
 [sub_resource type="Resource" id=22]
 script = ExtResource( 11 )
@@ -179,6 +181,15 @@ ZoneCross = 0
 MaxActionPoints = 0
 EmmitedEffects = [  ]
 ReceivedEffects = [  ]
+Actions = [  ]
+
+[sub_resource type="Resource" id=28]
+script = ExtResource( 9 )
+ActionCost = 1
+IconOpen = "res://Resources/Images/GUI/Icons/ActionsIcons/11.png"
+Cooldown = 2
+Radius = 2
+Damage = 5
 
 [sub_resource type="Resource" id=27]
 script = ExtResource( 12 )
@@ -189,7 +200,7 @@ Active = false
 MovementFeature = false
 ModifiersFeature = false
 EffectsFeature = true
-ActionFeature = false
+ActionFeature = true
 DeathFeature = false
 HealFeature = false
 DamageFeature = false
@@ -199,6 +210,7 @@ ZoneCross = 0
 MaxActionPoints = 0
 EmmitedEffects = [  ]
 ReceivedEffects = [ 2 ]
+Actions = [ SubResource( 28 ) ]
 
 [sub_resource type="Resource" id=24]
 script = ExtResource( 11 )
@@ -241,6 +253,7 @@ ZoneCross = 0
 MaxActionPoints = 0
 EmmitedEffects = [  ]
 ReceivedEffects = [  ]
+Actions = [  ]
 
 [sub_resource type="Resource" id=26]
 script = ExtResource( 11 )

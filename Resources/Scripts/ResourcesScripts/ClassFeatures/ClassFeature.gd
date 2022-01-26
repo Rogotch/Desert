@@ -23,6 +23,8 @@ export (int) var MaxActionPoints
 export (Array, int) var EmmitedEffects
 export (Array, int) var ReceivedEffects
 
+export (Array, Resource) var Actions
+
 func Movement():
 	pass
 
@@ -38,7 +40,8 @@ func AddEffects(Hero):
 	Hero.EmmEff.append_array(EmmitedEffects)
 	pass
 
-func AddAction():
+func AddActions(Hero):
+	Hero.Actions.append_array(Actions)
 	pass
 
 func Death():

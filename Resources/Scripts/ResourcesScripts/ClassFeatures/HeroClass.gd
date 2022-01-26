@@ -50,6 +50,12 @@ func SetParameters(hero):
 	
 	pass
 
+func set_class_features():
+	set_hero_modifiers()
+	set_hero_effects()
+	set_hero_actions()
+	pass
+
 func set_hero_modifiers():
 	for feat in ActiveFeatures:
 		if feat.ModifiersFeature:
@@ -60,4 +66,10 @@ func set_hero_effects():
 	for feat in ActiveFeatures:
 		if feat.EffectsFeature:
 			feat.AddEffects(Hero)
+	pass
+
+func set_hero_actions():
+	for feat in ActiveFeatures:
+		if feat.EffectsFeature:
+			feat.AddActions(Hero)
 	pass
