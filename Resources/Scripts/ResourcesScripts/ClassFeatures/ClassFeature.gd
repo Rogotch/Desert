@@ -15,10 +15,14 @@ export (bool) var DeathFeature
 export (bool) var HealFeature
 export (bool) var DamageFeature
 
-export (int) var MaxMovement
-export (int) var MaxHealth
-export (int) var ZoneCross
-export (int) var MaxActionPoints
+export (int) var Strength
+export (int) var Dexterity
+export (int) var Charisma
+export (int) var Mobility
+export (int) var Constitution
+export (int) var Adaptivity
+export (int) var Multitasking
+export (int) var Inflamed
 
 export (Array, int) var EmmitedEffects
 export (Array, int) var ReceivedEffects
@@ -29,10 +33,14 @@ func Movement():
 	pass
 
 func Modifiers(Hero):
-	Hero.MaxMovement += MaxMovement
-	Hero.MaxHealth += MaxHealth
-	Hero.ZoneCross += ZoneCross
-	Hero.MaxActionPoints += MaxActionPoints
+	Hero.Strength += Strength
+	Hero.Dexterity += Dexterity
+	Hero.Charisma += Charisma
+	Hero.Mobility += Mobility
+	Hero.Constitution += Constitution
+	Hero.Adaptivity += Adaptivity
+	Hero.Multitasking += Multitasking
+	Hero.Inflamed += Inflamed
 	pass
 
 func AddEffects(Hero):

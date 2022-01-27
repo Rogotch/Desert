@@ -6,10 +6,26 @@ onready var DamageNumbers = preload("res://Resources/Entities/UI/DamageNumbers.t
 
 export var PlayerTeam      : bool
 export var physic_speed    : float
-export var MaxMovement     : int
-export var MaxHealth       : int
-export var ZoneCross       : int
-export var MaxActionPoints : int
+
+# Характеристики персонажа
+
+# - Должно влиять на силу удара, доступную броню, силовые действия 
+export var Strength        : int
+# - Должно влиять на уклонение, иногда на некоторые удары 
+export var Dexterity       : int
+# - Должно влиять на зональные эффекты типа вдохновения или устрашения и социальные взаимодействия 
+export var Charisma        : int
+# + Должно влиять на скорость в ход 
+export var Mobility        : int
+# ~ Должно влиять на максимум здоровья персонажа и сопротивление эффектам 
+export var Constitution    : int
+# ~ Дожно влиять на количество зон в ход, которые может пересечь персонаж и его реакцию на неожиданные эвенты 
+export var Adaptivity      : int
+# + Влияет на количество очков действий персонажа 
+export var Multitasking    : int
+# - Влияет на силу магии и силу проявления Искры  
+export var Inflamed        : int
+
 export (String, FILE) var CharacterIcon
 #export var gravity : float
 
@@ -35,8 +51,8 @@ onready var Draw          = get_node(DrawPath)
 onready var Arena         = get_node(ArenaMainNodePath)
 
 #Блок Характеристик
-var Speed        = MaxMovement
-var Multitasking = MaxActionPoints
+var Speed           = Mobility
+var MaxActionPoints = Multitasking
 #var Constitution
 
 var Health setget ChangeHealth
@@ -88,11 +104,11 @@ func _ready():
 	LoadEmmEffects()
 	
 	# Установка параметров персонажа в соответствии с его максимальными значениями
-	ActionPoints = MaxActionPoints
-	Movement     = 0
-	Speed        = MaxMovement
-	Multitasking = MaxActionPoints
-	Health       = MaxHealth
+	MaxActionPoints = Multitasking
+	ActionPoints    = MaxActionPoints
+	Movement        = 0
+	Speed           = Mobility
+	Health          = Constitution
 	
 	# Установка глобальной позиции персонажа на grid_map
 	var V3Pos = Grid.world_to_map(transform.origin)
@@ -159,8 +175,8 @@ func ChangeHealth(value):
 		damageNum.SetColor(Color.red)
 		damageNum.ShowNumbers(value * -1)
 	
-	if Health + value > MaxHealth:
-		Health = MaxHealth
+	if Health + value > Constitution:
+		Health = Constitution
 	elif Health + value < 0:
 		Health = 0
 	else:
@@ -220,8 +236,8 @@ func StartTurn():
 	SignalsScript.emit_signal("StartTurnOnZone", self, ZoneId)
 	Selecter.visible = true
 	Movement = 0
-	ZonePoints = ZoneCross
-	ActionPoints = Multitasking
+	ZonePoints = Adaptivity
+	ActionPoints = MaxActionPoints
 	Arena.CreatePathZone(self)
 	ReceivedEffects.ActivateEffectsByTriggerAndType(Effect.ActivationTrigger.StartTurn, Effect.Type.ZONE)
 	ReceivedEffects.ActivateEffectsByTriggerAndType(Effect.ActivationTrigger.StartTurn, Effect.Type.CHARACTER)
