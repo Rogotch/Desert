@@ -23,6 +23,14 @@ func _input_event(_camera, event, click_position, _click_normal, _shape_idx):
 				FightSystem.SelectMode.POSITION:
 					FightSystem.SelectedCharacter.target = mapPosition
 					FightSystem.SelectedCharacter.DoSomething()
+	if event is InputEventMouseMotion && !FightSystem.SelectedCharacter.Moving:
+		var path = Arena.GetPath(FightSystem.SelectedCharacter, click_position)
+		if path != null:
+			Arena.DrawPath(FightSystem.SelectedCharacter, path)
 #
 #				FightSystem.TARGET:
+	pass
+
+func DrawPath():
+	
 	pass

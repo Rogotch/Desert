@@ -16,11 +16,14 @@ export var GridsPath            : NodePath
 export var _PathZone            : NodePath
 export var GridMapPath          : NodePath
 export var CharactersNodePath   : NodePath
+export var _DrawNode            : NodePath
 
 onready var gridMap          = get_node(GridMapPath)
 onready var PathZone         = get_node(_PathZone)
 onready var Grids            = get_node(GridsPath)
 onready var CharactersNode   = get_node(CharactersNodePath)
+onready var DrawNode         = get_node(_DrawNode)
+
 
 var Grid = []
 var Zones = []
@@ -598,18 +601,51 @@ func GoToClick(character, click_position):
 	var startPosition = character.ZonePosition
 	var selectedPosition = Vector2(gridMap.world_to_map(click_position).x, gridMap.world_to_map(click_position).z)
 	if InGridCheck(selectedPosition, Vector2.ZERO) && startPosition != selectedPosition:
-		var trace
 		if !Grid[selectedPosition.x][selectedPosition.y].interzone:
 			ClearPathZone()
 			if Grid[selectedPosition.x][selectedPosition.y].content == GridPoint.CHARACTER:
 	#			print("Находится ли цель в зоне")
 				character.target = selectedPosition
+#				prints("target", str(trace.target))
+			character.path = GetPath(character, click_position)
+	pass
+
+func GetPath(character, click_position):
+	var startPosition = character.ZonePosition
+	var selectedPosition = Vector2(gridMap.world_to_map(click_position).x, gridMap.world_to_map(click_position).z)
+	if InGridCheck(selectedPosition, Vector2.ZERO) && startPosition != selectedPosition:
+		var trace
+		if !Grid[selectedPosition.x][selectedPosition.y].interzone:
+			if Grid[selectedPosition.x][selectedPosition.y].content == GridPoint.CHARACTER:
 				trace = BuildPathToTheTarget(character, selectedPosition, character.SelectedAction)
-				prints("target", str(trace.target))
 			elif Grid[selectedPosition.x][selectedPosition.y].content == GridPoint.EMPTY:
 				trace = BuildPathToTheEmptyZone(character, selectedPosition)
 			var finalPath = SetGlobalPath(trace.path)
-			character.path = finalPath
+#			print(finalPath)
+			return finalPath
 	pass
 
-
+# Отрисовка линии пути
+func DrawPath(character, path):
+	var newArr = [Vector3(character.transform.origin.x, 1, character.transform.origin.z)]
+	for pathPoint in path:
+		newArr.append(Vector3(pathPoint.x, 1, pathPoint.z))
+#	var DrawNode = $Environment/Draw
+	DrawNode.clear()
+	DrawNode.begin(Mesh.PRIMITIVE_LINE_STRIP)
+	for point in newArr:
+		DrawNode.add_vertex(point)
+	DrawNode.end()
+#	if Input. is_mouse_button_pressed( BUTTON_LEFT):
+#		p.clear()
+#		p. append( get_node( "point").transform.origin)
+#		p. append( get_node( "point1"). transform.origin)
+#		p. append( get_node( "point2").transform.origin)
+#		p. append( get_node( "point3"). transform.origin)
+#		var ig = get node( "draw") 
+#		ig.clear()
+##		ig. begin(Mesh. PRIMITIVE LINE t.oo)
+#		 for x in p:
+#			  ig. add_vertex(x)
+#		 ig. end( )
+	pass

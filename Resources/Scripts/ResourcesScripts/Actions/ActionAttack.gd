@@ -26,7 +26,7 @@ func Activate():
 	.Activate()
 #	print("Activate Action")
 #	OwnCharacter.ActionPoints -= ActionCost
-	FightSystem.GetCharacterByPos(OwnCharacter.target).Health -= 5
+	FightSystem.GetCharacterByPos(OwnCharacter.target).Health -= OwnCharacter.Strength / 2
 ##	OwnCharacter.Health -= 5
 	FightSystem.Mode = FightSystem.SelectMode.NONE
 	pass

@@ -108,7 +108,7 @@ func _ready():
 	ActionPoints    = MaxActionPoints
 	Movement        = 0
 	Speed           = Mobility
-	Health          = Constitution
+	Health          = Constitution * 4
 	
 	# Установка глобальной позиции персонажа на grid_map
 	var V3Pos = Grid.world_to_map(transform.origin)
@@ -175,8 +175,8 @@ func ChangeHealth(value):
 		damageNum.SetColor(Color.red)
 		damageNum.ShowNumbers(value * -1)
 	
-	if Health + value > Constitution:
-		Health = Constitution
+	if Health + value > Constitution * 4:
+		Health = Constitution * 4
 	elif Health + value < 0:
 		Health = 0
 	else:
