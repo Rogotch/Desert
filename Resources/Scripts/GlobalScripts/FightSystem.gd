@@ -3,6 +3,7 @@ extends Node
 signal NewRound(roundNum)
 signal StartTurn(character)
 signal EndTurn
+signal StartFight
 
 enum SelectMode {NONE, TARGET, POSITION, ZONE}
 

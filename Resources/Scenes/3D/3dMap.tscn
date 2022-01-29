@@ -1,4 +1,4 @@
-[gd_scene load_steps=40 format=2]
+[gd_scene load_steps=41 format=2]
 
 [ext_resource path="res://Resources/Entities/3D/Character.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Resources/Scripts/ResourcesScripts/Actions/Action.gd" type="Script" id=2]
@@ -55,6 +55,9 @@ height = 3.393
 
 [sub_resource type="SpatialMaterial" id=10]
 albedo_color = Color( 0.180392, 0.564706, 0.0235294, 1 )
+
+[sub_resource type="SpatialMaterial" id=29]
+albedo_color = Color( 0.545098, 1, 0, 1 )
 
 [sub_resource type="CubeMesh" id=14]
 resource_local_to_scene = true
@@ -374,6 +377,7 @@ mesh = SubResource( 9 )
 material/0 = SubResource( 10 )
 
 [node name="Draw" type="ImmediateGeometry" parent="Environment"]
+material_override = SubResource( 29 )
 
 [node name="GridVisualizers" type="Spatial" parent="Environment"]
 
@@ -411,6 +415,7 @@ Constitution = 4
 Adaptivity = 2
 Multitasking = 3
 Inflamed = 10
+CharacterIcon = "res://Resources/Images/TestImages/D (1).png"
 Actions = [ SubResource( 19 ), SubResource( 18 ) ]
 CharacterClass = SubResource( 22 )
 GridPath = NodePath("../../Environment/GridMap")
@@ -431,6 +436,7 @@ Constitution = 2
 Adaptivity = 3
 Multitasking = 2
 Inflamed = 5
+CharacterIcon = "res://Resources/Images/TestImages/D (2).png"
 Actions = [ SubResource( 16 ) ]
 CharacterClass = SubResource( 24 )
 GridPath = NodePath("../../Environment/GridMap")
@@ -450,6 +456,7 @@ Constitution = 1
 Adaptivity = 2
 Multitasking = 4
 Inflamed = 4
+CharacterIcon = "res://Resources/Images/TestImages/D (3).png"
 Actions = [ SubResource( 17 ) ]
 CharacterClass = SubResource( 26 )
 GridPath = NodePath("../../Environment/GridMap")

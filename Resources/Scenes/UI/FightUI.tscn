@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=2]
+[gd_scene load_steps=21 format=2]
 
 [ext_resource path="res://Resources/Scripts/UIScripts/FightUI.gd" type="Script" id=1]
 [ext_resource path="res://Resources/Fonts/DynamicFont.tres" type="DynamicFont" id=2]
@@ -8,7 +8,6 @@
 [ext_resource path="res://Resources/Images/GUI/Buttons/01.png" type="Texture" id=6]
 [ext_resource path="res://Resources/Images/GUI/Buttons/02.png" type="Texture" id=7]
 [ext_resource path="res://Resources/Scripts/UIScripts/CustomLabel.gd" type="Script" id=8]
-[ext_resource path="res://Resources/Entities/UI/CharacterPortrait.tscn" type="PackedScene" id=9]
 
 [sub_resource type="Theme" id=1]
 default_font = ExtResource( 2 )
@@ -77,6 +76,7 @@ __meta__ = {
 }
 _UnitUI = NodePath("UnitInformation")
 _ActionsCells = NodePath("BottomUI/Actions/ScrollContainer/ActionsContainer/ActionsCells")
+_CharPortraits = NodePath("HBoxContainer/Control/CenterContainer/HBoxContainer")
 UnitUIOffset = Vector2( -10, -10 )
 
 [node name="UnitInformation" type="Control" parent="."]
@@ -444,32 +444,12 @@ __meta__ = {
 }
 
 [node name="HBoxContainer" type="HBoxContainer" parent="HBoxContainer/Control/CenterContainer"]
-margin_left = 358.0
-margin_top = 7.0
-margin_right = 666.0
-margin_bottom = 117.0
+margin_left = 512.0
+margin_top = 62.0
+margin_right = 512.0
+margin_bottom = 62.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
-
-[node name="Control" parent="HBoxContainer/Control/CenterContainer/HBoxContainer" instance=ExtResource( 9 )]
-anchor_right = 0.0
-anchor_bottom = 0.0
-margin_right = 100.0
-margin_bottom = 110.0
-
-[node name="Control2" parent="HBoxContainer/Control/CenterContainer/HBoxContainer" instance=ExtResource( 9 )]
-anchor_right = 0.0
-anchor_bottom = 0.0
-margin_left = 104.0
-margin_right = 204.0
-margin_bottom = 110.0
-
-[node name="Control3" parent="HBoxContainer/Control/CenterContainer/HBoxContainer" instance=ExtResource( 9 )]
-anchor_right = 0.0
-anchor_bottom = 0.0
-margin_left = 208.0
-margin_right = 308.0
-margin_bottom = 110.0
 
 [connection signal="pressed" from="BottomUI/EndTurnButton" to="." method="NextTurn"]

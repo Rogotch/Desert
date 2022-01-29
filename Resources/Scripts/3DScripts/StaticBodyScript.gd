@@ -31,6 +31,3 @@ func _input_event(_camera, event, click_position, _click_normal, _shape_idx):
 #				FightSystem.TARGET:
 	pass
 
-func DrawPath():
-	
-	pass

@@ -71,6 +71,7 @@ func SetCharacters():
 	FightSystem.PlayerTurn = true
 	for zone in Zones:
 		zone.GetAllCharacters()
+	FightSystem.emit_signal("StartFight")
 	pass
 
 #Возвращает ID зоны по координатам
@@ -632,6 +633,8 @@ func DrawPath(character, path):
 		newArr.append(Vector3(pathPoint.x, 1, pathPoint.z))
 #	var DrawNode = $Environment/Draw
 	DrawNode.clear()
+#	var textur = load("res://Resources/Images/GUI/SimpleIcons/Icon16.png")
+#	DrawNode.set_color(Color.green)
 	DrawNode.begin(Mesh.PRIMITIVE_LINE_STRIP)
 	for point in newArr:
 		DrawNode.add_vertex(point)

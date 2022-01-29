@@ -2,10 +2,13 @@ extends Control
 
 export var _UnitUI        : NodePath
 export var _ActionsCells  : NodePath
+export var _CharPortraits : NodePath
 export var UnitUIOffset   : Vector2
 onready var UnitUI        = get_node(_UnitUI)
 onready var ActionsCells  = get_node(_ActionsCells)
+onready var CharPortraits = get_node(_CharPortraits)
 
+onready var CharacterIconClass = preload("res://Resources/Entities/UI/CharacterPortrait.tscn")
 onready var UnitStrings = UnitUI.get_node("Strings")
 onready var UnitHP = UnitUI.get_node("Strings/Health")
 onready var UnitZP = UnitUI.get_node("Strings/ZonePoints")
@@ -19,8 +22,17 @@ func _ready():
 	ConnectAllCells()
 	FightSystem.connect("EndTurn", self, "ClearCells")
 	FightSystem.connect("StartTurn", self, "FillCells")
+	FightSystem.connect("StartFight", self, "SetCharactersIcons")
 	SignalsScript.connect("DoAction", self, "UnselectActivedAction")
 	SignalsScript.connect("UpdateFightUI", self, "UpdateCells")
+	pass
+
+func SetCharactersIcons():
+	for character in FightSystem.TurnsQueue:
+		var newIcon = CharacterIconClass.instance()
+		CharPortraits.add_child(newIcon)
+		newIcon.SelectedCharacter = character
+		newIcon.Update()
 	pass
 
 func UnselectActivedAction(_character, action_id):
