@@ -631,6 +631,7 @@ func DrawPath(character, path):
 	var newArr = [Vector3(character.transform.origin.x, 1, character.transform.origin.z)]
 	for pathPoint in path:
 		newArr.append(Vector3(pathPoint.x, 1, pathPoint.z))
+	newArr = Global.ChaikinAlgorithmMultipleIterations(newArr, 4)
 #	var DrawNode = $Environment/Draw
 	DrawNode.clear()
 #	var textur = load("res://Resources/Images/GUI/SimpleIcons/Icon16.png")
