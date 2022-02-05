@@ -99,8 +99,8 @@ func _ready():
 	yield(get_tree(), "idle_frame")
 	
 	# Установка излучаемых и принимаемых эффектов
-	EmittedEffects.Parent = self
-	ReceivedEffects.Parent = self
+	EmittedEffects.Target = self
+	ReceivedEffects.Target = self
 	LoadEmmEffects()
 	
 	# Установка параметров персонажа в соответствии с его максимальными значениями
@@ -200,34 +200,34 @@ func _SetCharacterPosition(newPosition):
 		pass
 	pass
 
-func draw_path(target_pos):
-	var path_array = Arena._get_path(global_transform.origin, target_pos)
-	var m = SpatialMaterial.new()
-	var im = Draw
-	im.set_material_override(m)
-	im.clear()
-	im.begin(Mesh.PRIMITIVE_POINTS, null)
-#	for pathPoint in path_array:
-#		im.add_vertex(pathPoint)
-	if path_array.size() > 0:
-		im.add_vertex(path_array[0])
-		im.add_vertex(path_array[(path_array.size() - 1 if path_array.size() - 1 < Movement else Movement)])
-		im.end()
-		im.begin(Mesh.PRIMITIVE_LINE_STRIP, null)
-		var count = 0
-	#	var endPath = (path_array.size() -1 if path_array.size() -1 < movement else path_array.size() -1 - movement)
-	#	print(str(endPath))
-		for x in path_array:
-	#		if count < movement:
-	#			break
-	#		if count < path_ind -1:
-			if count >= Movement:
-				break
-			count += 1
-	#			continue
-			im.add_vertex(x)
-	im.end()
-	pass
+#func draw_path(target_pos):
+#	var path_array = Arena._get_path(global_transform.origin, target_pos)
+#	var m = SpatialMaterial.new()
+#	var im = Draw
+#	im.set_material_override(m)
+#	im.clear()
+#	im.begin(Mesh.PRIMITIVE_POINTS, null)
+##	for pathPoint in path_array:
+##		im.add_vertex(pathPoint)
+#	if path_array.size() > 0:
+#		im.add_vertex(path_array[0])
+#		im.add_vertex(path_array[(path_array.size() - 1 if path_array.size() - 1 < Movement else Movement)])
+#		im.end()
+#		im.begin(Mesh.PRIMITIVE_LINE_STRIP, null)
+#		var count = 0
+#	#	var endPath = (path_array.size() -1 if path_array.size() -1 < movement else path_array.size() -1 - movement)
+#	#	print(str(endPath))
+#		for x in path_array:
+#	#		if count < movement:
+#	#			break
+#	#		if count < path_ind -1:
+#			if count >= Movement:
+#				break
+#			count += 1
+#	#			continue
+#			im.add_vertex(x)
+#	im.end()
+#	pass
 
 func StartTurn():
 #	Actions[0].Select()

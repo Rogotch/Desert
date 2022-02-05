@@ -50,18 +50,21 @@ func _ready():
 	add_to_group("Arena")
 	FightSystem.Arena = self
 	
-	SignalsScript.connect("CameOnZone",  self, "CheckZone")
-	SignalsScript.connect("LeftTheZone", self, "CheckZone")
-	SignalsScript.connect("UpdateZoneEffects", self, "UpdateAllZonesEffects")
 	
 	SetVisualGrids()
 	SetCharacters()
+	
+	
+	yield(get_tree(), "idle_frame")
+	for zone in Zones:
+		if zone.Interzone:
+			zone.ConnectSignals()
 	pass # Replace with function body.
 
-func CheckZone(character, zoneID):
-	yield(get_tree(), "idle_frame")
-	GetZoneByID(zoneID).CheckSignal(character, zoneID)
-	pass
+#func CheckZone(character, zoneID):
+#	yield(get_tree(), "idle_frame")
+#	GetZoneByID(zoneID).CheckSignal(character, zoneID)
+#	pass
 
 #Устанавливает персонажей в список системы боя и начинает ход
 func SetCharacters():
@@ -113,13 +116,13 @@ func GetZoneByPosition(objPos):
 	pass
 
 # Обновляет эффекты зоны, так как у неё нет своих эффектов, только те, что она получает от пероснажей
-func UpdateAllZonesEffects():
-	for zone in Zones:
-		if zone.Interzone:
-			continue
-		else:
-			zone.UpdateZoneEffects()
-	pass
+#func UpdateAllZonesEffects():
+#	for zone in Zones:
+#		if zone.Interzone:
+#			continue
+#		else:
+#			zone.UpdateZoneEffects()
+#	pass
 
 #Надо сначала поместить раундовые эффекты в отдельный EffectHolder, потому что иначе эффект при первом же UpdateAllZonesEffects будет удалён
 ## Активирует эффекты во всех зонах по триггеру

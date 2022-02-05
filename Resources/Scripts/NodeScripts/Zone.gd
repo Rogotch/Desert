@@ -22,7 +22,19 @@ var Characters = []
 var VisualGrid
 
 func _ready():
+#	SignalsScript.connect("EndTurnOnZone", self, "checkMethod")
 	pass # Replace with function body.
+
+#func checkMethod(_arg1, _arg2):
+#	print_debug("Yay")
+#	print("Start!  Y_Y")
+#	pass
+
+func ConnectSignals():
+	SignalsScript.connect("CameOnZone",  self, "CheckSignal")
+	SignalsScript.connect("LeftTheZone", self, "CheckSignal")
+	SignalsScript.connect("UpdateZoneEffects", self, "UpdateZoneEffects")
+	pass
 
 func SetZoneParams(params):
 #	var params = {ZoneName = "Zone1", ZoneId = 0, StartPos = Vector2(0, 0),  EndPos = Vector2(3,5),  interzone = false}
@@ -54,6 +66,7 @@ func GetAllCharacters():
 
 func CheckSignal(_character, zoneID):
 	print("Zone id - " + str(zoneID))
+	yield(get_tree(), "idle_frame")
 	if zoneID == ZoneId:
 		GetAllCharacters()
 		call_deferred("CheckCondition")

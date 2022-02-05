@@ -6,7 +6,7 @@ class_name EffectsHolder, "res://Resources/Images/GUI/SimpleIcons/Icon16.png"
 #
 #var Out = false
 var Effects = []
-var Parent  = null
+var Target  = null
 var ZoneObj = null
 
 func _init():
@@ -25,10 +25,11 @@ func ActivateEffectsByTriggerAndType(trigger, type):
 	var effects = GetEffectsByType(type)
 	for effect in effects:
 		if effect.Trigger == trigger:
-			if (effect.EffectTarget == Effect.Target.Team && Parent.PlayerTeam == effect.PlayerEffect ||
-				effect.EffectTarget == Effect.Target.Enemy && Parent.PlayerTeam != effect.PlayerEffect ||
+			if (effect.EffectTarget == Effect.Target.Team && Target.PlayerTeam == effect.PlayerEffect ||
+				effect.EffectTarget == Effect.Target.Enemy && Target.PlayerTeam != effect.PlayerEffect ||
 				effect.EffectTarget == Effect.Target.All):
-					Activate(effect)
+					effect.Activate(self)
+#					Activate(effect)
 					Global._create_timer(effect.timeDelay)
 					yield(Global, "timeout")
 	pass
@@ -36,10 +37,11 @@ func ActivateEffectsByTriggerAndType(trigger, type):
 func ActivateEffectsByType(type):
 	var effects = GetEffectsByType(type)
 	for effect in effects:
-		if (effect.EffectTarget == Effect.Target.Team && Parent.PlayerTeam == effect.PlayerEffect ||
-			effect.EffectTarget == Effect.Target.Enemy && Parent.PlayerTeam != effect.PlayerEffect ||
+		if (effect.EffectTarget == Effect.Target.Team && Target.PlayerTeam == effect.PlayerEffect ||
+			effect.EffectTarget == Effect.Target.Enemy && Target.PlayerTeam != effect.PlayerEffect ||
 			effect.EffectTarget == Effect.Target.All):
-				Activate(effect)
+				effect.Activate(self)
+#				Activate(effect)
 				Global._create_timer(effect.timeDelay)
 				yield(Global, "timeout")
 	pass
@@ -52,25 +54,25 @@ func GetEffectsByType(type):
 	return finalEffects
 	pass
 
-func Activate(effect):
-#	ZoneObj.GetZones
-	for paramMod in effect.Parameters.keys():
-		if effect.Parameters[paramMod] != 0:
-			match paramMod:
-				"Health":
-					Parent.Health = effect.Parameters[paramMod]
-					pass
-				"Accuracy":
-					pass
-				"ActionPoints":
-					pass
-				"Speed":
-					pass
-	
-	if !effect.permanent:
-		effect.duration -= 1
-		if effect.duration == 0:
-			Effects.remove(Effects.find(effect))
+#func Activate(effect):
+##	ZoneObj.GetZones
+#	for paramMod in effect.Parameters.keys():
+#		if effect.Parameters[paramMod] != 0:
+#			match paramMod:
+#				"Health":
+#					Target.Health = effect.Parameters[paramMod]
+#					pass
+#				"Accuracy":
+#					pass
+#				"ActionPoints":
+#					pass
+#				"Speed":
+#					pass
+#
+#	if !effect.permanent:
+#		effect.duration -= 1
+#		if effect.duration == 0:
+#			Effects.remove(Effects.find(effect))
 #	match effect.EffectType:
 #		Effect.Type.ZONE:
 #			print("Активируется зональный эффект")
@@ -93,11 +95,12 @@ func DeleteAllEffectsByType(type):
 			count += 1
 	pass
 
+# Загрузка эффекта из файла по ID
 func SetEffectByID(id):
 	var effectParams = DataBase.GetObjFromArrByID(DataBase.Effects, id)
 	var newEffect = Effect.new()
 	newEffect.EffectName   = effectParams.Name
-	newEffect.PlayerEffect = Parent.PlayerTeam
+	newEffect.PlayerEffect = Target.PlayerTeam
 	newEffect.Parameters   = effectParams.Effects
 	newEffect.timeDelay    = effectParams.timeDelay
 	if effectParams.has("TargetsZones"):

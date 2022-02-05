@@ -9,6 +9,7 @@ var content = EMPTY
 var zoneID
 var interzone = false
 var character = null
+var pointEffects = EffectsHolder.new()
 
 func _ready():
 	add_to_group("GridPoints")
@@ -17,6 +18,10 @@ func _ready():
 func ClearPoint():
 #	print("CLEAR")
 	step = null
+	pass
+
+func OnPosition(character):
+	
 	pass
 
 #Проверка возможности прохождения через эту клетку персонажем
