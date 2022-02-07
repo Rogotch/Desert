@@ -12,6 +12,10 @@ func _create_timer(value):
 	emit_signal("timeout")
 	pass
 
+func _idle_frame():
+	yield(get_tree(), "idle_frame")
+	emit_signal("timeout")
+	pass
 
 func ChaikinAlgorithmMultipleIterations(pointArr, iterationsCount):
 	for i in iterationsCount:

@@ -26,6 +26,7 @@ func StartTurn():
 	TurnsQueue[queueIndex].StartTurn()
 	if queueIndex == 0:
 		roundCounter += 1
+		print("NEEEEW ROUND")
 		emit_signal("NewRound", roundCounter)
 #	var zone = Arena.GetZoneByID(ZoneId)
 #	zone.GetAllCharacters()

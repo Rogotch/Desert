@@ -50,8 +50,11 @@ func _ready():
 	add_to_group("Arena")
 	FightSystem.Arena = self
 	
+#	yield(get_tree(), "idle_frame")
 	
 	SetVisualGrids()
+	yield(get_tree(), "idle_frame")
+	
 	SetCharacters()
 	
 	
@@ -59,6 +62,7 @@ func _ready():
 	for zone in Zones:
 		if zone.Interzone:
 			zone.ConnectSignals()
+	
 	pass # Replace with function body.
 
 #func CheckZone(character, zoneID):
@@ -69,7 +73,7 @@ func _ready():
 #Устанавливает персонажей в список системы боя и начинает ход
 func SetCharacters():
 	FightSystem.TurnsQueue.append_array(CharactersNode.get_children())
-	yield(get_tree(), "idle_frame")
+#	yield(get_tree(), "idle_frame")
 	FightSystem.StartTurn()
 	FightSystem.PlayerTurn = true
 	for zone in Zones:
@@ -216,9 +220,9 @@ func WaveFindPath(_character, finPos):
 		var ScanningNodes = [startPos]
 		for node in ScanningNodes:
 			if node == finPos:
-				print("Дошли до обратной постройки пути!")
+#				print("Дошли до обратной постройки пути!")
 	#			break
-				PrintGrid(finPos)
+#				PrintGrid(finPos)
 				return SetTrace(finPos, newGrid)
 			else:
 				var DirectionArr = (RectDirections if Grid[node.x][node.y].interzone else RoundDirections)
@@ -237,9 +241,9 @@ func WaveFindPath(_character, finPos):
 #		var actualstring = startString % [str(startPos), str(finPos)]
 #		print(actualstring)
 	#	print(str(Grid))
-		PrintGrid(finPos)
+#		PrintGrid(finPos)
 		ClearPoints()
-		print("Путь не был найден")
+#		print("Путь не был найден")
 	return []
 	pass
 
@@ -337,7 +341,7 @@ func CircleArea(startPos, radius):
 	for i in radius+1:
 		for j in radius+1:
 			
-			prints(i, j, radius, Vector2(i,j).length())
+#			prints(i, j, radius, Vector2(i,j).length())
 			if int(round(Vector2(i,j).length()))<= radius:
 				Octan.append(Vector2(i,j))
 #	for i in radius:
@@ -410,8 +414,8 @@ func isCellCheck(pos, direction, gridArr, startZPoint, endZPoint, _Character):
 #	Проверка соседней клетки pos по направлению direction
 	var gridPos = (pos) + direction
 #	Проверка, находится ли точка в рамках сетки
-	if gridPos == _Character.target:
-		print("Клетка была отсканирована")
+#	if gridPos == _Character.target:
+#		print("Клетка была отсканирована")
 	if InGridCheck(pos, direction, startZPoint, endZPoint):
 #		Проверка, что точка свободна для передвижения или она является целью персонажа и его предыдущая позиция не является междузоньем
 		if  ((gridArr[gridPos.x][gridPos.y].content == GridPoint.EMPTY || gridPos == _Character.target && !gridArr[pos.x][pos.y].interzone) &&
@@ -420,7 +424,7 @@ func isCellCheck(pos, direction, gridArr, startZPoint, endZPoint, _Character):
 #			Проверка, что при диагональном переходе обе боковые клетки пусты
 			if (_Character.CheckDiagonalPosition(pos, direction) || gridPos == _Character.target):
 				var step = 0
-				print("")
+#				print("")
 	#			Проверка, что предыдущая точка не занята игроком и определение её шага
 				if  gridArr[pos.x][pos.y].step != null:
 					step = gridArr[pos.x][pos.y].step
@@ -451,7 +455,7 @@ func SetTrace(finPos, gridArr):
 				stepNum = gridArr[NextPoint.x][NextPoint.y].step
 				newTrace.append(NextPoint)
 				break
-	print("Trace - " + str(newTrace))
+#	print("Trace - " + str(newTrace))
 	ClearPoints()
 #	get_tree().call_group("GridPoints", "ClearPoint")
 	return newTrace
@@ -491,7 +495,7 @@ func InDistanceCheck(startPos, Distance, targetPosition):
 #	var Distance = character.AttackDistance
 	var ScanningNodes = {startPos : cell}
 	var nodesKeys = ScanningNodes.keys()
-	print("targetPosition " + str(targetPosition))
+#	print("targetPosition " + str(targetPosition))
 	for node in nodesKeys:
 		for dir in RoundDirections:
 			# Проверка, чтобы значение находилось в рамках зоны
@@ -552,7 +556,7 @@ func BuildPathToTheTarget(_Character, endPos, CharAction = null):
 	var inDistancePosition = null
 #	var CharAction = Action.new()
 	var Cost = {movement = 0, zonePoints = 0}
-	print()
+#	print()
 	for tracePosition in trace:
 		if Grid[tracePosition.x][tracePosition.y].CheckMovement(_Character, Cost):
 #			print("Cost - " + str(Cost))
@@ -564,13 +568,13 @@ func BuildPathToTheTarget(_Character, endPos, CharAction = null):
 					# Сохраняем позицию, с которой персонаж может достать до цели
 					inDistancePosition = tracePosition
 					if GetCostMovement(_Character, newTrace).actionPoints + CharAction.ActionCost <= _Character.ActionPoints: # И если у игрока достаточно AP для действия
-						print("newTrace - " + str(newTrace))
+#						print("newTrace - " + str(newTrace))
 						InDistance = true
 						break
 		else:
 			break
 	var SelectedTarget = null
-	print("newTrace - " + str(newTrace))
+#	print("newTrace - " + str(newTrace))
 	if newTrace.size() > 0 && _Character.target == newTrace[-1]:
 		SelectedTarget = newTrace[-1]
 		newTrace.remove(newTrace.find(newTrace[-1]))
@@ -642,6 +646,9 @@ func DrawPath(character, path):
 	DrawNode.begin(Mesh.PRIMITIVE_LINE_STRIP)
 	for point in newArr:
 		DrawNode.add_vertex(point)
+		if point.distance_to(newArr[-1]) <= (5 if (point.x == newArr[-1].x || point.z == newArr[-1].z) else 6.5): #5
+			prints(point, newArr[-1])
+			break
 	DrawNode.end()
 #	if Input. is_mouse_button_pressed( BUTTON_LEFT):
 #		p.clear()

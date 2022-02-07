@@ -8,7 +8,7 @@ var step = null
 var content = EMPTY
 var zoneID
 var interzone = false
-var character = null
+var character = null setget SetCharacter
 var pointEffects = EffectsHolder.new()
 
 func _ready():
@@ -20,8 +20,12 @@ func ClearPoint():
 	step = null
 	pass
 
-func OnPosition(character):
-	
+# При установке персонажа клетке (что происходит в моменты когда персонаж встаёт на клетку, следует активировать эффекты клетки
+func SetCharacter(newCharacter):
+	pointEffects.Target = newCharacter
+	character = newCharacter
+	if newCharacter != null:
+		pointEffects.ActivateEffectsByType(Effect.Type.POSITION)
 	pass
 
 #Проверка возможности прохождения через эту клетку персонажем

@@ -66,7 +66,7 @@ func GetAllCharacters():
 
 func CheckSignal(_character, zoneID):
 	print("Zone id - " + str(zoneID))
-	yield(get_tree(), "idle_frame")
+#	yield(get_tree(), "idle_frame")
 	if zoneID == ZoneId:
 		GetAllCharacters()
 		call_deferred("CheckCondition")
@@ -76,7 +76,9 @@ func CheckSignal(_character, zoneID):
 #		VisualGrid.GridColor = Color.yellow - мгновенная
 #		VisualGrid.SetGridColorSmooth(Color.green) - плавная
 func CheckCondition():
-	print("Check Condition!")
+#	Global._idle_frame()
+#	yield(Global, "timeout")
+#	print("Check Condition!")
 	if !Interzone:
 		if Characters.size() == 0:
 			SetStatus(NONE)
