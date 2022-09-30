@@ -6,7 +6,7 @@
 ![ScreenRecorderProject13](https://user-images.githubusercontent.com/57594218/193289347-dac4b926-f965-406a-abcd-bfbb610123bb.gif)
 
 ## А ещё у нас есть магия!
-Пока, правда, без VFX и красивостей...
+<p>Пока, правда, без VFX и красивостей...</p>
 ![ScreenRecorderProject13_1](https://user-images.githubusercontent.com/57594218/193289511-2c16d96c-f177-4f5e-b690-880c00b3b36a.gif)
 
 # К сожалению...
