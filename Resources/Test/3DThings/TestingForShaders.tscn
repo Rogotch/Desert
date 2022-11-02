@@ -1,13 +1,25 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://Resources/Shaders/3D/DisolveShader.tres" type="Shader" id=1]
 
+[sub_resource type="SpatialMaterial" id=6]
+albedo_color = Color( 0.682353, 0.784314, 1, 1 )
+
 [sub_resource type="CubeMesh" id=1]
+material = SubResource( 6 )
 
 [sub_resource type="SphereMesh" id=2]
 
 [sub_resource type="ShaderMaterial" id=3]
 shader = ExtResource( 1 )
+shader_param/Vertex_OffsetX = null
+shader_param/Vertex_TiledX = null
+shader_param/Vertex_OffsetY = null
+shader_param/Vertex_TiledY = null
+shader_param/Fragment_OffsetX = null
+shader_param/Fragment_TiledX = null
+shader_param/Fragment_OffsetY = null
+shader_param/Fragment_TiledY = null
 shader_param/Degerees = 90.0
 shader_param/DisolveStrenght2 = null
 shader_param/Rotation = Vector3( 0.1, 0.2, 0 )
@@ -20,13 +32,25 @@ shader_param/EmissionColor = Color( 0.976471, 0.513726, 0.0666667, 1 )
 
 [sub_resource type="ShaderMaterial" id=5]
 shader = ExtResource( 1 )
+shader_param/Vertex_OffsetX = null
+shader_param/Vertex_TiledX = 1.0
+shader_param/Vertex_OffsetY = null
+shader_param/Vertex_TiledY = 1.0
+shader_param/Fragment_OffsetX = 0.0
+shader_param/Fragment_TiledX = 1.0
+shader_param/Fragment_OffsetY = null
+shader_param/Fragment_TiledY = 1.0
 shader_param/Degerees = 90.0
-shader_param/DisolveStrenght2 = null
-shader_param/Rotation = Vector3( 0.1, 0, 0 )
-shader_param/DisolveLevel = 2.984
+shader_param/DisolveStrenght2 = Vector3( 1, 0, 0 )
+shader_param/Rotation = Vector3( 0.1, 0.2, 0 )
+shader_param/DisolveLevel = -0.81
 shader_param/DisolveStrenght = 1.913
 shader_param/EmissionSize = 0.002
 shader_param/EmissionColor = Color( 0, 0.976471, 1, 1 )
+
+[sub_resource type="PrismMesh" id=7]
+
+[sub_resource type="CylinderMesh" id=8]
 
 [node name="Spatial" type="Spatial"]
 
@@ -45,6 +69,18 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.08778, -3.249 )
 mesh = SubResource( 4 )
 material/0 = SubResource( 5 )
 
+[node name="MeshInstance4" type="MeshInstance" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 2.92255, 1.08778, -1.9755 )
+cast_shadow = 0
+mesh = SubResource( 7 )
+material/0 = SubResource( 5 )
+
+[node name="MeshInstance5" type="MeshInstance" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 2.2934, 1.08778, 1.40379 )
+cast_shadow = 0
+mesh = SubResource( 8 )
+material/0 = SubResource( 5 )
+
 [node name="DirectionalLight" type="DirectionalLight" parent="."]
 transform = Transform( -0.400774, -0.505092, 0.764371, 0.0713223, 0.814573, 0.57566, -0.913397, 0.285226, -0.290435, 3.15584, 3.49148, -0.145445 )
-light_energy = 0.402
+light_energy = 0.362

@@ -12,16 +12,19 @@ void fragment()
 	float text_r = texture(TEXTURE, UV).r;
 	float text_g = texture(TEXTURE, UV).g;
 	float text_b = texture(TEXTURE, UV).b;
+	float text_a = texture(TEXTURE, UV).a;
+	vec4 sprite_color = texture(TEXTURE, UV);
+	float alpha = -8.0 * sprite_color.a;
 
 	vec3 textColor = vec3(text_r, text_g, text_b);
 	vec4 newColor = vec4(textColor, 1);
 	
 	if (GrayScale)
 	{
-		COLOR.rgb = vec3(dot(newColor.rgb, vec3(brightness, brightness, brightness)))
+		COLOR = vec4(vec3(dot(newColor.rgb, vec3(brightness, brightness, brightness))), sprite_color.a)
 	}
 	else
 	{
-		COLOR.rgb = newColor.rgb
+		COLOR = vec4(newColor.rgb, sprite_color.a)
 	}
 }"
